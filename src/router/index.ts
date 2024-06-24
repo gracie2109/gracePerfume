@@ -25,6 +25,7 @@ const router = createRouter({
         {
             path: '/admin/',
             component: AdminLayout,
+            name:'admin',
             children:[
                 //brands
                 {
