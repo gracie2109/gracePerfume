@@ -1,5 +1,36 @@
 <template>
-  <DataTable :data="brands" :columns="newColumn" />
+  <div class="my-8  space-y-3">
+    <b>Using normal table</b>
+    <DataTable :data="brands" :columns="newColumn" />
+  </div>
+
+  <div class=" space-y-3">
+      <b>Using normal table</b>
+    <Table>
+
+      <template v-if="brands.length">
+        <TableHeader>
+          <TableRow>
+            <TableHead v-for="(i, j) in Object.keys(brands[0])" :key="j">{{ i }}</TableHead>
+            <TableHead></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="(i, j) in brands" :key="j">
+            <template v-for="(m) in Object.keys(brands[0])"  :key="m">
+              <TableCell>{{i[m]}}</TableCell>
+            </template>
+            <TableCell>
+              <Button variant="destructive" @click="() => handleDelete(i.id)"><Trash class="w-4 h-4"/></Button>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </template>
+      <template v-else>
+          No result
+      </template>
+    </Table>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -12,7 +43,9 @@ import {h, reactive} from "vue";
 import {Checkbox} from "@/components/ui/checkbox";
 import DataTableColumnHeader from "@/components/ui/data-table/DataTableColumnHeader.vue";
 import BrandRowAction from "@/components/RowAction/BrandRowAction.vue";
-
+import {TableHeader, Table, TableBody, TableCell, TableHead, TableRow} from "@/components/ui/table";
+import {Button} from '@/components/ui/button'
+import {Trash} from "lucide-vue-next"
 const newColumn:ColumnDef<any>[] = reactive([
   {
     id: 'select',
@@ -50,5 +83,7 @@ const newColumn:ColumnDef<any>[] = reactive([
 
 const brandStore = useBrandStore()
 const { brands  } = storeToRefs(brandStore);
-
+const handleDelete = async (id:string) => {
+  await brandStore.deleteBrand(id)
+}
 </script>
