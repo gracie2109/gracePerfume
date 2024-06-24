@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Column } from '@tanstack/vue-table'
-import type { Task } from '@/data/schema'
 import {ArrowDownIcon,ArrowUpIcon, ArrowDownAZ  , EyeOff }  from 'lucide-vue-next'
 
 
@@ -15,7 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 interface DataTableColumnHeaderProps {
-  column: Column<Task, any>
+  column: Column<any, any>
   title: string
 }
 

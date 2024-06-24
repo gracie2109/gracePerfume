@@ -24,7 +24,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {useRoute} from "vue-router";
 
 interface DataTableViewOptionsProps {
   table: Table<Task>
