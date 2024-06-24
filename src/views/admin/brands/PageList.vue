@@ -1,6 +1,6 @@
 <template>
   <div class="my-8  space-y-3">
-    <b>Using normal table</b>
+    <b>Using tanstack table</b>
     <DataTable :data="brands" :columns="newColumn" />
   </div>
 
