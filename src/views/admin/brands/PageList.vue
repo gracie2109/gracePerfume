@@ -1,4 +1,6 @@
 <template>
+  <PageHeader :show-back-btn="false" page-title='Brands'  page-desc="Show all brands"/>
+
   <div class="my-8  space-y-3">
     <b>Using tanstack table</b>
     <DataTable :data="brands" :columns="newColumn" />
@@ -46,6 +48,7 @@ import BrandRowAction from "@/components/RowAction/BrandRowAction.vue";
 import {TableHeader, Table, TableBody, TableCell, TableHead, TableRow} from "@/components/ui/table";
 import {Button} from '@/components/ui/button'
 import {Trash} from "lucide-vue-next"
+import PageHeader from "@/components/PageHeader.vue";
 const newColumn:ColumnDef<any>[] = reactive([
   {
     id: 'select',

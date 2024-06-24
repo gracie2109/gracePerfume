@@ -1,7 +1,13 @@
 <template>
-  <div>
+  <PageHeader :show-back-btn="true" back-link="adminBrands" page-title='Create Brand'
+              :bread-crumbs="[
+      {
+        url: 'adminBrands',
+        name:'Brands'
+      }
+]"/>
     <BrandForm :loading="loading"  @submit="onSubmit" :form="form" />
-  </div>
+
 </template>
 
 <script setup lang="ts">
@@ -15,6 +21,7 @@ import BrandForm from  "@/components/forms/BrandForm.vue"
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
+import PageHeader from "@/components/PageHeader.vue";
 
 
 
