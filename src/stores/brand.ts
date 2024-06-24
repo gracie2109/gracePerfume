@@ -50,7 +50,9 @@ export const useBrandStore = defineStore('brand',  () => {
         try {
             loading.value = true;
             if (Array.isArray(id)) {
-                const deletePromises = id.map(async (brandId) => { await deleteDoc(doc(db, 'brands', brandId))});
+                const deletePromises = id.map(async (brandId) => {
+                    await deleteDoc(doc(db, 'brands', brandId))
+                });
                 await Promise.all(deletePromises)
                     .then(() => toast.success('Delete success'))
 
