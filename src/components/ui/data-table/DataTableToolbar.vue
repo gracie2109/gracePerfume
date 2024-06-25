@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import type { Table } from '@tanstack/vue-table'
 import { computed } from 'vue'
-
-import { priorities, statuses } from '@/data/data'
-import DataTableFacetedFilter from './DataTableFacetedFilter.vue'
 import DataTableViewOptions from './DataTableViewOptions.vue'
-import { Plus } from 'lucide-vue-next';
+import { X } from 'lucide-vue-next';
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {DataTableSearchableColumn, DataTableFilterableColumn} from "@/types";
 
 interface DataTableToolbarProps {
-  table: Table<any>
+  table: Table<any>,
+  searchableColumns?: DataTableSearchableColumn<any[]>[],
+  filterableColumns?:DataTableFilterableColumn<any[]>[]
 }
 
 const props = defineProps<DataTableToolbarProps>()
@@ -22,24 +22,17 @@ const isFiltered = computed(() => props.table.getState().columnFilters.length > 
 <template>
   <div class="flex items-center justify-between">
     <div class="flex flex-1 items-center space-x-2">
-      <Input
-          placeholder="Filter tasks..."
-          :model-value="(table.getColumn('name')?.getFilterValue() as string) ?? ''"
-          class="h-8 w-[150px] lg:w-[250px]"
-          @input="table.getColumn('name')?.setFilterValue($event.target.value)"
-      />
-<!--      <DataTableFacetedFilter-->
-<!--          v-if="table.getColumn('status')"-->
-<!--          :column="table.getColumn('status')"-->
-<!--          title="Status"-->
-<!--          :options="statuses"-->
-<!--      />-->
-<!--      <DataTableFacetedFilter-->
-<!--          v-if="table.getColumn('priority')"-->
-<!--          :column="table.getColumn('priority')"-->
-<!--          title="Priority"-->
-<!--          :options="priorities"-->
-<!--      />-->
+
+     <template v-if="props.searchableColumns">
+       <Input
+           v-for="(i, ii) in props.searchableColumns"
+           :key="ii"
+           :placeholder="`Filter ${i.title}`"
+           :model-value="(table.getColumn(String(i.id))?.getFilterValue() as string) ?? ''"
+           class="h-8 w-[150px] lg:w-[250px]"
+           @input="table.getColumn(String(i.id))?.setFilterValue($event.target.value)"
+       />
+     </template>
 
       <Button
           v-if="isFiltered"
@@ -48,7 +41,7 @@ const isFiltered = computed(() => props.table.getState().columnFilters.length > 
           @click="table.resetColumnFilters()"
       >
         Reset
-        <Plus class="ml-2 h-4 w-4" />
+        <X class="ml-2 h-4 w-4" />
       </Button>
     </div>
     <DataTableViewOptions :table="table" />
