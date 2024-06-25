@@ -2,8 +2,9 @@
 import type { Column } from '@tanstack/vue-table'
 import type { Component } from 'vue'
 import { computed } from 'vue'
-import {CirclePlus , CheckIcon} from "lucide-vue-next"
 
+
+import {PlusCircle} from "lucide-vue-next";
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '@/components/ui/command'
@@ -36,9 +37,8 @@ const selectedValues = computed(() => new Set(props.column?.getFilterValue() as 
   <Popover>
     <PopoverTrigger as-child>
       <Button variant="outline" size="sm" class="h-8 border-dashed">
-        <CirclePlus  class="mr-2 h-4 w-4" />
+        <PlusCircle class="mr-2 h-4 w-4" />
         {{ title }}
-
         <template v-if="selectedValues.size > 0">
           <Separator orientation="vertical" class="mx-2 h-4" />
           <Badge
@@ -58,7 +58,7 @@ const selectedValues = computed(() => new Set(props.column?.getFilterValue() as 
 
             <template v-else>
               <Badge
-                  v-for="option in options
+                  v-for="option in props.options
                   .filter((option) => selectedValues.has(option.value))"
                   :key="option.value"
                   variant="secondary"
@@ -72,26 +72,24 @@ const selectedValues = computed(() => new Set(props.column?.getFilterValue() as 
       </Button>
     </PopoverTrigger>
     <PopoverContent class="w-[200px] p-0" align="start">
-      <Command >
+      <Command
+          :filter-function="(val: any, term:any) =>  val.filter((i:any) => i.label.toLowerCase()?.includes(term))"
+      >
         <CommandInput :placeholder="title" />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup>
             <CommandItem
-                v-for="option in options"
+                v-for="option in props.options"
                 :key="option.value"
                 :value="option"
                 @select="(e:any) => {
                 console.log(e.detail.value)
                 const isSelected = selectedValues.has(option.value)
-                if (isSelected) {
-                  selectedValues.delete(option.value)
-                }
-                else {
-                  selectedValues.add(option.value)
-                }
+                if (isSelected) {   selectedValues.delete(option.value)    }
+                else {  selectedValues.add(option.value)   }
                 const filterValues = Array.from(selectedValues)
-                column?.setFilterValue(
+                props.column?.setFilterValue(
                   filterValues.length ? filterValues : undefined,
                 )
               }"
@@ -104,7 +102,7 @@ const selectedValues = computed(() => new Set(props.column?.getFilterValue() as 
                     : 'opacity-50 [&_svg]:invisible',
                 )"
               >
-                <CheckIcon :class="cn('h-4 w-4')" />
+                <PlusCircle :class="cn('h-4 w-4')" />
               </div>
               <component :is="option.icon" v-if="option.icon" class="mr-2 h-4 w-4 text-muted-foreground" />
               <span>{{ option.label }}</span>
@@ -120,7 +118,7 @@ const selectedValues = computed(() => new Set(props.column?.getFilterValue() as 
               <CommandItem
                   :value="{ label: 'Clear filters' }"
                   class="justify-center text-center"
-                  @select="column?.setFilterValue(undefined)"
+                  @select="props.column?.setFilterValue(undefined)"
               >
                 Clear filters
               </CommandItem>
