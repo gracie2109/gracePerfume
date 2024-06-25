@@ -65,7 +65,7 @@ const selectedLength = computed(() => {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-    <Button size="sm" variant="outline" @click="$router.push('/admin/brand/create')">
+    <Button size="sm" variant="outline" @click="$router.push('/admin/brands/create')">
       <PlusCircle class="mr-2 h-4 w-4" />
       Create
     </Button>

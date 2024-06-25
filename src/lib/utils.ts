@@ -40,3 +40,8 @@ export function valueUpdater<T extends Updater<any>>(updaterOrValue: T, ref: Ref
       ? updaterOrValue(ref.value)
       : updaterOrValue
 }
+
+export const profitAndMarginAlg = (sale_price:number, cost_price: number,  puschase_price:number ) => {
+  if(!(sale_price && cost_price && puschase_price)) return 0;
+  return Number(sale_price - puschase_price);
+}
