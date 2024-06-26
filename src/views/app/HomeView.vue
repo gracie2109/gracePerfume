@@ -1,31 +1,145 @@
+<!--<script lang="ts" setup>-->
+<!--import { useFirebaseStorage, useStorageFile, useCurrentUser } from 'vuefire'-->
+<!--import { ref as storageRef } from 'firebase/storage'-->
+<!--import {computed, ref, watch} from "vue";-->
+<!--import {useFileDialog} from "@vueuse/core";-->
+<!--import {PlusCircle} from "lucide-vue-next"-->
+<!--import Loading  from '@/components/loading.vue';-->
+
+<!--const filename = ref<string[]>()-->
+<!--const { files, open } = useFileDialog({-->
+<!--  accept: 'image/*',-->
+<!--})-->
+<!--const preview = ref<string[] | null>(null);-->
+<!--const imageResult = ref([])-->
+
+
+
+<!--const user = useCurrentUser()-->
+
+<!--const storage = useFirebaseStorage()-->
+<!--const storageBucket = () =>-->
+<!--    storageRef(storage, '/' + (user.value?.uid || ''))-->
+<!--const storageSource = computed(() =>-->
+<!--    filename.value ? storageRef(storageBucket(), filename.value?.map((_, j) => j.name)) : null-->
+<!--)-->
+
+<!--const {-->
+<!--  upload,-->
+<!--  url,-->
+<!--  metadata,-->
+<!--} = useStorageFile(storageSource)-->
+
+
+<!--watch(-->
+<!--    () => files.value,-->
+<!--     () => {-->
+<!--      const data = files.value?.item(0);-->
+<!--      console.log("dataitem", files.value)-->
+<!--      if(data){-->
+<!--        //@ts-ignore-->
+<!--        for (const i of files.value) {-->
+
+<!--          preview.value = [...URL.createObjectURL(i)];-->
+<!--          filename.value = i.name-->
+<!--          setTimeout(() => {-->
+<!--            upload(i);-->
+<!--            preview.value = null;-->
+<!--            if(url)  {-->
+<!--              //@ts-ignore-->
+<!--              imageResult.value = ([...imageResult.value, url])-->
+<!--            }-->
+<!--          },1000)-->
+<!--        }-->
+
+<!--      }-->
+<!--    }-->
+<!--)-->
+
+<!--const handleDelete = () => {-->
+<!--  preview.value = null;-->
+
+<!--}-->
+
+<!--const imageLength = ref(3)-->
+
+<!--</script>-->
+
+
+
+
+
+
+
+<!--<template>-->
+<!--  <h2>imageResult:::{{ imageResult }}</h2>-->
+
+
+<!--    <div class="flex gap-3">-->
+<!--      <div class=" w-20 h-20 border-2 border-dashed border-primary rounded-lg relative" v-for="(i, j) in new Array(imageLength)" :key="j">-->
+<!--        <div v-if="!preview && !metadata && !url" class="grid place-items-center w-full h-full cursor-pointer"-->
+<!--             @click="open({ accept: 'image/*', multiple: true })"-->
+<!--        >-->
+<!--          <PlusCircle class="w-4 h-4" />-->
+<!--        </div>-->
+<!--        <div class="w-full h-full p-1.5" v-else-if="preview && !metadata && !url">-->
+<!--          <div class="relative w-full h-full">-->
+<!--            <img :src="preview[i]" alt="" class="w-full h-full object-cover relative">-->
+<!--            <div class="absolute top-0 h-full w-full bg-black/30 grid place-items-center text-white">-->
+<!--              <Loading />-->
+<!--            </div>-->
+
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="w-full h-full p-1.5" v-else>-->
+<!--          <div class="relative w-full h-full">-->
+<!--            <img :src="url[i]" alt="" class="w-full h-full object-cover relative">-->
+
+<!--          </div>-->
+<!--          <div @click="handleDelete"  class="cursor-pointer absolute -right-2 -top-1 w-5 h-5 grid place-items-center bg-amber-700 rounded-full text-white  "> <span class="relative bottom-1 ">x</span>  </div>-->
+<!--        </div>-->
+
+
+
+<!--      </div>-->
+<!--    </div>-->
+
+
+
+
+
+<!--&lt;!&ndash;  <div v-if="error">&ndash;&gt;-->
+<!--&lt;!&ndash;    {{error}}&ndash;&gt;-->
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+<!--&lt;!&ndash;  <div v-else-if="progress != null">&ndash;&gt;-->
+<!--&lt;!&ndash;    <div>Progress {{ progress * 100 }}%</div>&ndash;&gt;-->
+<!--&lt;!&ndash;    <progress max="1" :value="progress">{{ progress * 100 }}%</progress>&ndash;&gt;-->
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  <p v-else>Select a picture to delete.</p>&ndash;&gt;-->
+<!--&lt;!&ndash;  <button @click="deleteObject(storageSource!)" :disabled="!storageSource">&ndash;&gt;-->
+<!--&lt;!&ndash;    Delete the picture&ndash;&gt;-->
+<!--&lt;!&ndash;  </button>&ndash;&gt;-->
+
+
+
+<!--</template>-->
+
+<!--<style scoped>-->
+<!--.progress-bar {-->
+<!--  max-width: 60px;-->
+<!--  width: 60px;-->
+<!--  border-radius: 50%;-->
+
+<!--}-->
+
+<!--.progress-bar::before {-->
+<!--  color: black;-->
+<!--  font-size: 10px;-->
+<!--}-->
+<!--</style>-->
+
 <template>
-  <div>
-   <RouterLink :to="$router.resolve({name: 'adminBrands'})">Manager Brand</RouterLink>
-
-    <div class="w-20 h-20 max-w-20 max-h-20 rounded-sm">
-      <div class="flex items-center justify-center w-full">
-        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-full border border-orange-500 border-dashed  rounded-md cursor-pointer  hover:bg-gray-100">
-          <div class="grid place-items-center h-20 max-h-20">
-            <PlusCircle class="w-3 h-3 text-orange-500" />
-            <Input id="dropzone-file" type="file" class="hidden"   @change="uploadFile($event)" multiple    accept="image/*"/>
-          </div>
-        </label>
-      </div>
-    </div>
-
-
-  </div>
+  <router-link :to="$router.resolve({name: 'admin'})">Go admin</router-link>
+  this is client side
 </template>
-
-<script setup lang="ts">
-import {Input} from "@/components/ui/input";
-import {PlusCircle} from "lucide-vue-next"
-
-const uploadFile = ($event: Event) => {
-  const files = ($event.target as HTMLInputElement).files;
-  console.log("event", files);
-}
-
-
-
-</script>
