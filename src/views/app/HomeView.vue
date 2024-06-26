@@ -142,4 +142,47 @@
 <template>
   <router-link :to="$router.resolve({name: 'admin'})">Go admin</router-link>
   this is client side
+  <div v-if="user">
+    <p>Hello {{ user}}</p>
+    <button @click="logout">Logout</button>
+  </div>
+  <div v-else>
+    <router-link to="/auth/login">Login</router-link>
+  </div>
+
 </template>
+
+<script setup lang="ts">
+import { FirebaseError } from 'firebase/app'
+import { signOut, type Auth } from 'firebase/auth'
+import {useRouter} from "vue-router";
+import {useCurrentUser, useFirebaseAuth} from "vuefire";
+import { toast } from 'vue-sonner'
+import {onMounted, ref} from "vue";
+
+const auth = useFirebaseAuth() as Auth;
+const user = useCurrentUser()
+
+const router = useRouter();
+const displayName = ref<string | null>(null)
+onMounted(() => {
+  displayName.value = user.value?.displayName || null
+})
+
+async function logout() {
+  try {
+    await signOut(auth)
+    router.go(0)
+  } catch (error) {
+    let errorMessage = 'An unknown error occurred.'
+
+    if (error instanceof FirebaseError) {
+      errorMessage = error.message
+    } else if (error instanceof Error) {
+      errorMessage = error.message
+    }
+
+    toast.error(errorMessage)
+  }
+}
+</script>
