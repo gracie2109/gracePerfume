@@ -4,7 +4,7 @@
   >
     <div class="absolute inset-0 w-full bg-custom-bg"></div>
     <AppLogo class="z-10 mx-auto mb-5" />
-    <Card class="z-10 ">
+    <Card class="z-10  min-w-[400px]">
       <CardHeader>
         <CardTitle class="text-xl text-custom-bg"> Sign Up </CardTitle>
         <CardDescription class="text-custom-bg">
@@ -107,10 +107,8 @@
         </form>
 
         <Separator class="my-4" label="OR" />
+        <SocialLogin />
 
-        <Button variant="outline" class="w-full">
-          <Github class="w-4 h-4 mr-2"/> Signup with google
-        </Button>
 
         <div class="mt-4 text-center text-sm text-custom-bg">
           Already have an account?
@@ -132,10 +130,11 @@ import {Card, CardDescription, CardHeader, CardTitle, CardContent} from "@/compo
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {EyeOff, Eye, LoaderIcon, Github} from "lucide-vue-next"
+import {EyeOff, Eye, LoaderIcon} from "lucide-vue-next"
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import AppLogo from "@/components/AppLogo.vue";
 import {Separator} from "@/components/ui/separator";
+import SocialLogin from "@/components/SocialLogin.vue"
 
 const auth = useFirebaseAuth() as Auth
 const router = useRouter()
@@ -167,7 +166,7 @@ async function createUser() {
     updateProfile(user, {
       displayName: `${models.firstName} ${models.lastName}`
     })
-    router.go(0)
+    router.replace({name: 'login'})
   } catch (error) {
     isLoading.value = false
     errorMessage.value = 'An unknown error occurred.'
@@ -184,13 +183,28 @@ async function createUser() {
       errorMessage.value = error.message
     }
 
-    clearErrorMessage()
+    clearErrorMessage();
+    reset()
   }
 }
 
+
+
+
+
+
 function clearErrorMessage() {
   timeout = setTimeout(() => {
-    errorMessage.value = null
+    errorMessage.value = null;
+    reset()
   }, 3000)
+}
+
+function reset(){
+  models.lastName="";
+  models.email="";
+  models.firstName=  '';
+  models.password="";
+  models.confirmPassword=  '';
 }
 </script>
