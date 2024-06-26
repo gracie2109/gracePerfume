@@ -1,18 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import HomeView from "@/views/app/HomeView.vue"
 import AdminLayout from "@/layouts/admin/AdminLayout.vue";
-import PageListBrand from "@/views/admin/brands/PageList.vue";
-import PageEditBrand from "@/views/admin/brands/PageEdit.vue";
-import PageCreateBrand from "@/views/admin/brands/PageCreate.vue";
-
-import PageListProduct from "@/views/admin/products/PageProductList.vue";
-import PageCreateProducts from "@/views/admin/products/PageProductCreate.vue";
-
-
-import PageListCollections from "@/views/admin/collections/PageCollectionList.vue";
-import PageCreateCollections from "@/views/admin/collections/PageCollectionCreate.vue";
-
+import HomeView from "../views/app/HomeView.vue"
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +12,22 @@ const router = createRouter({
             component: HomeView
         },
         {
+            path: '/auth/',
+            children:[
+                {
+                    path: 'login',
+                    name: 'login',
+                    component: import("@/views/auth/LoginPage.vue")
+                },
+                {
+                    path: 'register',
+                    name: 'register',
+                    component: import("@/views/auth/Register.vue")
+                }
+            ]
+
+        },
+        {
             path: '/admin/',
             component: AdminLayout,
             name:'admin',
@@ -31,39 +36,39 @@ const router = createRouter({
                 {
                     path: 'brands',
                     name: 'adminBrands',
-                    component: PageListBrand,
+                    component: import("@/views/admin/brands/PageList.vue"),
                 },
                 {
                     path: 'brands/edit/:id',
                     name: 'adminBrandEdit',
-                    component: PageEditBrand,
+                    component: import("@/views/admin/brands/PageEdit.vue"),
                 },
                 {
                     path: 'brands/create',
                     name: 'adminBrandCreate',
-                    component: PageCreateBrand,
+                    component: import("@/views/admin/brands/PageCreate.vue"),
                 },
                 //products
                 {
                     path: 'products',
                     name: 'adminProducts',
-                    component: PageListProduct,
+                    component: import("@/views/admin/products/PageProductList.vue"),
                 },
                 {
                     path: 'products/create',
                     name: 'adminProductCreate',
-                    component: PageCreateProducts,
+                    component: import("@/views/admin/products/PageProductCreate.vue"),
                 },
                 //collections
                 {
                     path: 'collections',
                     name: 'adminCollections',
-                    component: PageListCollections,
+                    component: import("@/views/admin/collections/PageCollectionList.vue"),
                 },
                 {
                     path: 'collections/create',
                     name: 'adminCollectionCreate',
-                    component: PageCreateCollections,
+                    component: import("@/views/admin/collections/PageCollectionCreate.vue"),
                 }
             ]
         }

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type {Table} from '@tanstack/vue-table'
 import {computed} from 'vue'
-import type {Task} from '@/data/schema'
 import {PlusCircle, Settings2, Trash} from 'lucide-vue-next';
 import {
   AlertDialog,
@@ -26,7 +25,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 interface DataTableViewOptionsProps {
-  table: Table<Task>
+  table: Table<any>
 }
 
 const props = defineProps<DataTableViewOptionsProps>()

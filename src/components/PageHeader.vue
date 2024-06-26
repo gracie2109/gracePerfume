@@ -9,9 +9,9 @@
       </BreadcrumbItem>
       <BreadcrumbSeparator />
 
-      <BreadcrumbItem v-for="(i, j) in props.breadCrumbs" :key="j" >
+      <BreadcrumbItem v-if="props.breadCrumbs"  v-for="(i, j) in props.breadCrumbs" :key="j" >
         <BreadcrumbLink>
-          <router-link :to="$router.resolve({name: i.url})" >{{i.name}}</router-link>
+          <router-link :to="$router.resolve({name: String(i.url)})" >{{i.name}}</router-link>
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator v-if="props.breadCrumbs" />
@@ -48,7 +48,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import {useRouter, useRoute} from "vue-router";
+import { useRoute} from "vue-router";
 import {computed} from "vue";
   const props = defineProps({
     showBackBtn: Boolean,
@@ -58,7 +58,7 @@ import {computed} from "vue";
     breadCrumbs:Array<{name: String, url: String}>
   });
 const router = useRoute();
-console.log("router", router);
+
 const firstItem = computed(() => {
   if(router.path.includes('admin')) {  return {  name: 'Dashboard',   url: 'admin' } }
   else return {name:'Home', url: 'home'}
