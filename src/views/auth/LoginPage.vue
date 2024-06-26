@@ -4,7 +4,7 @@
   >
     <div class="absolute inset-0 w-full bg-custom-bg"></div>
     <AppLogo class="z-10 mx-auto mb-5" />
-    <Card  class="z-10 w-[980px]'">
+    <Card  class="z-10 min-w-[400px] ">
       <CardHeader>
         <CardTitle class="text-2xl text-custom-bg">Login</CardTitle>
         <CardDescription class="text-custom-bg">
@@ -70,9 +70,7 @@
 
           <Separator class="my-4" label="OR" />
 
-            <Button variant="outline" class="w-full">
-             <Github class="w-4 h-4 mr-2"/> Login with google
-            </Button>
+        <SocialLogin />
 
         <div class="mt-4 text-center text-sm text-custom-bg">
           Don't have an account?
@@ -94,10 +92,11 @@ import {Card, CardDescription, CardHeader, CardTitle, CardContent} from "@/compo
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {EyeOff, Eye, LoaderIcon, Github } from "lucide-vue-next"
+import {EyeOff, Eye, LoaderIcon } from "lucide-vue-next"
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import AppLogo from "@/components/AppLogo.vue";
 import { Separator } from '@/components/ui/separator'
+import SocialLogin from "@/components/SocialLogin.vue";
 
 
 
@@ -119,7 +118,7 @@ async function login() {
     clearTimeout(timeout)
     errorMessage.value = null
     await signInWithEmailAndPassword(auth, models.email, models.password)
-    router.go(0)
+    router.replace({name: 'home'})
   } catch (error) {
     isLoading.value = false
     errorMessage.value = 'An unknown error occurred.'
