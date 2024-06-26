@@ -11,3 +11,4 @@ export const firebaseApp = initializeApp({
 });
 
 export const db = getFirestore(firebaseApp);
+
