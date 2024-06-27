@@ -45,3 +45,20 @@ export const profitAndMarginAlg = (sale_price:number, cost_price: number,  pusch
   if(!(sale_price && cost_price && puschase_price)) return 0;
   return Number(sale_price - puschase_price);
 }
+
+
+export function formatPrice(
+    price: number | string,
+    options: {
+      currency?: "USD" | "EUR" | "GBP" | "BDT" | "VND"
+      notation?: Intl.NumberFormatOptions["notation"]
+    } = {}
+) {
+  const {currency = "VND", notation = "standard"} = options
+  if (price == "undefined") return
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency,
+    notation,
+  }).format(Number(price))
+}
