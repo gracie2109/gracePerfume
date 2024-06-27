@@ -58,6 +58,10 @@ module.exports = {
         "custom-secondary": "#a7a9be",
         "custom-tertiary": "#e53170",
         "custom-accent": "#f25f4c",
+        "custom-success":'#22C55E',
+        "cara-secondary":"#0f1b2e",
+        "cara-primary":"#0a0f19",
+        "cara-blue":"#1b55ac"
       },
       borderRadius: {
       	xl: "calc(var(--radius) + 4px)",
@@ -93,3 +97,4 @@ module.exports = {
   },
   plugins: [animate],
 }
+

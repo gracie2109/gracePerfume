@@ -1,38 +1,41 @@
 <template>
-  <div class="w-full text-center">
-    <h2 class="scroll-m-20  pb-2 text-3xl font-semibold tracking-tight  first:mt-0 capitalize">
-      Collections
-    </h2>
-  </div>
 
-  <div class="container my-8">
-    <div class="tabs flex gap-12 items-center justify-center">
-      <template v-if="collections.length > 0">
-        <div v-for="(i, ii) in collections" :key="ii" class="cursor-pointer" @click="changeTab(i.id)">
-        <span :class="clsx({
-              'border-b-2 border-custom-accent ':(i.id === initTabs)
+    <div class="w-full text-center">
+      <h2 class="scroll-m-20  pb-2 text-4xl font-semibold tracking-tight  first:mt-0 capitalize">
+        Collections
+      </h2>
+    </div>
+
+    <div class="container my-6">
+      <div class="tabs flex gap-12 items-center justify-center">
+        <template v-if="collections.length > 0">
+          <div v-for="(i, ii) in collections" :key="ii" class="cursor-pointer" @click="changeTab(i.id)">
+        <div :class="clsx({
+              'border-b-4   w-full border-cara-blue h-full ':(i.id === initTabs)
             })"
-              class="capitalize font-semibold "
+              class="capitalize font-semibold text-xl "
 
-        >{{ i.name }}</span>
-        </div>
-      </template>
-      <template v-else>
-        <SkeletonCollectionTabs :quantity="5"/>
-      </template>
+        >{{ i.name }}</div>
+          </div>
+        </template>
+        <template v-else>
+          <SkeletonCollectionTabs :quantity="5"/>
+        </template>
 
+      </div>
     </div>
-  </div>
 
-  <div id="tabs_content" class="flex flex-wrap items-center justify-between gap-3 container">
-    <div v-for="(i, j) in Array(5)" :key="j" class="w-60" v-if="collections.length">
-      <CardProductList :data="i"/>
+    <div id="tabs_content" class="flex pt-8 flex-wrap items-center justify-between gap-3 container">
+      <div v-for="(i, j) in Array(5)" :key="j" class="w-60" v-if="collections.length">
+        <CardProductList :data="i"/>
+      </div>
+      <div v-else>
+        <SkeletonCard :quantity="5"/>
+      </div>
     </div>
-    <div v-else>
-      <SkeletonCard :quantity="5"/>
+    <div class="container mt-8 grid place-items-center">
+      <router-link to="/" class="text-custom-primary font-semibold flex items-center gap-3  hover:text-custom-accent ">View More <ChevronsRight /></router-link>
     </div>
-  </div>
-
 
 </template>
 
@@ -44,7 +47,7 @@ import {ref, watchEffect} from "vue";
 import CardProductList from "@/components/card/card-product/List.vue"
 import SkeletonCard from "@/components/skeleton/CardSkeleton.vue"
 import SkeletonCollectionTabs from "@/components/skeleton/CollectionTabs.vue"
-
+import {ChevronsRight} from "lucide-vue-next"
 const collectionStore = useCollectionsStore();
 const {collections} = storeToRefs(collectionStore);
 const initTabs = ref<string | null>(null)

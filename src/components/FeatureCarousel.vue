@@ -1,0 +1,3 @@
+<template>
+  Feature carousel
+</template>
