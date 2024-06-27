@@ -62,3 +62,30 @@ export function formatPrice(
     notation,
   }).format(Number(price))
 }
+
+
+export function groupBrands (data:string[]) {
+  // const getName = new Set(data.map((i) => i.name.toLowerCase().at(0)))
+  return data
+}
+
+export function getAllAlphabet () {
+  const alphabet = [];
+  for (let i = 65; i <= 90; i++) {
+    alphabet.push(String.fromCharCode(i));
+  }
+  return alphabet
+}
+
+export function getBrandsByCharacter(data:string[],letter:string) {
+  const brandMap = new Map();
+  if(!data) return []
+  data.forEach((brand:string) => {
+    const initial = brand[0].toUpperCase();
+    if (!brandMap.has(initial)) {
+      brandMap.set(initial, []);
+    }
+    brandMap.get(initial).push(brand);
+  });
+  return brandMap.get(letter.toUpperCase()) || [];
+}

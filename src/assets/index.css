@@ -79,11 +79,12 @@
         @apply border-border;
     }
     .client_body {
-        @apply bg-custom-bg text-custom-foreground;
+        @apply  text-custom-foreground bg-cara-primary;
     }
-    ::selection{
-        color: red;
-    }
+    /*::selection{*/
+    /*    @apply text-custom-primary*/
+    /*}*/
+
 }
 @layer components {
     @font-face {

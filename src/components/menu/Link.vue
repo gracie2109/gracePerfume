@@ -1,5 +1,5 @@
 <template>
-  <li class="text-2xl lg:text-base xl:text-lg">
+  <li class="text-xl lg:text-base">
     <router-link
         :to="link.url"
         class="transition-colors hover:text-custom-primary "
