@@ -140,34 +140,76 @@
 <!--</style>-->
 
 <template>
-  <router-link :to="$router.resolve({name: 'admin'})">Go admin</router-link>
-  this is client side
-  <div v-if="user">
-    <p>Hello {{ user}}</p>
-    <button @click="logout">Logout</button>
-  </div>
-  <div v-else>
-    <router-link to="/auth/login">Login</router-link>
+<div class="relative space-y-4 ">
+ <div class="w-full overflow-hidden relative ">
+   <Carousel
+       class="relative h-full w-screen"
+      :plugin="[plugin]"
+       @mouseenter="plugin.stop"
+       @mouseleave="[plugin.reset(), plugin.play()];"
+       :showButton="false"
+   >
+     <CarouselContent class="w-full h-full" >
+       <CarouselItem v-for="(i,j) in carouselImages" :key="j" >
+         <img :src="i" :alt="i" class="w-full max-h-[700px]  overflow-hidden object-cover  ">
+       </CarouselItem>
+     </CarouselContent>
+     <CarouselPrevious />
+     <CarouselNext />
+   </Carousel>
+ </div>
+
+
+
+  <div class="relative pt-16">
+    <AppCollections />
   </div>
 
+
+</div>
 </template>
 
 <script setup lang="ts">
+import {carouselImages} from "@/lib/constant.ts"
+
 import { FirebaseError } from 'firebase/app'
 import { signOut, type Auth } from 'firebase/auth'
 import {useRouter} from "vue-router";
 import {useCurrentUser, useFirebaseAuth} from "vuefire";
 import { toast } from 'vue-sonner'
 import {onMounted, ref} from "vue";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
+import Autoplay from 'embla-carousel-autoplay';
+import AppCollections from "@/components/AppCollections.vue";
+
+
+
+
 
 const auth = useFirebaseAuth() as Auth;
 const user = useCurrentUser()
 
+
+
+
 const router = useRouter();
-const displayName = ref<string | null>(null)
+const displayName = ref<string | null>(null);
+
+const plugin = Autoplay({
+  delay: 5000,
+  stopOnMouseEnter: true,
+  stopOnInteraction: false,
+
+})
+
 onMounted(() => {
   displayName.value = user.value?.displayName || null
 })
+
+
+
+
+
 
 async function logout() {
   try {

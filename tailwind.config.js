@@ -5,9 +5,7 @@ module.exports = {
   darkMode: ["class"],
   safelist: ["dark"],
   prefix: "",
-
   content: ['./src/**/*.{vue,js,ts,jsx,tsx,md}', './.vitepress/**/*.{vue,js,ts,jsx,tsx}'],
-  
   theme: {
     container: {
       center: true,
@@ -15,6 +13,9 @@ module.exports = {
       screens: {
         "2xl": "1400px",
       },
+    },
+    fontFamily: {
+      sans: ["Work Sans", "sans-serif"],
     },
     extend: {
       colors: {
@@ -27,7 +28,6 @@ module.exports = {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
-        custom: "hsl(24.58,94.98%,53.14%)",
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
@@ -52,6 +52,12 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        "custom-bg": "#0f0e17",
+        "custom-foreground": "#fffffe",
+        "custom-primary": "#ff8906",
+        "custom-secondary": "#a7a9be",
+        "custom-tertiary": "#e53170",
+        "custom-accent": "#f25f4c",
       },
       borderRadius: {
       	xl: "calc(var(--radius) + 4px)",
