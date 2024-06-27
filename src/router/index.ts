@@ -2,17 +2,26 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import AdminLayout from "@/layouts/admin/AdminLayout.vue";
 import HomeView from "../views/app/HomeView.vue"
+import ClientLayout from "@/layouts/client/Layout.vue";
+import AuthLayout from "@/layouts/auth/Layout.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: '/',
-            name: 'home',
-            component: HomeView
+            component: ClientLayout,
+            children:[
+                {
+                    path: '',
+                    component: HomeView,
+                    name: 'home',
+                }
+            ]
         },
         {
             path: '/auth/',
+            component:AuthLayout,
             children:[
                 {
                     path: 'login',

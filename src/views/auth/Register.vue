@@ -1,9 +1,4 @@
 <template>
-  <div
-      class="custom-bg-img relative grid place-content-center bg-contain bg-fixed bg-center px-2 py-12 xs:h-screen xs:py-0 sm:px-0"
-  >
-    <div class="absolute inset-0 w-full bg-custom-bg"></div>
-    <AppLogo class="z-10 mx-auto mb-5" />
     <Card class="z-10  min-w-[400px]">
       <CardHeader>
         <CardTitle class="text-xl text-custom-bg"> Sign Up </CardTitle>
@@ -116,7 +111,7 @@
         </div>
       </CardContent>
     </Card>
-  </div>
+
 </template>
 
 <script setup lang="ts">
@@ -132,7 +127,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {EyeOff, Eye, LoaderIcon} from "lucide-vue-next"
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import AppLogo from "@/components/AppLogo.vue";
+import {Transition } from 'vue'
 import {Separator} from "@/components/ui/separator";
 import SocialLogin from "@/components/SocialLogin.vue"
 

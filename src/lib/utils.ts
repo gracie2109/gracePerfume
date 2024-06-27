@@ -45,3 +45,47 @@ export const profitAndMarginAlg = (sale_price:number, cost_price: number,  pusch
   if(!(sale_price && cost_price && puschase_price)) return 0;
   return Number(sale_price - puschase_price);
 }
+
+
+export function formatPrice(
+    price: number | string,
+    options: {
+      currency?: "USD" | "EUR" | "GBP" | "BDT" | "VND"
+      notation?: Intl.NumberFormatOptions["notation"]
+    } = {}
+) {
+  const {currency = "VND", notation = "standard"} = options
+  if (price == "undefined") return
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency,
+    notation,
+  }).format(Number(price))
+}
+
+
+export function groupBrands (data:string[]) {
+  // const getName = new Set(data.map((i) => i.name.toLowerCase().at(0)))
+  return data
+}
+
+export function getAllAlphabet () {
+  const alphabet = [];
+  for (let i = 65; i <= 90; i++) {
+    alphabet.push(String.fromCharCode(i));
+  }
+  return alphabet
+}
+
+export function getBrandsByCharacter(data:string[],letter:string) {
+  const brandMap = new Map();
+  if(!data) return []
+  data.forEach((brand:string) => {
+    const initial = brand[0].toUpperCase();
+    if (!brandMap.has(initial)) {
+      brandMap.set(initial, []);
+    }
+    brandMap.get(initial).push(brand);
+  });
+  return brandMap.get(letter.toUpperCase()) || [];
+}

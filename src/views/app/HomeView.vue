@@ -14,7 +14,6 @@
 <!--const imageResult = ref([])-->
 
 
-
 <!--const user = useCurrentUser()-->
 
 <!--const storage = useFirebaseStorage()-->
@@ -66,11 +65,6 @@
 <!--</script>-->
 
 
-
-
-
-
-
 <!--<template>-->
 <!--  <h2>imageResult:::{{ imageResult }}</h2>-->
 
@@ -100,12 +94,8 @@
 <!--        </div>-->
 
 
-
 <!--      </div>-->
 <!--    </div>-->
-
-
-
 
 
 <!--&lt;!&ndash;  <div v-if="error">&ndash;&gt;-->
@@ -120,7 +110,6 @@
 <!--&lt;!&ndash;  <button @click="deleteObject(storageSource!)" :disabled="!storageSource">&ndash;&gt;-->
 <!--&lt;!&ndash;    Delete the picture&ndash;&gt;-->
 <!--&lt;!&ndash;  </button>&ndash;&gt;-->
-
 
 
 <!--</template>-->
@@ -140,49 +129,65 @@
 <!--</style>-->
 
 <template>
-  <router-link :to="$router.resolve({name: 'admin'})">Go admin</router-link>
-  this is client side
-  <div v-if="user">
-    <p>Hello {{ user}}</p>
-    <button @click="logout">Logout</button>
-  </div>
-  <div v-else>
-    <router-link to="/auth/login">Login</router-link>
-  </div>
+  <div class="relative space-y-12 ">
+    <div class="w-full overflow-hidden relative ">
+      <Carousel
+          :plugin="[plugin]"
+          :showButton="false"
+          class="relative h-full w-screen"
+          @mouseenter="plugin.stop"
+          @mouseleave="[plugin.reset(), plugin.play()];"
+      >
+        <CarouselContent class="w-full h-full">
+          <CarouselItem v-for="(i,j) in carouselImages" :key="j">
+            <img :alt="i" :src="i" class="w-full max-h-[700px]  overflow-hidden object-cover  ">
+          </CarouselItem>
+        </CarouselContent>
+        <CarouselPrevious/>
+        <CarouselNext/>
+      </Carousel>
+    </div>
+   <div class="inner_page">
+     <div class="section">  <AppCollections/>  </div>
+     <div class="section">  <HeroSection />   </div> </div>
 
+  </div>
 </template>
 
-<script setup lang="ts">
-import { FirebaseError } from 'firebase/app'
-import { signOut, type Auth } from 'firebase/auth'
-import {useRouter} from "vue-router";
-import {useCurrentUser, useFirebaseAuth} from "vuefire";
-import { toast } from 'vue-sonner'
-import {onMounted, ref} from "vue";
+<script lang="ts" setup>
+import {carouselImages} from "@/lib/constant.ts"
+import {Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious} from '@/components/ui/carousel'
+import Autoplay from 'embla-carousel-autoplay';
+import AppCollections from "@/components/AppCollections.vue";
+import HeroSection from "@/components/HeroSection.vue";
+import {computed, inject, provide, ref} from "vue";
 
-const auth = useFirebaseAuth() as Auth;
-const user = useCurrentUser()
+const plugin = Autoplay({
+  delay: 5000,
+  stopOnMouseEnter: true,
+  stopOnInteraction: false,
 
-const router = useRouter();
-const displayName = ref<string | null>(null)
-onMounted(() => {
-  displayName.value = user.value?.displayName || null
 })
+const name = ref('hello')
+provide('test', name.value);
 
-async function logout() {
-  try {
-    await signOut(auth)
-    router.go(0)
-  } catch (error) {
-    let errorMessage = 'An unknown error occurred.'
 
-    if (error instanceof FirebaseError) {
-      errorMessage = error.message
-    } else if (error instanceof Error) {
-      errorMessage = error.message
-    }
 
-    toast.error(errorMessage)
-  }
-}
+
+
+
 </script>
+
+<style scoped>
+  .section{
+    position: relative;
+    padding: 4rem;
+    top: 1rem
+  }
+
+  .inner_page{
+    background-image: url("/src/assets/images/background.svg");
+    position: relative;
+    top: -3rem
+  }
+</style>

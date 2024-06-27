@@ -1,12 +1,8 @@
 <template>
-  <div
-      class="custom-bg-img relative grid place-content-center bg-contain bg-fixed bg-center  xs:h-screen sm:px-0"
-  >
-    <div class="absolute inset-0 w-full bg-custom-bg"></div>
-    <AppLogo class="z-10 mx-auto mb-5" />
+
     <Card  class="z-10 min-w-[400px] ">
       <CardHeader>
-        <CardTitle class="text-2xl text-custom-bg">Login</CardTitle>
+        <CardTitle class="text-2xl text-custom-bg/85">Login</CardTitle>
         <CardDescription class="text-custom-bg">
           Enter your email below to login to your account
         </CardDescription>
@@ -59,7 +55,7 @@
             </div>
             <Button
                 type="submit"
-                class="w-full bg-custom"
+                class="w-full bg-custom-bg"
                 :disabled="isLoading"
             >
               <LoaderIcon v-if="isLoading" class="mr-1.5 animate-spin" :size="18" />
@@ -78,7 +74,7 @@
         </div>
       </CardContent>
     </Card>
-  </div>
+
 
 </template>
 
@@ -94,10 +90,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {EyeOff, Eye, LoaderIcon } from "lucide-vue-next"
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import AppLogo from "@/components/AppLogo.vue";
 import { Separator } from '@/components/ui/separator'
 import SocialLogin from "@/components/SocialLogin.vue";
-
+import {Transition } from 'vue'
 
 
 const auth = useFirebaseAuth() as Auth

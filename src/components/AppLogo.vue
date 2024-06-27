@@ -9,7 +9,7 @@
         class=" w-12  z-[999] text-white"
     >
     <span
-        class="text-5xl font-semibold tracking-wide text-custom app_name"
+        class="text-2xl font-semibold tracking-tighter text-custom-primary sm:text-3xl"
     >grace</span>
   </RouterLink>
 </template>
