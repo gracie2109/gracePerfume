@@ -160,7 +160,7 @@ import {Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious}
 import Autoplay from 'embla-carousel-autoplay';
 import AppCollections from "@/components/AppCollections.vue";
 import HeroSection from "@/components/HeroSection.vue";
-import {computed, inject, provide, ref} from "vue";
+import {provide, ref} from "vue";
 
 const plugin = Autoplay({
   delay: 5000,
