@@ -13,5 +13,21 @@ export const navigation = {
             path: 'collections',
             name: 'adminCollections',
         },
+        {
+            path: 'settings',
+            name:'adminSetting'
+        }
+    ],
+    settingNav :[
+        {
+            path: 'roles',
+            name: 'adminSettingRoleList',
+            icon:'',
+        },
+        {
+            path: 'permissions',
+            name: 'adminSettingPermissionList',
+            icon:''
+        }
     ]
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-60 group">
+  <div class="relative group">
     <img
         class="block relative h-[20rem] w-full cursor-pointer rounded-lg object-cover drop-shadow-2xl transition-opacity hover:opacity-70 relative"
         src="https://image.tmdb.org/t/p/w342/2H1TmgdfNtsKlU9jKdeNyYL5y8T.jpg"

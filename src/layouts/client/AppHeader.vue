@@ -13,6 +13,7 @@
         <nav class="hidden lg:block">
           <MenuLinks type="desktop" />
         </nav>
+
         <MenuExtras @toggle-menu="toggleMenu" />
         <div
             class="bg-custom-foreground-secondary/10 fixed right-0 top-0 w-full backdrop-blur transition-transform duration-500 md:w-2/4 lg:hidden"
@@ -30,7 +31,6 @@ import {onMounted, onUnmounted, provide, ref, watch} from "vue";
 import MenuLinks from "@/components/menu/Links.vue";
 import MenuExtras from "@/components/menu/Extras.vue";
 import AppLogo from "@/components/AppLogo.vue";
-
 
 const isOpen = ref<boolean>(false)
 const isShow = ref<boolean>(true)

@@ -6,11 +6,12 @@ import { cn } from '@/lib/utils'
 const props = defineProps<{
   class?: HTMLAttributes['class']
   variant?: AlertVariants['variant']
+  size?:AlertVariants['size']
 }>()
 </script>
 
 <template>
-  <div :class="cn(alertVariants({ variant }), props.class)" role="alert">
+  <div :class="cn(alertVariants({ variant, size }), props.class)" role="alert">
     <slot />
   </div>
 </template>
