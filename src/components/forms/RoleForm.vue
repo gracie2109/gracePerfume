@@ -121,28 +121,7 @@ function getByMethods(i:string) {
 
 
 
-const handleChooseMethods = (e: any, m: any) => {
-  const inputs = document.querySelectorAll(`button[data-method='${m}']`);
-  const data = [] as any[];
-  if (e) {
-    inputs.forEach((e) => {
-      const value = e.getAttribute("data-value") as any;
-      data.push(JSON.parse(value))
-    });
-    // const flatmap = memoFormPermission ? [...memoFormPermission, ...data].flatMap((i) => i) : [...data];
-    // form.setValue("permissions", flatmap);
-    // setCheckedMethods([...checkedMethods, m]);
-  } else {
-    inputs.forEach((e) => {
-      const value = e.getAttribute("data-value") as any
-      data.push(JSON.parse(value))
-    });
-    // const filterMethods = checkedMethods?.filter((i) => i !== m);
-    // setCheckedMethods(filterMethods);
-    // const clearPer2 = getUniquePermissions(data, memoFormPermission)
-    // form.setValue("permissions", clearPer2);
-  }
-}
+
 
 
 
