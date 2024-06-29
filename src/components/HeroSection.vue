@@ -81,7 +81,7 @@
 
   async function handleSubmit () {
     try{
-      clearErrorMessage()
+      clearTimeout(timeout)
       loading.value = true;
       const exist = await checkItemExistence('notifications','email', model.value.email);
       if(!exist){
@@ -94,7 +94,7 @@
         success.value=false;
         model.value.email="";
       }
-
+      clearErrorMessage()
     }
     catch(error){
       model.value.email="";

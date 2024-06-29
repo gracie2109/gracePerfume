@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.1",
+    "@casl/vue": "^2.2.2",
     "@fancyapps/ui": "^5.0.36",
     "@radix-icons/vue": "^1.0.0",
     "@tanstack/vue-table": "^8.17.3",

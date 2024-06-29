@@ -131,23 +131,27 @@
 <template>
   <div class="relative space-y-12 ">
     <div class="w-full overflow-hidden relative ">
-      <Carousel
-          :plugin="[plugin]"
-          :showButton="false"
-          class="relative h-full w-screen"
-          @mouseenter="plugin.stop"
-          @mouseleave="[plugin.reset(), plugin.play()];"
-      >
-        <CarouselContent class="w-full h-full">
-          <CarouselItem v-for="(i,j) in carouselImages" :key="j">
-            <img :alt="i" :src="i" class="w-full max-h-[700px]  overflow-hidden object-cover  ">
-          </CarouselItem>
-        </CarouselContent>
-        <CarouselPrevious/>
-        <CarouselNext/>
-      </Carousel>
+      <div class="relative">
+        <Carousel
+            :plugin="[plugin]"
+            :showButton="false"
+            class="relative h-full w-screen"
+            @mouseenter="plugin.stop"
+            @mouseleave="[plugin.reset(), plugin.play()];"
+        >
+          <CarouselContent class="w-full h-full">
+            <CarouselItem v-for="(i,j) in carouselImages" :key="j">
+              <img :alt="i" :src="i" class="w-full max-h-[700px]  overflow-hidden object-cover  ">
+            </CarouselItem>
+          </CarouselContent>
+          <CarouselPrevious/>
+          <CarouselNext/>
+        </Carousel>
+
+      </div>
     </div>
-   <div class="inner_page">
+
+    <div class="inner_page">
      <div class="section">  <AppCollections/>  </div>
      <div class="section">  <HeroSection />   </div> </div>
 
@@ -160,7 +164,7 @@ import {Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious}
 import Autoplay from 'embla-carousel-autoplay';
 import AppCollections from "@/components/AppCollections.vue";
 import HeroSection from "@/components/HeroSection.vue";
-import {computed, inject, provide, ref} from "vue";
+import {provide, ref} from "vue";
 
 const plugin = Autoplay({
   delay: 5000,

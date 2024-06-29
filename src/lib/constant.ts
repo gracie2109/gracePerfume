@@ -80,4 +80,7 @@ export const cloneBrands = [
     "Viktor & Rolf",
     "Xerjoff",
     "Yves Saint Laurent"
-]
+];
+
+
+export const baseMethods = ['CREATE','READ','DELETE','UPDATE']

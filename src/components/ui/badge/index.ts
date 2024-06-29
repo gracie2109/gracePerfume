@@ -15,9 +15,14 @@ export const badgeVariants = cva(
           'border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80',
         outline: 'text-foreground',
       },
+        size: {
+          small:'w-4 h-4 rounded-full',
+          default:''
+        }
     },
     defaultVariants: {
       variant: 'default',
+      size:'default'
     },
   },
 )

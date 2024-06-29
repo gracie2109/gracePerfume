@@ -64,10 +64,10 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, ref, provide, inject} from "vue";
+import {computed, ref, inject} from "vue";
 import MenuLink from "./Link.vue";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from '@/components/ui/dropdown-menu';
-import {Label} from '@/components/ui/label';
+
 import {ChevronDown} from "lucide-vue-next";
 import {useCollectionsStore} from '@/stores/collections.ts';
 // import {useBrandStore} from '@/stores/brand.ts';
@@ -106,8 +106,6 @@ const dropdownHandler: OnClickOutsideHandler = () => {
   listBrandByChar.value=[]
 }
 
-const test= inject('test');
-console.log("test inject", test)
 
 
 
