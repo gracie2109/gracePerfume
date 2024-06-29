@@ -190,7 +190,6 @@ provide('test', name.value);
   }
 
   .inner_page{
-    background-image: url("/src/assets/images/background.svg");
     position: relative;
     top: -3rem
   }

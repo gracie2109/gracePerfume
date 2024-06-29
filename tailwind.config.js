@@ -59,9 +59,10 @@ module.exports = {
         "custom-tertiary": "#e53170",
         "custom-accent": "#f25f4c",
         "custom-success":'#22C55E',
-        "cara-secondary":"#0f1b2e",
-        "cara-primary":"#0a0f19",
-        "cara-blue":"#1b55ac"
+        "cara-secondary":"#112035",
+        "cara-primary":"#0f172a",
+        "cara-blue":"#38bdf8",
+        'cara-border':'#2d364a'
       },
       borderRadius: {
       	xl: "calc(var(--radius) + 4px)",
