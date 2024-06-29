@@ -12,11 +12,17 @@ export const alertVariants = cva(
         default: 'bg-background text-foreground',
         destructive:
           'border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive',
-          success: 'bg-custom-success text-white border-none'
+          success: 'bg-custom-success text-white border-none',
+          alert:'text-custom-primary text-white border-none'
       },
+        size:{
+          small: 'max-w-md',
+            auto:''
+        }
     },
     defaultVariants: {
       variant: 'default',
+        size:'auto'
     },
   },
 )

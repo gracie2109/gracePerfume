@@ -89,3 +89,55 @@ export function getBrandsByCharacter(data:string[],letter:string) {
   });
   return brandMap.get(letter.toUpperCase()) || [];
 }
+
+
+export  function groupByPermissions(data: any[]) {
+  console.log("groupByPermissions", data)
+  const response: any[] = [];
+  const groupedData: any = {};
+  if (!data) return [];
+
+  data.forEach((item) => {
+    const permissionName = item.name.split('.')[1];
+    const perName = item.name.split('.')[2];
+    if (!groupedData[permissionName]) {// @ts-ignore
+      groupedData[permissionName] = new Set<string>();
+    }// @ts-ignore
+    groupedData[permissionName].add(perName);
+  });
+
+  const allPerNames = new Set<string>();
+  for (const permissionName in groupedData) {
+    for (const perName of groupedData[permissionName]) {
+      // @ts-ignore
+      allPerNames.add(perName);
+    }
+  }
+
+  const sortedPerNames = Array.from(allPerNames);
+
+  for (const permissionName in groupedData) {
+    const permissionArray: (string | null)[] = [];
+    for (const perName of sortedPerNames) {// @ts-ignore
+      permissionArray.push(groupedData[permissionName].has(perName) ? perName : null);
+    }
+    const permissionItemArray = permissionArray.map((perName) => {
+      const foundItem = data.find((item) => item.name.split('.')[1] === permissionName && item.name.split('.')[2] === perName);
+      const newItem = {...foundItem, indentity: permissionName}
+      return foundItem ? newItem : null;
+    });// @ts-ignore
+    // @ts-ignore
+    const permissionObject = {
+      // @ts-ignore
+      [permissionName]: permissionItemArray,
+
+    };
+    response.push(permissionObject);
+  }
+  return response
+}
+
+export function truncateText(text:string, maxLength: number){
+    const newText = text.slice(0, maxLength);
+    return `${newText}...`;
+}

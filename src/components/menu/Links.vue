@@ -106,8 +106,6 @@ const dropdownHandler: OnClickOutsideHandler = () => {
   listBrandByChar.value=[]
 }
 
-const test= inject('test');
-console.log("test inject", test)
 
 
 
