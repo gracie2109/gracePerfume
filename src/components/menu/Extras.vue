@@ -23,10 +23,8 @@ import {Separator} from '@/components/ui/separator';
 import {Search } from "lucide-vue-next"
 import {useCurrentUser} from "vuefire";
 import CartMenu from "@/components/menu/CartMenu.vue";
-
 const emit = defineEmits(['toggleMenu']);
 
 const user = useCurrentUser()
-
 </script>
 

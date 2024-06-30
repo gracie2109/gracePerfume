@@ -9,6 +9,11 @@ export type IPermissionsHandle = {
     methods: string[];
 }
 
+export type IPermissions = {
+    name: string;
+    methods: string[];
+    id:string
+}
 
 
 

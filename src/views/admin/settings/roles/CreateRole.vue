@@ -7,29 +7,29 @@
       }
 ]"/>
 
-  <RoleForm :form="form"  :loading="false" @on-submit="onSubmit"/>
+  <RoleForm :loading="loading" @on-submit="onSubmit" :endTask="endTask" />
 
 </template>
+
+
+
 <script setup lang="ts">
 import PageHeader from "@/components/PageHeader.vue";
 import RoleForm from "@/components/forms/RoleForm.vue";
-import {useForm} from "vee-validate";
+import { toRef, ref} from "vue";
+import {useRoles} from "@/stores/roles"
+import { storeToRefs } from "pinia";
+
+import { } from 'firebase/firestore'
+
+const roleStore = useRoles()
+const {loading, endTask} = storeToRefs(roleStore)
 
 
-
-
-const form = useForm({
-
-})
-
-
-
-
-
-const onSubmit = form.handleSubmit(async (values:any) => {
- console.log('submit', values)
-})
-
+ async function onSubmit(values: any) {
+  const refss = toRef(values)
+  await roleStore.createRole(refss.value)
+}
 
 
 </script>

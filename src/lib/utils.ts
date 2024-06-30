@@ -92,7 +92,6 @@ export function getBrandsByCharacter(data:string[],letter:string) {
 
 
 export  function groupByPermissions(data: any[]) {
-  console.log("groupByPermissions", data)
   const response: any[] = [];
   const groupedData: any = {};
   if (!data) return [];
@@ -115,7 +114,6 @@ export  function groupByPermissions(data: any[]) {
   }
 
   const sortedPerNames = Array.from(allPerNames);
-
   for (const permissionName in groupedData) {
     const permissionArray: (string | null)[] = [];
     for (const perName of sortedPerNames) {// @ts-ignore
@@ -134,10 +132,62 @@ export  function groupByPermissions(data: any[]) {
     };
     response.push(permissionObject);
   }
-  return response
+  return {
+    data: response || [],
+    methods:sortedPerNames||[]
+  }
 }
 
 export function truncateText(text:string, maxLength: number){
     const newText = text.slice(0, maxLength);
     return `${newText}...`;
 }
+
+
+export function getUniquePermissions(array1: any, array2: any) {
+  if(!(array1 && array2)) return [];
+  const setA = new Set(array1?.map((item: any) => item?.id));
+  const uniqueElements = array2?.filter((item: any) => {
+      if (!setA.has(item?.id)) {
+          setA.add(item?.name);
+          return item;
+      }
+  });
+
+  return uniqueElements;
+}
+
+
+export const getQuantityOfPermission = (data: any[]) => {
+  if (!data) return null;
+  const dataname = data?.map((i) => i.name?.split('.')?.at(-1));
+  return dataname.reduce((acc, curr) => {
+      acc[curr] = (acc[curr] || 0) + 1;
+      return acc;
+  }, {});
+}
+
+
+export function matchingTwoObject(obj1: any, ob2: any): any[] {
+  if (!(obj1 || ob2)) return []
+  else {
+      const matchingKeys = [];
+      const keys1 = Object.keys(obj1);
+      const keys2 = Object.keys(ob2);
+
+      for (const key of keys1) {
+          if (keys2.includes(key) && obj1[key] === ob2[key]) {
+              matchingKeys.push(key);
+          }
+      }
+      return matchingKeys;
+  }
+}
+
+
+export const reduceData = (data: any) => {
+  return data.reduce((acc: any, curr: any) => {
+    acc[curr] = (acc[curr] || 0) + 1;
+    return acc;
+  }, {});
+};
