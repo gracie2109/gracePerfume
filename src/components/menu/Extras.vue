@@ -3,7 +3,6 @@
     <CartMenu />
     <button class="flex items-center gap-x-2" type="button">
       <Search :size="20" stroke-width="1.5"/>
-      <p class="hidden md:block">Search</p>
     </button>
 
     <Separator class="hidden !h-5 lg:block" orientation="vertical"/>
@@ -21,14 +20,11 @@
 import BaseAvatar from "@/components/base/avatar/Avatar.vue";
 import MenuButton from "@/components/menu/Button.vue";
 import {Separator} from '@/components/ui/separator';
-import {Button} from "@/components/ui/button"
 import {Search } from "lucide-vue-next"
 import {useCurrentUser} from "vuefire";
 import CartMenu from "@/components/menu/CartMenu.vue";
-
 const emit = defineEmits(['toggleMenu']);
 
 const user = useCurrentUser()
-
 </script>
 

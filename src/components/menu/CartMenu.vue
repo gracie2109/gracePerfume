@@ -1,18 +1,17 @@
 <template>
-  <Sheet class="min-h-screen overflow-y-auto !p-6" :open='open'>
-    <SheetTrigger @click="open = !open" >
+  <Sheet class="min-h-screen overflow-y-auto !p-6" >
+    <SheetTrigger>
       <div class="relative">
         <ShoppingCart :size="24" class="relative z-[10]" stroke-width="1.5"/>
         <span
             class="absolute text-[12px] font-semibold  -top-1 z-[12] bg-slate-200 w-4 h-4 text-red-600 rounded-full">12</span>
-
       </div>
     </SheetTrigger>
     <SheetContent>
      <SheetHeader class="absolute top-3 font-semibold text-sm hover:underline hover:cursor-pointer"
-     @click.prevent="() => {
+     @click="() => {
        $router.push('/cart');
-       open=false
+       closeSheet()
      }"
      >Your cart (10) </SheetHeader>
       <div class="relative top-5  h-screen overflow-y-auto">
@@ -40,12 +39,19 @@
 </template>
 <script setup lang="ts">
 import {ChevronsRight, ShoppingCart} from "lucide-vue-next";
-import {Sheet, SheetContent, SheetHeader, SheetTrigger} from "@/components/ui/sheet";
+import {Sheet, SheetContent, SheetHeader, SheetTrigger, } from "@/components/ui/sheet";
 import {Button} from "@/components/ui/button";
 import CartItem from "@/components/card/CartItem.vue";
-import {formatPrice} from "../../lib/utils.ts";
+import {formatPrice} from "@/lib/utils.ts";
 import {ref} from "vue";
-const open = ref(false)
+const open = ref(false);
+
+function closeSheet () {
+  open.value = !open.value
+}
+
+
+
 </script>
 
 <style scoped>

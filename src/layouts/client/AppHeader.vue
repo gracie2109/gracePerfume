@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, onUnmounted, provide, ref, watch} from "vue";
+import {onMounted, onUnmounted, provide, ref, watch, inject} from "vue";
 import MenuLinks from "@/components/menu/Links.vue";
 import MenuExtras from "@/components/menu/Extras.vue";
 import AppLogo from "@/components/AppLogo.vue";
@@ -36,8 +36,13 @@ const isOpen = ref<boolean>(false)
 const isShow = ref<boolean>(true)
 const lastScrollTop = ref<number>(0)
 let timeout: ReturnType<typeof setTimeout>
-
+const openSheet = ref<string>("testttttttttttttt")
 provide('isOpen', isOpen)
+provide('openSheet', openSheet);
+provide('test_in_parent', 'test_in_parent_value');
+
+const getFormChild = inject('test_in_child')
+console.log("getFormChild", getFormChild);
 
 watch(isOpen, (value) => {
   if (value) document.addEventListener('click', detectClickOutside)

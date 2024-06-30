@@ -35,9 +35,12 @@ const router = useRouter()
 const displayName = ref<string | null>(null)
 
 onMounted(() => {
+  if(user.value){
+    displayName.value = user.value?.displayName && user.value?.displayName?.length >=1 ? user.value?.displayName : user?.value.email
+  }
+});
 
-  displayName.value = user.value?.displayName || user.value?.email || null
-})
+console.log( user.value?.displayName)
 
 async function logout() {
   try {

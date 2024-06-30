@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, ref, inject} from "vue";
+import {computed, ref} from "vue";
 import MenuLink from "./Link.vue";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from '@/components/ui/dropdown-menu';
 

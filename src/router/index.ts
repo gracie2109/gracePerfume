@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import AdminLayout from "@/layouts/admin/AdminLayout.vue";
-import HomeView from "../views/app/HomeView.vue"
 import ClientLayout from "@/layouts/client/Layout.vue";
+import HomeView from "@/views/app/HomeView.vue";
 import AuthLayout from "@/layouts/auth/Layout.vue";
+import AdminLayout from "@/layouts/admin/AdminLayout.vue";
 import AdminSettingLayout from "@/layouts/admin/AdminSettingLayout.vue";
-import NotFoundComponent from "@/components/NotFoundComponent.vue"
+import NotFoundComponent from "@/components/NotFoundComponent.vue";
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -22,6 +22,12 @@ const router = createRouter({
                     path: 'cart',
                     component: () => import('@/views/app/Cart.vue'),
                     name: 'cart',
+
+                },
+                {
+                    path: 'checkout',
+                    component: () => import('@/views/app/checkout/Index.vue'),
+                    name: 'checkout',
 
                 }
             ]
@@ -120,6 +126,8 @@ const router = createRouter({
 
         { path: '/:pathMatch(.*)', component: NotFoundComponent }
     ]
-})
+});
+
+
 
 export default router
