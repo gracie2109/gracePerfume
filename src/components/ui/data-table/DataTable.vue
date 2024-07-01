@@ -57,7 +57,9 @@ const table = useVueTable({
   getSortedRowModel: getSortedRowModel(),
   getFacetedRowModel: getFacetedRowModel(),
   getFacetedUniqueValues: getFacetedUniqueValues(),
-  getFilteredRowModel: getFilteredRowModel()
+  getFilteredRowModel: getFilteredRowModel(),
+
+
 })
 const rerender = () => {
   data.value = [...props.data]
@@ -66,6 +68,22 @@ const rerender = () => {
 watchEffect(() => {
   return rerender()
 })
+
+const state = ref({
+  ...table.initialState,
+})
+
+const setState = (updater:any) => {
+  state.value = updater instanceof Function ? updater(state.value) : updater
+} 
+table.setOptions(prev => ({
+  ...prev, //preserve any other options that we have set up above
+  get state() {
+    return state.value
+  },
+  onStateChange: setState //any state changes will be pushed up to our own state management
+}))
+
 </script>
 
 <template>
