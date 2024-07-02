@@ -25,7 +25,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 interface DataTableViewOptionsProps {
-  table: Table<any>
+  table: Table<any>,
+  createNewLink?:string
 }
 
 const props = defineProps<DataTableViewOptionsProps>()
@@ -64,7 +65,7 @@ const selectedLength = computed(() => {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-    <Button size="sm" variant="outline" @click="$router.push('/admin/brands/create')">
+    <Button size="sm" variant="outline" @click="$router.push(String(props.createNewLink))">
       <PlusCircle class="mr-2 h-4 w-4" />
       Create
     </Button>

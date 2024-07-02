@@ -1,9 +1,12 @@
 <template>
-  <transition name="fade" mode="out-in">
-    <router-view></router-view>
+  <router-view v-slot="{ Component }">
+  <transition  name="fade" mode="out-in">
+    <component :is="Component" />
   </transition>
-  <Toaster position="top-right" rich-colors  />
+</router-view>
+<Toaster position="top-right" rich-colors  />
 </template>
+
 <script setup lang="ts">
 import { Toaster } from '@/components/ui/sonner';
 

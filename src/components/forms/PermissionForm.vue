@@ -28,12 +28,12 @@
             </FormLabel>
           </div>
 
-          <div class="flex  gap-3 " >
+           <div class="flex  gap-3 " >
             <FormField v-for="item in baseMethods" v-slot="{ value, handleChange }" :key="item" type="checkbox" :value="item" :unchecked-value="false" name="methods">
               <FormItem class="flex flex-row items-center space-x-3 space-y-0">
                 <FormControl>
                   <Checkbox
-                      :checked="value.includes(item)"
+                      :checked="value.includes(item) || value"
                       @update:checked="handleChange"
                   />
                 </FormControl>
@@ -96,6 +96,7 @@ watch(props.form.values, () => {
   if(name && methods.length> 0) allPermission.value = store.modifyData({name, methods})
   else allPermission.value = null
 })
+
 
 
 

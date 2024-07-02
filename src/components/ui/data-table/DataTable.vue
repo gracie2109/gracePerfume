@@ -23,6 +23,7 @@ interface DataTableProps {
   data: any[],
   searchableColumns?: DataTableSearchableColumn<any>[],
   filterableColumns?:DataTableFilterableColumn<any>[],
+  createNewLink?:string
 }
 
 const props = defineProps<DataTableProps>()
@@ -57,7 +58,9 @@ const table = useVueTable({
   getSortedRowModel: getSortedRowModel(),
   getFacetedRowModel: getFacetedRowModel(),
   getFacetedUniqueValues: getFacetedUniqueValues(),
-  getFilteredRowModel: getFilteredRowModel()
+  getFilteredRowModel: getFilteredRowModel(),
+
+
 })
 const rerender = () => {
   data.value = [...props.data]
@@ -66,6 +69,9 @@ const rerender = () => {
 watchEffect(() => {
   return rerender()
 })
+
+
+
 </script>
 
 <template>
@@ -74,6 +80,7 @@ watchEffect(() => {
               :table="table"
               :searchableColumns="props.searchableColumns"
               :filterableColumns="props.filterableColumns"
+              :createNewLink="props.createNewLink"
     />
     <div class="rounded-md border">
       <Table>
@@ -112,6 +119,6 @@ watchEffect(() => {
       </Table>
     </div>
 
-    <DataTablePagination :table="table"/>
+    <DataTablePagination :table="table" />
   </div>
 </template>
