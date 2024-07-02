@@ -54,7 +54,6 @@
                             <TableCell>
                               <div class="flex items-center gap-x-3">
                                 <CustomAlerDialog :title="`Delete ${m.name}`" trigger-text="Delete" @on-confirm="deleteItem(m)" />
-
                               </div>
                             </TableCell>
                           </template>
@@ -83,7 +82,7 @@
 import { usePermissionStore } from "@/stores/permissions";
 import { storeToRefs } from "pinia";
 import PageHeader from "@/components/PageHeader.vue";
-import { computed, ref } from "vue";
+import {computed, ref} from "vue";
 import { Table, TableBody, TableRow, TableCell, TableHead, TableHeader } from "@/components/ui/table"
 import { groupByPermissions } from "@/lib/utils"
 import { Button } from "@/components/ui/button";
@@ -132,4 +131,6 @@ const deleteItem = async (item: any) => {
 
   await perStore.deletePermissions(item.id)
 }
+
+
 </script>

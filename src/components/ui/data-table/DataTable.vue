@@ -23,6 +23,7 @@ interface DataTableProps {
   data: any[],
   searchableColumns?: DataTableSearchableColumn<any>[],
   filterableColumns?:DataTableFilterableColumn<any>[],
+  createNewLink?:string
 }
 
 const props = defineProps<DataTableProps>()
@@ -69,20 +70,7 @@ watchEffect(() => {
   return rerender()
 })
 
-const state = ref({
-  ...table.initialState,
-})
 
-const setState = (updater:any) => {
-  state.value = updater instanceof Function ? updater(state.value) : updater
-} 
-table.setOptions(prev => ({
-  ...prev, //preserve any other options that we have set up above
-  get state() {
-    return state.value
-  },
-  onStateChange: setState //any state changes will be pushed up to our own state management
-}))
 
 </script>
 
@@ -92,6 +80,7 @@ table.setOptions(prev => ({
               :table="table"
               :searchableColumns="props.searchableColumns"
               :filterableColumns="props.filterableColumns"
+              :createNewLink="props.createNewLink"
     />
     <div class="rounded-md border">
       <Table>
@@ -130,6 +119,6 @@ table.setOptions(prev => ({
       </Table>
     </div>
 
-    <DataTablePagination :table="table"/>
+    <DataTablePagination :table="table" />
   </div>
 </template>

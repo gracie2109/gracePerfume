@@ -31,10 +31,6 @@ export const usePermissionStore = defineStore("permission", () => {
   });
   const permissions = useCollection(collection(db, "permissions"));
   const detailPermission: Ref<any | undefined> = ref(undefined);
-  const detailRef:Ref<any> = ref({
-    name: 'string',
-    methods: []
-  });
 
 
 
@@ -113,7 +109,6 @@ export const usePermissionStore = defineStore("permission", () => {
     permissions,
     loading,
     detailPermission,
-    detailRef,
     createNewPermission,
     modifyData,
     deletePermissions,

@@ -1,12 +1,10 @@
 import { ref, type Ref } from "vue";
 import { defineStore } from "pinia";
-import { collection, addDoc } from "firebase/firestore";
+import {collection, addDoc, doc, getDoc} from "firebase/firestore";
 import { useCollection, useFirestore } from "vuefire";
 import { checkItemExistence } from "@/lib/utils";
 import { toast } from "vue-sonner";
 import { IPermissions } from "./permissions";
-import { permission } from "process";
-import { Database } from "firebase/database";
 
 export type IRoles = {
   name: string;
@@ -22,7 +20,7 @@ export const useRoles = defineStore("role", () => {
   });
 
   const endTask: Ref<boolean> = ref(false);
-  const roles = useCollection(collection(db, "roles"));
+  const roles:Ref<any | null>= ref(null)
 
   const createRole = async (value: IRoles) => {
     try {
@@ -49,13 +47,43 @@ export const useRoles = defineStore("role", () => {
     }
   };
 
-  function getAllRoles() {
-    const permissions = useCollection(collection(db, "permissions"));
-    const roleRef = useCollection(collection(db, "roles"));
 
-    console.log("dalll", permissions.value);
-    roles.value = [];
-  }
+  const fetchPermissionsDetail = async () => {
+    const rolesData = await useCollection(collection(db, "roles"));
+    let permissionsDetail:any = []
+    for (let role of rolesData.value) {
 
-  return { createRole, getAllRoles, loading, errors, endTask, roles };
+      for (let permissionId of role.permissions) {
+        const docRef = await doc(db, 'permissions', permissionId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          permissionsDetail.push({ ...role, permission:[{...docSnap.data()}] });
+        } else {
+          console.log('No such document!');
+        }
+      }
+
+    }
+    roles.value= permissionsDetail
+  };
+  const fetchPermissionsDetail2 = async () => {
+    const rolesDataSnapshot = await useCollection(collection(db, "roles"));
+      const rolesData:any= []
+    for (let role of rolesDataSnapshot.value) {
+
+      for (let permissionId of role.permissions) {
+        const docRef = doc(db, 'permissions', permissionId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          rolesData.push({ id: permissionId, ...docSnap.data() });
+        } else {
+          console.log('No such document!');
+        }
+      }
+    }
+
+    roles.value = rolesData;
+  };
+
+  return { createRole, fetchPermissionsDetail, fetchPermissionsDetail2,loading, errors, endTask, roles };
 });

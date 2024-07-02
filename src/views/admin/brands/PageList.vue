@@ -3,6 +3,7 @@
   <DataTable
       :columns="newColumn"
       :data="brands"
+      :createNewLink="'/admin/brands/create'"
       :searchableColumns="[
           {
             title: 'Brand name',
