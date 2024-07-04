@@ -1,6 +1,6 @@
 import { ref, type Ref } from "vue";
 import { defineStore } from "pinia";
-import {collection, addDoc, doc, getDoc} from "firebase/firestore";
+import {collection, addDoc, doc, getDoc, deleteDoc} from "firebase/firestore";
 import { useCollection, useFirestore } from "vuefire";
 import { checkItemExistence } from "@/lib/utils";
 import { toast } from "vue-sonner";
@@ -85,5 +85,16 @@ export const useRoles = defineStore("role", () => {
     roles.value = rolesData;
   };
 
-  return { createRole, fetchPermissionsDetail, fetchPermissionsDetail2,loading, errors, endTask, roles };
+  const deleteRole = async(id: string) => {
+    try {
+      loading.value = true;
+        await deleteDoc(doc(db, 'roles', id))
+            .then(() => toast.success('Delete success'))
+    } catch (e) {
+      console.log("error", e);
+    } finally {
+      loading.value = false;
+    }
+  }
+  return { deleteRole,createRole, fetchPermissionsDetail, fetchPermissionsDetail2,loading, errors, endTask, roles };
 });

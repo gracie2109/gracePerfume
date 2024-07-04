@@ -1,18 +1,16 @@
 <template>
-  <div class="client_body min-h-screen">
+  <div class="client_body min-h-screen ">
     <AppHeader />
 
-    <main class="relative ">
-      <router-view></router-view>
+    <main :class="clsx('relative',{ 'top-24': route.name !== 'home'     })">
+        <router-view></router-view>
     </main>
 
-
-
-<!--   <div class="relative">-->
-<!--     <AppFooter />-->
-<!--   </div>-->
   </div>
 </template>
 <script setup lang="ts">
-import AppHeader  from "./AppHeader.vue"
+import AppHeader  from "./AppHeader.vue";
+import {useRoute} from 'vue-router';
+import {clsx} from 'clsx'
+const route = useRoute();
 </script>

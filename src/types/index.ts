@@ -17,3 +17,11 @@ export interface DataTableFilterableColumn<TData>
     options: Option[]
 }
 
+export type IFilterModel ={
+    brands: [],
+    price:{
+        min:number,
+        max:number
+    },
+    attributes:[]
+}

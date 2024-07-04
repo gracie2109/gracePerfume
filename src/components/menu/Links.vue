@@ -1,5 +1,8 @@
 <template>
-  <ul :class="[`flex relative ${navLinksClass}`] ">
+  <ul :class="clsx(`flex relative font-semibold  ${navLinksClass}`,{
+    'text-white': route.name === 'home',
+    'text-primary': route.name !== 'home'
+  }) ">
     <MenuLink v-for="link in links" :key="link.text" :link="link"/>
     <!--collections-->
     <DropdownMenu>
@@ -10,9 +13,8 @@
       <DropdownMenuContent class="w-40 ">
 
         <template v-if="collections">
-
           <DropdownMenuItem v-for="(i,j) in collections" :key="j">
-            <router-link :to="`/collections/${i.name}`" class="capitalize cursor-pointer">{{ i.name }}</router-link>
+            <router-link :to="`/collection/${i.name}`" class="capitalize cursor-pointer">{{ i.name }}</router-link>
           </DropdownMenuItem>
         </template>
       </DropdownMenuContent>
@@ -20,13 +22,15 @@
 
     <!--brands-->
     <div class="relative">
-      <div class="brands relative flex gap-2" @click.stop="handleOpen" >
+      <div class="brands relative flex gap-2 cursor-pointer" @click.stop="handleOpen" >
         <p>Brands</p>
         <ChevronDown :class="clsx({  'rotate-[180deg] transition all duration-200': openBrands})"/>
       </div>
+
       <div v-if='openBrands'
-           class="absolute -left-[40rem] top-10  bg-white  min-h-12  will-change-auto w-[80vw]  rounded-lg ">
+           class="absolute -left-[40rem] top-10  bg-white border-2 p-3  min-h-12  will-change-auto w-[80vw]  rounded-lg ">
         <div class="flex gap-3 p-2 ">
+
           <div class="flex items-center">
             <input id="all" class="hidden" name="brand" type="radio" value="all" @change="changeBrand('all')">
             <label :class="clsx({'active': !currentBrands || currentBrands=== 'all'})" class=" label_custom" for="all">All</label>
@@ -67,25 +71,24 @@
 import {computed, ref} from "vue";
 import MenuLink from "./Link.vue";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from '@/components/ui/dropdown-menu';
-
 import {ChevronDown} from "lucide-vue-next";
 import {useCollectionsStore} from '@/stores/collections.ts';
-// import {useBrandStore} from '@/stores/brand.ts';
 import {storeToRefs} from "pinia";
 import {clsx} from "clsx"
 import {getAllAlphabet, getBrandsByCharacter, groupBrands} from "@/lib/utils.ts";
-import {cloneBrands} from "@/lib/constant.ts";
 import type { OnClickOutsideHandler } from '@vueuse/core'
-
+import {useBrandStore} from "@/stores/brand.ts";
+import {useRoute} from "vue-router"
 
 const collectionStore = useCollectionsStore();
 const {collections} = storeToRefs(collectionStore)
-// const brandStore = useBrandStore();
+const brandStore = useBrandStore();
+const route = useRoute()
 
-// const {brands} = storeToRefs(brandStore);
+const {brands} = storeToRefs(brandStore);
 
-// console.log(brands.value)
-const newBrands = computed(() => groupBrands(cloneBrands))
+
+const newBrands = computed(() =>brands.value ? groupBrands(brands.value.map((i) => i.name)) : [])
 const alphabet = getAllAlphabet();
 const openBrands = ref<boolean>(false)
 
@@ -98,7 +101,7 @@ function handleOpen() {
 
 function changeBrand(brand: string) {
   currentBrands.value = brand;
-  listBrandByChar.value = getBrandsByCharacter(cloneBrands, brand)
+  listBrandByChar.value = getBrandsByCharacter(newBrands.value, brand)
 }
 
 const dropdownHandler: OnClickOutsideHandler = () => {

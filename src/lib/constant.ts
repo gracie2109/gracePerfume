@@ -5,82 +5,22 @@ import image4 from "@/assets/images/sliders/4.jpg"
 import image5 from "@/assets/images/sliders/5.jpg";
 
 
-export const carouselImages = [  image1,image2,image3,image4,image5];
 
 
-export const cloneBrands = [
-    "Afnan",
-    "Alaia Paris",
-    "Alexandria Fragrances",
-    "Amouage",
-    "Angela Ciampagna",
-    "Argos",
-    "Armaf",
-    "Astrophil & Stella",
-    "Atelier des Ors",
-    "Attar Collection",
-    "BDK",
-    "BornToStandOut",
-    "Burberry",
-    "By Kilian",
-    "Byredo",
-    "Carner Barcelona",
-    "Chanel",
-    "Chloé",
-    "City Rhythm",
-    "Creed",
-    "Dior",
-    "Diptyque",
-    "Dolce & Gabbana",
-    "DS&Durga",
-    "Elizabeth Arden",
-    "Franck Boclet",
-    "Giardini Di Toscana",
-    "Giorgio Armani",
-    "Gucci",
-    "Imaginary Authors",
-    "Initio Parfums Prives",
-    "Jean Paul Gaultier",
-    "Juliette Has A Gun",
-    "Lalique",
-    "Le Labo",
-    "Les Liquides Imaginaires",
-    "Les Soeurs de Noe",
-    "Loewe",
-    "L'Orchestre",
-    "Mad et Len",
-    "Maison Francis Kurkdjian",
-    "Maison Martin Margiela",
-    "Maison Matine",
-    "Mancera",
-    "Marc Jacobs",
-    "Marie Jeanne",
-    "Matiere Premiere",
-    "Montale",
-    "MontBlanc",
-    "Mugler",
-    "NARCISO RODRIGUEZ",
-    "Nasomatto",
-    "NISHANE",
-    "ONCE",
-    "Ormonde Jayne",
-    "Orto Parisi",
-    "Paco Rabanne",
-    "Parfums De Marly",
-    "Roja Dove",
-    "Salvatore Ferragamo",
-    "Tamburins",
-    "The Merchant of Venice",
-    "Theodoros Kalotinis",
-    "Thomas Kosmala",
-    "Tom Ford",
-    "Valentino",
-    "Van Cleef & Arpels",
-    "Versace",
-    "Viktor & Rolf",
-    "Xerjoff",
-    "Yves Saint Laurent"
-];
+export const carouselImages = [image1,image2,image3,image4,image5];
 
 
-export const baseMethods = ['CREATE','READ','DELETE','UPDATE']
+export const baseMethods = ['CREATE','READ','DELETE','UPDATE'];
+
+
+export const baseAttribute = ['10ml','20ml','75ml', '90ml','110ml'];
+
+export const baseFilter = [
+    {  value: 'newest', name:'Newest' },
+    {  value: 'ads', name:'Lower price' },
+    {  value: 'esc', name:'Higher price' },
+    {  value: 'nameAsd', name:'Name: A-Z' },
+    {  value: 'nameEsc', name:'Name: Z-A' },
+    {  value: 'oldest', name:'Oldest' },
+    {  value: 'best_selling', name:'Best selling' },
+]

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-cara-secondary p-5 rounded-md">
+  <div class="border bg-white p-5 rounded-md">
 
   <div class="relative flex gap-3 container justify-between">
     <div class="">
