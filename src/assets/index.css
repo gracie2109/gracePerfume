@@ -86,6 +86,9 @@
         will-change: auto;
 
     }
+    ul{
+        list-style-type: disc;
+    }
 }
 @layer components {
 

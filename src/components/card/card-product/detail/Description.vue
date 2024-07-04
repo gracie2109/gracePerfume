@@ -1,0 +1,1 @@
+<template>COmp1</template>

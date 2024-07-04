@@ -15,7 +15,9 @@
             })"
               class="capitalize font-semibold text-xl "
 
-        >{{ i.name }}</div>
+        >
+            {{ i.name }}
+        </div>
           </div>
         </template>
         <template v-else>

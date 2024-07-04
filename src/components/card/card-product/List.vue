@@ -1,12 +1,14 @@
 <template>
   <div class="relative group">
-    <img
-        class="block relative h-[20rem] w-full cursor-pointer rounded-lg object-cover drop-shadow-2xl transition-opacity hover:opacity-70 relative"
-        src="https://image.tmdb.org/t/p/w342/2H1TmgdfNtsKlU9jKdeNyYL5y8T.jpg"
-        alt="title"
-        role="link"
-    />
+    <RouterLink :to="`/product/this-is-slug`">
+      <img
+          class="block relative h-[20rem] w-full cursor-pointer rounded-lg object-cover drop-shadow-2xl transition-opacity hover:opacity-70 relative"
+          src="https://image.tmdb.org/t/p/w342/2H1TmgdfNtsKlU9jKdeNyYL5y8T.jpg"
+          alt="title"
+          role="link"
+      />
 
+    </RouterLink>
     <div class="ribbon" v-if="!hasSale"><span>30%</span></div>
     <div class="absolute group hidden bottom-0 w-full p-5 group-hover:block bg-white/30 backdrop-blur-sm rounded-sm">
 

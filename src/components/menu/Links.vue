@@ -1,5 +1,5 @@
 <template>
-  <ul :class="clsx(`flex relative font-semibold  ${navLinksClass}`,{
+  <ul :class="clsx(`flex relative font-semibold list-none ${navLinksClass}`,{
     'text-white': route.name === 'home',
     'text-primary': route.name !== 'home'
   }) ">
@@ -156,16 +156,11 @@ const navLinksClass = computed<string>(() => {
   cursor: pointer
 }
 
-.active {
-  background-color: red;
-  color: white;
-  border: none;
-  outline: none
-}
 
 .list_brands {
   color: black;
   margin-top: 12px;
   padding: 5px
 }
+
 </style>
