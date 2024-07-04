@@ -26,7 +26,7 @@ import type {ColumnDef} from "@tanstack/vue-table";
 import {Checkbox} from "@/components/ui/checkbox";
 import DataTableColumnHeader from "@/components/ui/data-table/DataTableColumnHeader.vue";
 import DataTable from "@/components/ui/data-table/DataTable.vue"
-import BrandRowAction from "@/components/RowAction/BrandRowAction.vue";
+import RoleRowAction from "@/components/RowAction/RoleRowAction.vue";
 const roleStore = useRoles();
  const {roles} = storeToRefs(roleStore);
 
@@ -72,7 +72,7 @@ const column: ColumnDef<any>[] = reactive([
   // },
   {
     id: 'actions',
-    cell: ({row}) => h(BrandRowAction, {row}),
+    cell: ({row}) => h(RoleRowAction, {row}),
   },
 ])
 

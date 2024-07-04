@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge'
 import { getDocs, collection, query, where } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
 import type { Updater } from '@tanstack/vue-table'
-import type { Ref } from 'vue'
+import type { Ref } from 'vue';
 
 
 export function cn(...inputs: ClassValue[]) {
@@ -49,17 +49,12 @@ export const profitAndMarginAlg = (sale_price:number, cost_price: number,  pusch
 
 export function formatPrice(
     price: number | string,
-    options: {
-      currency?: "USD" | "EUR" | "GBP" | "BDT" | "VND"
-      notation?: Intl.NumberFormatOptions["notation"]
-    } = {}
 ) {
-  const {currency = "VND", notation = "standard"} = options
   if (price == "undefined") return
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",
-    currency,
-    notation,
+    currency:"VND",
+    notation:'standard',
   }).format(Number(price))
 }
 
@@ -191,3 +186,8 @@ export const reduceData = (data: any) => {
     return acc;
   }, {});
 };
+
+
+export function arraysEqual(arr1:any, arr2:any) {
+  return JSON.stringify(arr1) === JSON.stringify(arr2);
+}

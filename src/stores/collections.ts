@@ -1,9 +1,10 @@
 import { ref, type Ref} from 'vue'
 import { defineStore } from 'pinia'
-import { collection, addDoc } from 'firebase/firestore'
-import { useCollection, useFirestore,  } from 'vuefire'
+import {collection, addDoc, doc, deleteDoc} from 'firebase/firestore'
+import {useCollection, useDocument, useFirestore,} from 'vuefire'
 import { checkItemExistence } from '@/lib/utils';
 import { toast } from 'vue-sonner'
+import {getFirestore} from "@firebase/firestore";
 export type IBrands = {
     name: string;
     description: string | undefined;
@@ -19,7 +20,7 @@ export const useCollectionsStore = defineStore('collection',  () => {
     const collections =  useCollection(collection(db, 'collections'))
     const loading:Ref<boolean> = ref(false)
     const errors:Ref<{message: String, code: String}> = ref({message: "", code: ""})
-
+    const detail:Ref<any | undefined> = ref(undefined)
 
     const createNewCollection = async (value: Omit<IBrands, "id">) => {
         try{
@@ -44,10 +45,30 @@ export const useCollectionsStore = defineStore('collection',  () => {
     }
 
 
-
+    const getDetailCollection = async (id: string) => {
+        const brandDoc = await doc(getFirestore(), 'collections', id)
+        const dt = await useDocument(brandDoc)
+        return detail.value = dt;
+    }
 
     const resetForm = () => {
 
     };
-    return { collections,  createNewCollection, errors, loading, resetForm}
+
+
+    const deleteCollection = async(id:string) => {
+        try {
+            loading.value = true;
+            await deleteDoc(doc(db, 'collections', id))
+                .then(() => toast.success('Delete success'))
+        } catch (e) {
+            console.log("error", e);
+        } finally {
+            loading.value = false;
+        }
+    }
+    const resetDetail = () => {
+        detail.value = undefined
+    }
+    return { collections, errors, loading, detail,resetDetail, createNewCollection, getDetailCollection,resetForm,deleteCollection}
 })

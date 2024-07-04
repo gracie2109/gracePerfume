@@ -28,6 +28,26 @@ const router = createRouter({
                     path: 'checkout',
                     component: () => import('@/views/app/checkout/Index.vue'),
                     name: 'checkout',
+                },
+                {
+                    path: 'collections',
+                    component: () => import('@/views/app/collection/List.vue'),
+                    name: 'collections',
+                },
+                {
+                    path: 'brands',
+                    component: () => import('@/views/app/collection/List.vue'),
+                    name: 'brands',
+                },
+                {
+                    path: 'collection/:id',
+                    component: () => import('@/views/app/collection/Detail.vue'),
+                    name: 'collectionDetail',
+                },
+                {
+                    path: 'brand/:id',
+                    component: () => import('@/views/app/collection/Detail.vue'),
+                    name: 'brandDetail',
 
                 }
             ]
@@ -91,6 +111,11 @@ const router = createRouter({
                     path: 'collections/create',
                     name: 'adminCollectionCreate',
                     component: () => import("@/views/admin/collections/PageCollectionCreate.vue"),
+                },
+                {
+                    path: 'collections/:id',
+                    name: 'adminCollectionEdit',
+                    component: () => import("@/views/admin/collections/PageCollectionEdit.vue"),
                 },
                 //settings
                 {
