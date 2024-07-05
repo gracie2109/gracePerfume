@@ -2,47 +2,21 @@
   <div class="relative top-0 ">
     <div class="h-10  rounded-lg mb-3 ml-5 w-[220px] flex items-center justify-between px-3">
       <p class="scroll-m-20 text-[18px] font-semibold tracking-tight pl-2">Cart</p>
-      <small> You have 5 items in cart  </small>
+      <small> You have <span v-if="cart" class="mr-2">{{ cart.length }}</span>  <span class="mr-2" v-else>0</span>items in cart  </small>
     </div>
-    <div class=" relative  flex  gap-8 px-5">
+    <div class=" relative  flex  gap-8 px-5" >
       <div class="flex-1 rounded-lg  p-2 ">
        <ScrollArea class="h-full max-h-[70vh] h-[70vh] p-5">
-         <div class="cart_content ">
-
-           <div class="border p-1.5   rounded-md my-3" v-for="i in 12" :key="i">
-             <div class="flex items-start gap-x-4 h-full">
-               <div id="media" class="w-[78px] relative border">
-                 <img :src="cartItemRaw.image" alt="" class="w-full h-full object-cover rounded-lg relative">
-                 <div class="absolute -top-1 -right-1  w-4 h-4 bg-red-500 text-white rounded-full
-                          before:content-['x'] before:w-full before:h-full before:grid before:place-items-center
-                          before:relative before:-top-[3px] before:text-sm cursor-pointer"
-                      @click="removeItem"
-                 />
-               </div>
-
-               <div class=" flex w-full justify-between h-full">
-                 <div class="space-y-3 grid justify-around h-full">
-                   <p>{{ cartItemRaw.name }}</p>
-                   <p class="text-sm text-muted-foreground">
-                     {{ cartItemRaw.quantity }} x <span class="font-semibold">{{ formatPrice(cartItemRaw.price) }}</span>
-                   </p>
-                 </div>
-                 <div class="space-y-3 grid justify-end h-full">
-                   <div>{{ formatPrice(cartItemRaw.price) }}</div>
-                   <div>
-                     <NumberField id="price" :default-value="cartItemRaw.quantity" :min="1" class="w-[calc(100%-4rem)]">
-                       <NumberFieldContent>
-                         <NumberFieldDecrement/>
-                         <NumberFieldInput/>
-                         <NumberFieldIncrement/>
-                       </NumberFieldContent>
-                     </NumberField>
-                   </div>
-                 </div>
-               </div>
+         <div class="cart_content container">
+           <div v-if="cart">
+             <div  v-for="(i, j) in cart" >
+               <CartItem :key="j" :data="i" />
              </div>
            </div>
-
+            <div v-else class="container w-full h-full grid place-items-center">
+              <img :src="cartEmptyImg" alt="">
+              <Button size="xl"  @click="$router.push({name: 'home'}) ">Shopping now</Button>
+            </div>
          </div>
        </ScrollArea>
       </div>
@@ -55,7 +29,9 @@
 
         <div class="flex items-center justify-between mt-8 my-3  h-12 rounded-lg px-4">
          <div>
-           <b class="pr-6">Total Price:</b><span>{{formatPrice(cartItemRaw.price)}}</span>
+           <b class="pr-6">Total Price:</b>
+           <span v-if="cart">{{formatPrice(totalPrice)}}</span>
+           <span v-else>0 đ</span>
          </div>
         </div>
        <div class=" rounded-lg px-4">
@@ -65,9 +41,10 @@
           </ul>
        </div>
         <div class="my-8">
-          <Button class="w-full bg-custom-primary p-5 hover:bg-custom-primary/85" @click="() => {
-            $router.push('/checkout')
-          }">Checkout</Button>
+          <Button
+                  :disabled="!cart"
+                  class="w-full bg-custom-primary p-5 hover:bg-custom-primary/85"
+                  @click="() => { $router.push('/checkout')  }">Checkout</Button>
         </div>
       </div>
     </div>
@@ -76,33 +53,25 @@
 
 
 <script lang="ts" setup>
-import {
-  NumberField,
-  NumberFieldContent,
-  NumberFieldDecrement,
-  NumberFieldIncrement,
-  NumberFieldInput,
-} from '@/components/ui/number-field';
 import {Button} from "@/components/ui/button"
-import {formatPrice} from "@/lib/utils";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {Separator} from "@/components/ui/separator"
-const cartItemRaw = {
-  id: '123',
-  name: 'Creed Absolu Aventus Creed Absolu Aventus',
-  image: 'https://bizweb.dktcdn.net/thumb/large/100/494/147/products/33-d4b70a3f-ad40-4ea4-83cb-371d4debee90.png?v=1714745473277',
-  media: [
-    'https://bizweb.dktcdn.net/thumb/large/100/494/147/products/nar-vetiver-musc.jpg?v=1704809896337',
-    'https://bizweb.dktcdn.net/thumb/large/100/494/147/products/33-d4b70a3f-ad40-4ea4-83cb-371d4debee90.png?v=1714745473277'
-  ],
-  price: 123000,
-  quantity: 10,
-  variant: 'Chiết 10ml'
-}
+import {Separator} from "@/components/ui/separator";
+import CartItem from '@/components/card/cart-item/CartItem.vue';
+import {useCart} from "@/stores/cart"
+import {storeToRefs} from "pinia";
+import cartEmptyImg from '@/assets/images/cart_banner_image.webp'
+import {formatPrice} from "@/lib/utils.ts";
+import {onMounted, watchEffect} from "vue";
+const cartStore = useCart();
+const {totalPrice, cart} = storeToRefs(cartStore);
 
-const removeItem = () => {
-  console.log("remove")
-}
+onMounted(() => {
+  cartStore.calcTotalPrice();
+})
+watchEffect(() => {
+  cartStore.getCart();
+})
+
 </script>
 
 <style scoped>

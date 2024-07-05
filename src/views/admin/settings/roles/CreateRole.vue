@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import PageHeader from "@/components/PageHeader.vue";
 import RoleForm from "@/components/forms/RoleForm.vue";
-import { toRef, ref} from "vue";
+import { toRef } from "vue";
 import {useRoles} from "@/stores/roles"
 import { storeToRefs } from "pinia";
 

@@ -2,8 +2,8 @@
 import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from 'radix-vue';
 import ProductDetail from '@/components/card/card-product/detail/Description.vue';
 import Reviews from '@/components/card/card-product/detail/Review.vue'
-import Terms from '@/components/card/card-product/detail/Term.vue';
-import FAQ from '@/components/card/card-product/detail/FAQ.vue'
+import Terms from '@/components/Term.vue';
+import FAQ from '@/components/FAQ.vue'
 
 const tabsList = ['Product Detail', 'Reviews', 'Terms of service', 'FAQ'];
 

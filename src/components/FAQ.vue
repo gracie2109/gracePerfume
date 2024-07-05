@@ -1,5 +1,5 @@
 <template>
-  <Accordion type="single" class="w-full" collapsible :default-value="defaultValue">
+  <Accordion type="single" class="w-full" collapsible >
     <AccordionItem v-for="(item, idx) in listFaq" :key="idx" :value="item.q">
       <AccordionTrigger>{{ item.q }}</AccordionTrigger>
       <AccordionContent>

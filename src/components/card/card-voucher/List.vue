@@ -57,9 +57,9 @@
   import couponImage from "@/assets/images/vouchers/coupon.webp"
   import freeshipImage from "@/assets/images/vouchers/freeship.webp"
   import cashImage from "@/assets/images/vouchers/cash.webp";
-  import {ref, watch} from 'vue'
+
   import { Info, Copy } from 'lucide-vue-next';
-  import { useClipboard, usePermission } from '@vueuse/core'
+  import { useClipboard } from '@vueuse/core'
 
   import {
     Tooltip,
@@ -68,20 +68,11 @@
     TooltipTrigger
   } from '@/components/ui/tooltip';
 
-  import {Button} from "@/components/ui/button"
-  const copyText = ref('');
+
   const { text, isSupported, copy } = useClipboard()
 
   const props = defineProps<{
-    data:{
-      id: String,
-      name: String,
-      condition:String,
-      code:String,
-      end_date:String,
-      desc: String[],
-      type:String
-    }
+    data:any
   }>();
 
 

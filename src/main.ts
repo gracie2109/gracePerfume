@@ -7,7 +7,6 @@ import { VueFire, VueFireAuth, VueFireFirestoreOptionsAPI  } from 'vuefire'
 import { firebaseApp } from '@/plugins/firebase'
 import VueImageZoomer from 'vue-image-zoomer'
 
-import 'vue-image-zoomer/dist/style.css';
 
 const app = createApp(App)
 

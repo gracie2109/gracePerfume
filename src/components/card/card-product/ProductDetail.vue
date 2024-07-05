@@ -1,6 +1,6 @@
 <template>
   Cart ProductDetail:
-
+  {{prop.data}}
 </template>
 
 <script lang="ts" setup>
