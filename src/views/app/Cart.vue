@@ -10,7 +10,7 @@
          <div class="cart_content container">
            <div v-if="cart">
              <div  v-for="(i, j) in cart" >
-               <CartItem :key="j" :data="i" />
+               <CartItem :key="j" :data="i" :show-btn-del="true" />
              </div>
            </div>
             <div v-else class="container w-full h-full grid place-items-center">

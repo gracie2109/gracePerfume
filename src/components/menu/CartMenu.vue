@@ -25,7 +25,7 @@
      </SheetHeader>
       <div v-if="cart" class="relative top-5  h-screen overflow-y-auto">
         <div  v-for="(i, j) in cart">
-          <CartItem :key="j" :data="i"/>
+          <CartItem :key="j" :data="i" :show-btn-del="false"/>
         </div>
       </div>
 

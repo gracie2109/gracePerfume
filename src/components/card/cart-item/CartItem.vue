@@ -6,7 +6,9 @@
 
                 <div if="media"  class="w-[20%] h-full relative">
                   <img :src="prop.data.image" alt="image of" class="w-ful h-full relative object-cover">
-                  <div class="cursor-pointer absolute -top-2 -left-4 bg-custom-primary w-6 h-6 rounded-full text-white text-sm" @click="deleteItemInCart(prop.data.id,j.id)">
+                  <div class="cursor-pointer absolute -top-2 -left-4 bg-custom-primary w-6 h-6 rounded-full text-white text-sm"
+                        v-if="prop.showBtnDel"
+                       @click="deleteItemInCart(prop.data.id,j.id)">
                     <div class="grid h-full place-items-center">x</div>
                   </div>
                 </div>
@@ -49,29 +51,23 @@ import {
 } from '@/components/ui/number-field';
 import {formatPrice, truncateText} from "@/lib/utils.ts";
 import {useCart} from "@/stores/cart.ts";
-
 const prop =defineProps<{
-  data:any
+  data:any,
+  showBtnDel:boolean
 }>();
 
-const emit = defineEmits(['decrement','increment'])
 const cartStore = useCart();
+
 const decrement = (productId:string, variantId:string) => {
   cartStore.decrementCartItem(productId,variantId)
-
-
-
 }
 
 const increment = (productId:string, variantId:string) => {
   cartStore.incrementCartItem(productId,variantId)
-
-
 }
 
 const deleteItemInCart= (productId:string, variantId:string) => {
   cartStore.deleteItemInCart(productId,variantId)
-
 }
 
 </script>
