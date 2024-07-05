@@ -132,22 +132,8 @@
   <div class="relative space-y-12 ">
     <div class="w-full overflow-hidden relative ">
       <div class="relative">
-        <Carousel
-            :plugin="[plugin]"
-            :showButton="false"
-            class="relative h-full w-screen"
-            @mouseenter="plugin.stop"
-            @mouseleave="[plugin.reset(), plugin.play()];"
-        >
-          <CarouselContent class="w-full h-full">
-            <CarouselItem v-for="(i,j) in carouselImages" :key="j">
-              <img :alt="i" :src="i" class="w-full max-h-[700px]  overflow-hidden object-cover  ">
-            </CarouselItem>
-          </CarouselContent>
-          <CarouselPrevious/>
-          <CarouselNext/>
-        </Carousel>
-
+          <HomeCarousel />
+        <div  class="absolute -bottom-2 inset-0 w-full bg-gradient-to-t from-custom-bg from-0% to-transparent transition-opacity duration-200 z-[2] opacity-0.2 "></div>
       </div>
     </div>
 
@@ -159,26 +145,9 @@
 </template>
 
 <script lang="ts" setup>
-import {carouselImages} from "@/lib/constant.ts"
-import {Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious} from '@/components/ui/carousel'
-import Autoplay from 'embla-carousel-autoplay';
+import HomeCarousel from "@/components/HomeCarousel.vue"
 import AppCollections from "@/components/AppCollections.vue";
 import HeroSection from "@/components/HeroSection.vue";
-import {provide, ref} from "vue";
-
-const plugin = Autoplay({
-  delay: 5000,
-  stopOnMouseEnter: true,
-  stopOnInteraction: false,
-
-})
-const name = ref('hello')
-provide('test', name.value);
-
-
-
-
-
 
 </script>
 

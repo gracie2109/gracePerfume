@@ -78,7 +78,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-vue-next";
 import { usePermissionStore } from "@/stores/permissions";
 import { storeToRefs } from "pinia";
-import { computed, reactive, ref, toRaw, toRef, watchEffect } from "vue";
+import { computed, ref, toRef, watchEffect } from "vue";
 import {
   groupByPermissions,
   getUniquePermissions,

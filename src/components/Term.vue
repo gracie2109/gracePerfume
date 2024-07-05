@@ -1,0 +1,1 @@
+<template>COmp3</template>

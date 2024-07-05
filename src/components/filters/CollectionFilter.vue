@@ -35,7 +35,7 @@
 
            <div class="grid gap-3" v-if="brands">
 
-             <template v-for="(i, ii) in brands" :key="ii">
+             <template v-for="i  in brands" :key="i.name">
              <div class="flex gap-2">
                <input  type="checkbox" :id="i.name" :value="i.name" v-model="props.filterModel.brands"
                        @change="handleChange('brands')"
@@ -54,7 +54,7 @@
           <AccordionContent>
             <div class="flex  gap-3 w-full flex-wrap" >
 
-              <template v-for="(i, ii) in collections" :key="ii">
+              <template v-for="i  in collections" :key="i.id">
                 <div class="flex gap-2">
                   <input  type="checkbox" :id="i.id" :value="i.id" v-model="props.filterModel.collections"
                           @change="handleChange('collections')"
@@ -84,7 +84,7 @@
           <AccordionContent>
             <div class="flex  gap-3 w-full flex-wrap" >
 
-              <template v-for="(i, ii) in baseAttribute" :key="ii">
+              <template v-for="i  in baseAttribute" :key="i">
                 <div class="flex gap-2">
                   <input  type="checkbox" :id="i" :value="i" v-model="props.filterModel.attributes"
                           @change="handleChange('attributes')"
@@ -113,7 +113,7 @@
   import {storeToRefs} from "pinia";
   import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
   import CustomMinMaxSlider from "@/components/CustomMinMaxSlider.vue"
-  import {Label} from "@/components/ui/label";
+
   import {baseAttribute} from '@/lib/constant.ts';
   import {formatPrice} from "@/lib/utils.ts";
   import {clsx} from "clsx";

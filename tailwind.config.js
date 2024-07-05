@@ -62,7 +62,8 @@ module.exports = {
         "cara-secondary":"#112035",
         "cara-primary":"#0f172a",
         "cara-blue":"#38bdf8",
-        'cara-border':'#2d364a'
+        'cara-border':'#2d364a',
+        'custom-red':'#e70505'
       },
       borderRadius: {
       	xl: "calc(var(--radius) + 4px)",

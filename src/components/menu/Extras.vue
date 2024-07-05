@@ -1,6 +1,8 @@
 <template>
-  <div class="flex items-center gap-x-2 md:gap-x-4 will-change-auto">
-    <CartMenu />
+  <div class="flex items-center gap-x-2 md:gap-x-4 will-change-auto text-primary" :class="clsx({
+  'text-white': route.name === 'home'
+  })">
+    <CartMenu :type="String(route.name)" />
     <button class="flex items-center gap-x-2" type="button">
       <Search :size="20" stroke-width="1.5"/>
     </button>
@@ -23,7 +25,11 @@ import {Separator} from '@/components/ui/separator';
 import {Search } from "lucide-vue-next"
 import {useCurrentUser} from "vuefire";
 import CartMenu from "@/components/menu/CartMenu.vue";
+import {clsx} from "clsx";
+import {useRoute} from "vue-router";
+
 const emit = defineEmits(['toggleMenu']);
+const route = useRoute()
 
 const user = useCurrentUser()
 </script>
