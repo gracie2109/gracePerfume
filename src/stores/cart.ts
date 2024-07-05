@@ -14,7 +14,7 @@ export const useCart = defineStore('cart',  () => {
     const loading:Ref<boolean> = ref(false);
 
     function clearCart() {
-        cart.value = [];
+        cart.value = null;
         localStorage.removeItem('cart')
     }
 
@@ -25,7 +25,7 @@ export const useCart = defineStore('cart',  () => {
     function getCart ()  {
         const data = JSON.parse(localStorage.getItem('cart') as string);
 
-        if(data.length ===0 )  cart.value = null
+        if(data?.length === 0)  cart.value = null
         else cart.value = data;
 
     }
