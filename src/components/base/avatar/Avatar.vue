@@ -8,6 +8,8 @@
     <DropdownMenuContent>
       <DropdownMenuLabel>My Account</DropdownMenuLabel>
       <DropdownMenuSeparator />
+      <DropdownMenuItem class="cursor-pointer" @click="() => {$router.push({name: 'profile', params: {}}) }">Profile</DropdownMenuItem>
+
       <DropdownMenuItem class="cursor-pointer" @click="logout">Logout</DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>

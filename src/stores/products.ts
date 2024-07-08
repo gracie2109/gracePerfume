@@ -20,9 +20,11 @@ export const useProductStore = defineStore('products',  () => {
 
 
 
-    const createNewProducts = async (value: Omit<IBrands, "id">) => {
+    const createNewProducts = async (value:any) => {
+
         try{
             loading.value = true;
+            console.log('paylad', value)
             const exist = await checkItemExistence('products','name', value.name);
             if(!exist){
                 await addDoc(collection(db, 'products'), value);
@@ -43,8 +45,11 @@ export const useProductStore = defineStore('products',  () => {
     }
 
 
+    const getListProducts = async () => {
+        products.value = []
+    }
 
 
 
-    return { products, createNewProducts}
+    return { products, loading, errors, createNewProducts, getListProducts}
 })

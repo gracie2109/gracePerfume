@@ -1,277 +1,307 @@
 <template>
 
-  <form class="space-y-4" @submit="onSubmit">
-    <div class="grid grid-cols-3 gap-4">
-      <div class="col-span-2 space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>General</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <FormField v-slot="{ componentField }" name="name">
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Hoodie.." type="text" v-bind="componentField"/>
-                </FormControl>
-                <FormMessage/>
-              </FormItem>
-            </FormField>
-            <FormField v-slot="{ componentField }" name="description">
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                      class="resize-none"
-                      placeholder="Tell us a little bit about yourself"
-                      v-bind="componentField"
-                  />
-                </FormControl>
-                <FormMessage/>
-              </FormItem>
-            </FormField>
-            <CustomInputNumber :form="form" :label="'Price'" :min="1" :name="'price'"/>
-          </CardContent>
+ <keep-alive>
+    <div>
+      <div v-if="errors.message">
+       <transition name="fade" mode="out-in">
+         <Alert variant="destructive" >
+           <AlertCircle class="w-4 h-4" />
+           <AlertTitle>Error</AlertTitle>
+           <AlertDescription>
+             {{errors.message}}
+           </AlertDescription>
+         </Alert>
+       </transition>
 
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Pricing</CardTitle>
-          </CardHeader>
-          <CardContent class="space-y-8">
-            <div class="flex gap-3 ">
-              <div>
-                <CustomInputNumber
-                    :form="form"
-                    :label="'Price'"
-                    :min="100"
-                    :name="'price'"
-                    :option="'currency'"
-                />
-              </div>
-              <div>
-                <CustomInputNumber
-                    :form="form"
-                    :label="'Cost'"
-                    :min="10"
-                    :name="'cost'"
-                    :option="'currency'"
-                />
-              </div>
-            </div>
-            <div class="flex gap-3 ">
-              <div>
-                <CustomInputNumber
-                    :form="form"
-                    :label="'Cost per item'"
-                    :min="10"
-                    :name="'cost_per_item'"
-                    :option="'currency'"
-                />
-              </div>
-              <div>
-                <FormField v-slot="{ componentField }" :model-value="profit" data-disabled name="profit">
+      </div>
+      <form class="space-y-4" @submit="onSubmit">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="col-span-2 space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>General</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <FormField v-slot="{ componentField }" name="name">
                   <FormItem>
-                    <FormLabel> Profit</FormLabel>
+                    <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="----" readonly type="text" v-bind="componentField"/>
+                      <Input placeholder="Hoodie.." type="text" v-bind="componentField"/>
                     </FormControl>
                     <FormMessage/>
                   </FormItem>
                 </FormField>
-              </div>
-              <div>
-
-                <FormField v-slot="{ componentField }" :model-value="`${profit}%`" name="profit_margin">
+                <FormField v-slot="{ componentField }" name="description">
                   <FormItem>
-                    <FormLabel>Profit margin</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Input placeholder="----" readonly type="text" v-bind="componentField"/>
+                      <QuillEditor theme="snow"
+                                   v-model:content="description"
+                                   content-type="html"
+                                   v-bind="componentField"
+                      />
                     </FormControl>
                     <FormMessage/>
                   </FormItem>
                 </FormField>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Variant</CardTitle>
-          </CardHeader>
-          <CardContent>
-
-            <div class="p-3">
-              <FieldArray v-slot="{ fields, push, remove }" name="variants">
-
-                <div v-for="(field, index) in fields" :key="`variants-${field.key}`"
-                     class="flex gap-3 mb-3 items-center">
-                  <FormField v-slot="{ componentField }" :name="`variants[${index}].unit`">
-                    <FormItem>
-                      <FormLabel v-if="index===0">Unit</FormLabel>
-                      <div class="relative flex items-center">
-                        <FormControl>
-                          <Input placeholder="enter unit" type="text" v-bind="componentField"/>
-                        </FormControl>
-                      </div>
-                      <FormMessage/>
-                    </FormItem>
-                  </FormField>
-                  <FormField v-slot="{ componentField }" :name="`variants[${index}].price`">
-                    <FormItem>
-                      <FormLabel v-if="index===0">Price</FormLabel>
-                      <div class="relative flex items-center">
-                        <FormControl>
-                          <Input placeholder="enter price" type="text" v-bind="componentField"/>
-                        </FormControl>
-                      </div>
-                      <FormMessage/>
-                    </FormItem>
-                  </FormField>
-                  <FormField v-slot="{ componentField }" :name="`variants[${index}].quantity`">
-                    <FormItem>
-                      <FormLabel v-if="index===0">Quantity</FormLabel>
-                      <div class="relative flex items-center">
-                        <FormControl>
-                          <Input placeholder="enter price" type="text" v-bind="componentField"/>
-                        </FormControl>
-                      </div>
-                      <FormMessage/>
-                    </FormItem>
-                  </FormField>
-
-                  <div :class="clsx({'pt-8': index === 0})">
-                    <Button size="icon" variant="link" @click="remove(index)">
-                      <XIcon class="w-4 h-4"/>
-                    </Button>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Pricing</CardTitle>
+              </CardHeader>
+              <CardContent class="space-y-8">
+                <div class="flex gap-3 ">
+                  <div>
+                    <CustomInputNumber
+                        :form="form"
+                        :label="'Price'"
+                        :min="100"
+                        :name="'price'"
+                        :option="'currency'"
+                    />
+                  </div>
+                  <div>
+                    <CustomInputNumber
+                        :form="form"
+                        :label="'Cost'"
+                        :min="10"
+                        :name="'cost'"
+                        :option="'currency'"
+                    />
                   </div>
                 </div>
+                <div class="flex gap-3 ">
+                  <div>
+                    <CustomInputNumber
+                        :form="form"
+                        :label="'Cost per item'"
+                        :min="10"
+                        :name="'cost_per_item'"
+                        :option="'currency'"
+                    />
+                  </div>
+                  <div>
+                    <FormField v-slot="{ componentField }" :model-value="profit" data-disabled name="profit">
+                      <FormItem>
+                        <FormLabel> Profit</FormLabel>
+                        <FormControl>
+                          <Input placeholder="----" readonly type="text" v-bind="componentField"/>
+                        </FormControl>
+                        <FormMessage/>
+                      </FormItem>
+                    </FormField>
+                  </div>
+                  <div>
 
-                <Button
-                    size="sm"
-                    type="button"
-                    variant="outline"
-                    @click="() => {
-                   push({ unit: '',  price: 0, quantity: 0 })
-                }"
-                >
-                  <PlusCircle class="w-4 h-4 mr-2"/>
-                  Add Variant
-                </Button>
-              </FieldArray>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      <div class="col-span-1">
-        <Card>
-          <CardHeader></CardHeader>
-          <CardContent class='space-y-8'>
-            <FormField v-slot="{ value, handleChange }" name="status">
-              <FormItem class="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div class="space-y-0.5">
-                  <FormLabel class="text-base">
-                    Status
-                  </FormLabel>
-
+                    <FormField v-slot="{ componentField }" :model-value="`${profit}%`" name="profit_margin">
+                      <FormItem>
+                        <FormLabel>Profit margin</FormLabel>
+                        <FormControl>
+                          <Input placeholder="----" readonly type="text" v-bind="componentField"/>
+                        </FormControl>
+                        <FormMessage/>
+                      </FormItem>
+                    </FormField>
+                  </div>
                 </div>
-                <FormControl>
-                  <Switch
-                      :checked="value"
-                      @update:checked="handleChange"
-                  />
-                </FormControl>
-              </FormItem>
-            </FormField>
-            <FormField v-slot="{ componentField }" name="brand">
-              <FormItem>
-                <FormLabel>Brands</FormLabel>
+              </CardContent>
+            </Card>
 
-                <Select v-bind="componentField">
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Brands"/>
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectGroup>
+            <Card>
+              <CardHeader>
+                <CardTitle>Variant</CardTitle>
+              </CardHeader>
+              <CardContent>
 
-                      <template v-if="brands.length > 0">
-                        <SelectItem v-for="(i,ii) in brands" :key="ii" :value="i.id">
-                          {{ i.name }}
-                        </SelectItem>
-                      </template>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                <FormMessage/>
-              </FormItem>
-            </FormField>
-            <div class="space-y-3">
-              <label class="font-semibold text-sm my-3">Collection</label>
-              <TagsInput :model-value="modelValue" class="px-0 gap-0 w-80">
-                <div class="flex gap-2 flex-wrap items-center px-3">
-                  <TagsInputItem v-for="item in modelValue" :key="item" :value="item">
-                    <TagsInputItemText/>
-                    <TagsInputItemDelete/>
-                  </TagsInputItem>
-                </div>
+                <div class="p-3">
+                  <FieldArray v-slot="{ fields, push, remove }" name="variants">
 
+                    <div v-for="(field, index) in fields" :key="`variants-${field.key}`"
+                         class="flex gap-3 mb-3 items-center">
+                      <FormField v-slot="{ componentField }" :name="`variants[${index}].unit`">
+                        <FormItem>
+                          <FormLabel v-if="index===0">Unit</FormLabel>
+                          <div class="relative flex items-center">
+                            <FormControl>
+                              <Input placeholder="enter unit" type="text" v-bind="componentField"/>
+                            </FormControl>
+                          </div>
+                          <FormMessage/>
+                        </FormItem>
+                      </FormField>
+                      <FormField v-slot="{ componentField }" :name="`variants[${index}].price`">
+                        <FormItem>
+                          <FormLabel v-if="index===0">Price</FormLabel>
+                          <div class="relative flex items-center">
+                            <FormControl>
+                              <Input placeholder="enter price" type="text" v-bind="componentField"/>
+                            </FormControl>
+                          </div>
+                          <FormMessage/>
+                        </FormItem>
+                      </FormField>
+                      <FormField v-slot="{ componentField }" :name="`variants[${index}].quantity`">
+                        <FormItem>
+                          <FormLabel v-if="index===0">Quantity</FormLabel>
+                          <div class="relative flex items-center">
+                            <FormControl>
+                              <Input placeholder="enter price" type="text" v-bind="componentField"/>
+                            </FormControl>
+                          </div>
+                          <FormMessage/>
+                        </FormItem>
+                      </FormField>
 
-                <ComboboxRoot v-model="modelValue" v-model:open="open" v-model:searchTerm="searchTerm" class="w-full">
-                  <ComboboxAnchor as-child>
-                    <ComboboxInput as-child placeholder="Framework...">
-                      <TagsInputInput :class="modelValue.length > 0 ? 'mt-2' : ''" class="w-full px-3"
-                                      @keydown.enter.prevent/>
-                    </ComboboxInput>
-                  </ComboboxAnchor>
+                      <div :class="clsx({'pt-8': index === 0})">
+                        <Button size="icon" variant="link" @click="remove(index)">
+                          <XIcon class="w-4 h-4"/>
+                        </Button>
+                      </div>
+                    </div>
 
-                  <ComboboxPortal>
-                    <CommandList
-                        class="w-[--radix-popper-anchor-width] rounded-md mt-2 border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
-                        position="popper"
+                    <Button
+                        size="sm"
+                        type="button"
+                        variant="outline"
+                        @click="() => {
+                       push({ unit: '',  price: 0, quantity: 0 })
+                    }"
                     >
-                      <CommandEmpty/>
-                      <CommandGroup>
-                        <template v-if="filteredFrameworks">
-                          <CommandItem
-                              v-for="(framework, j) in filteredFrameworks" :key="j" :value="framework.name"
-                              @select.prevent="(ev) => {
-                        if (typeof ev.detail.value === 'string') {
-                          searchTerm = ''
-                          modelValue.push(ev.detail.value);
-                        }
+                      <PlusCircle class="w-4 h-4 mr-2"/>
+                      Add Variant
+                    </Button>
+                  </FieldArray>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          <div class="col-span-1 space-y-6">
+            <Card>
+              <CardHeader>Media</CardHeader>
+              <CardContent>
+                <FormField v-slot="{ componentField }"  name="images">
+                  <FormItem>
+                    <FormLabel>Images</FormLabel>
+                    <FormControl>
+                      <Upload :folder-name="'product'" @set-images="setImages" :limit="3" v-bind="componentField"/>
 
-                        if (filteredFrameworks.length === 0) {
-                          open = false
-                        }
-                      }"
-                          >
-                            {{ framework.name }}
-                          </CommandItem>
-                        </template>
+                    </FormControl>
+                    <FormMessage/>
+                  </FormItem>
+                </FormField>
 
-                      </CommandGroup>
-                    </CommandList>
-                  </ComboboxPortal>
-                </ComboboxRoot>
-              </TagsInput>
-            </div>
-          </CardContent>
 
-        </Card>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader></CardHeader>
+              <CardContent class='space-y-8'>
+                <FormField v-slot="{ value, handleChange }" name="status">
+                  <FormItem class="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div class="space-y-0.5">
+                      <FormLabel class="text-base">
+                        Status
+                      </FormLabel>
 
-      </div>
+                    </div>
+                    <FormControl>
+                      <Switch
+                          :checked="value"
+                          @update:checked="handleChange"
+                      />
+                    </FormControl>
+                  </FormItem>
+                </FormField>
+                <FormField v-slot="{ componentField }" name="brand">
+                  <FormItem>
+                    <FormLabel>Brands</FormLabel>
+
+                    <Select v-bind="componentField">
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Brands"/>
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+
+                          <template v-if="brands.length > 0">
+                            <SelectItem v-for="(i,ii) in brands" :key="ii" :value="i.id">
+                              {{ i.name }}
+                            </SelectItem>
+                          </template>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage/>
+                  </FormItem>
+                </FormField>
+<!--                <div class="space-y-3">-->
+<!--                  <label class="font-semibold text-sm my-3">Collection</label>-->
+<!--                  <TagsInput :model-value="modelValue" class="px-0 gap-0 w-80">-->
+<!--                    <div class="flex gap-2 flex-wrap items-center px-3">-->
+<!--                      <TagsInputItem v-for="item in modelValue" :key="item" :value="item">-->
+<!--                        <TagsInputItemText/>-->
+<!--                        <TagsInputItemDelete/>-->
+<!--                      </TagsInputItem>-->
+<!--                    </div>-->
+
+
+<!--                    <ComboboxRoot v-model="modelValue" v-model:open="open" v-model:searchTerm="searchTerm" class="w-full">-->
+<!--                      <ComboboxAnchor as-child>-->
+<!--                        <ComboboxInput as-child placeholder="Enter collection name">-->
+<!--                          <TagsInputInput :class="modelValue.length > 0 ? 'mt-2' : ''" class="w-full px-3"-->
+<!--                                          @keydown.enter.prevent/>-->
+<!--                        </ComboboxInput>-->
+<!--                      </ComboboxAnchor>-->
+
+<!--                      <ComboboxPortal>-->
+<!--                        <CommandList-->
+<!--                            class="w-[&#45;&#45;radix-popper-anchor-width] rounded-md mt-2 border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"-->
+<!--                            position="popper"-->
+<!--                        >-->
+<!--                          <CommandEmpty/>-->
+<!--                          <CommandGroup>-->
+<!--                            <template v-if="filteredFrameworks">-->
+<!--                              <CommandItem-->
+<!--                                  v-for="(framework, j) in filteredFrameworks" :key="j" :value="framework.name"-->
+<!--                                  @select.prevent="(ev) => {-->
+<!--                            if (typeof ev.detail.value === 'string') {-->
+<!--                              searchTerm = ''-->
+<!--                              modelValue.push(ev.detail.value);-->
+<!--                            }-->
+
+<!--                            if (filteredFrameworks.length === 0) {-->
+<!--                              open = false-->
+<!--                            }-->
+<!--                          }"-->
+<!--                              >-->
+<!--                                {{ framework.name }}-->
+<!--                              </CommandItem>-->
+<!--                            </template>-->
+
+<!--                          </CommandGroup>-->
+<!--                        </CommandList>-->
+<!--                      </ComboboxPortal>-->
+<!--                    </ComboboxRoot>-->
+<!--                  </TagsInput>-->
+<!--                </div>-->
+              </CardContent>
+
+            </Card>
+
+          </div>
+        </div>
+        <div class="">
+          <Button type="submit">
+            <Loader2 v-if="loading" class="w-4 h-4 mr-2 animate-spin"/>
+            Submit
+          </Button>
+        </div>
+      </form>
     </div>
-    <div class="">
-      <Button type="submit">
-        <Loader2 v-if="loading" class="w-4 h-4 mr-2 animate-spin"/>
-        Submit
-      </Button>
-    </div>
-  </form>
-  {{ form.values }}
+ </keep-alive>
 
 
 </template>
@@ -279,19 +309,18 @@
 
 <script lang="ts" setup>
 import {Button} from "@/components/ui/button";
-import {Loader2, PlusCircle, XIcon} from "lucide-vue-next";
-
+import {Loader2, PlusCircle, XIcon,AlertCircle} from "lucide-vue-next";
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card'
-import {computed, ref, toRefs} from 'vue'
-
-import {Textarea} from "@/components/ui/textarea";
+import {computed, ref, toRefs} from 'vue';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import {Input} from "@/components/ui/input";
 import {Switch} from '@/components/ui/switch'
 
 import {FieldArray, useForm} from 'vee-validate';
 import {useBrandStore} from "@/stores/brand.ts";
+import {useProductStore} from "@/stores/products";
 import CustomInputNumber from "@/components/ui/CustomInputNumber.vue";
 import {storeToRefs} from "pinia";
 import clsx from "clsx"
@@ -305,25 +334,23 @@ import {
   TagsInputItemDelete,
   TagsInputItemText
 } from '@/components/ui/tags-input'
-import {profitAndMarginAlg} from "@/lib/utils.ts"
+import {profitAndMarginAlg,removeVietnameseTones} from "@/lib/utils.ts"
+import Upload from "@/components/Upload.vue"
 
-
-const loading = ref(false);
 const brandStore = useBrandStore();
+const productStore = useProductStore();
 const {brands} = storeToRefs(brandStore)
-
+const {loading, errors} = storeToRefs(productStore)
 const collectionStore = useCollectionsStore();
 const {collections} = storeToRefs(collectionStore)
-
+const description = ref<string>("")
 
 const modelValue = ref<string[]>([]);
 
 const open = ref(false)
 const searchTerm = ref('')
 
-const filteredFrameworks = computed(() =>
-    collections.value.filter((i: any) => !modelValue.value.includes(i.name))
-)
+const filteredFrameworks = computed(() => collections.value.filter((i: any) => !modelValue.value.includes(i.name)))
 
 
 const form = useForm()
@@ -331,9 +358,22 @@ const profit = computed(() => {
   return profitAndMarginAlg(form.values['price'], form.values['cost'], form.values['cost_per_item'])
 })
 
-const onSubmit = form.handleSubmit((values) => {
-  const newCollection = toRefs(modelValue)
-  const payload = {...values, collections: newCollection}
-  console.log(payload)
+
+const setImages = (images:any[]) => {
+  form.setFieldValue('images', images)
+}
+
+console.log('nidel', modelValue)
+const onSubmit = form.handleSubmit(async (values) => {
+  // const newCollection = toRefs(modelValue);
+
+  const payload = {...values,slug: removeVietnameseTones(values.name), description: description.value};
+  console.log('onSubmit', payload)
+  await productStore.createNewProducts(payload)
+
 })
+
+
+
+
 </script>

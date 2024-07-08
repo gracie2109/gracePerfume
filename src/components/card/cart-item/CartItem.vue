@@ -58,15 +58,15 @@ const prop =defineProps<{
 
 const cartStore = useCart();
 
-const decrement = (productId:string, variantId:string) => {
+const decrement = (productId:string, variantId:string | null) => {
   cartStore.decrementCartItem(productId,variantId)
 }
 
-const increment = (productId:string, variantId:string) => {
+const increment = (productId:string, variantId:string | null) => {
   cartStore.incrementCartItem(productId,variantId)
 }
 
-const deleteItemInCart= (productId:string, variantId:string) => {
+const deleteItemInCart= (productId:string, variantId:string | null) => {
   cartStore.deleteItemInCart(productId,variantId)
 }
 

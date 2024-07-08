@@ -41,7 +41,7 @@ const [container] = useKeenSlider(
           if (mouseOver) return
           timeout = setTimeout(() => {
             slider.next()
-          }, 3000)
+          }, 5000)
         }
 
         slider.on("created", () => {

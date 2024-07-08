@@ -117,13 +117,14 @@ export const useCart = defineStore('cart',  () => {
 
     function decrementCartItem(productId:string, variant_id:string | null) {
         getCart();
-        const rawCart = toRaw(cart.value)
+        const rawCart = toRaw(cart.value);
         const selectedPrd = rawCart && rawCart.find((i) => i.id === String(productId));
         if(variant_id!== null && selectedPrd){
             if(selectedPrd.variant && selectedPrd.variant.length >0){
                 const variantSelected = selectedPrd.variant.find((i:any) => i.id === variant_id);
                 if(variantSelected){
-                    if(variantSelected.quantity > 1){
+                    console.log('variantSelected',variantSelected)
+                    if(variantSelected.quantity > 1 ){
                         variantSelected.quantity = variantSelected.quantity - 1;
                     }
                 }
@@ -136,7 +137,6 @@ export const useCart = defineStore('cart',  () => {
         }
         uploadStorage();
         getCart()
-
 
     }
 

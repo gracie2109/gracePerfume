@@ -6,11 +6,10 @@
         name:'Products'
       }
 ]"/>
-  <ProductForm />
+  <ProductForm  />
 </template>
 
 <script lang="ts" setup>
 import ProductForm from "@/components/forms/ProductForm.vue";
 import PageHeader from "@/components/PageHeader.vue";
-
 </script>

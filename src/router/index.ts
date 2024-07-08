@@ -17,6 +17,11 @@ const router = createRouter({
             component: ClientLayout,
             children:[
                 {
+                    name: 'test',
+                    path:'test',
+                    component:() => import('@/components/Upload.vue')
+                },
+                {
                     path: '',
                     component: HomeView,
                     name: 'home',
@@ -51,12 +56,13 @@ const router = createRouter({
                     component: () => import('@/views/app/collection/Detail.vue'),
                     name: 'brandDetail',
 
-                }
+                },
             ]
         },
         {
             path: '/auth/',
             component:AuthLayout,
+            meta: { requiresAuth: true },
             children:[
                 {
                     path: 'login',
@@ -85,6 +91,8 @@ const router = createRouter({
             path: '/admin/',
             component: AdminLayout,
             name:'admin',
+            meta: { requiresAuth: true, isAdmin:true },
+
             children:[
                 //brands
                 {
