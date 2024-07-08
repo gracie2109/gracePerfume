@@ -1,17 +1,18 @@
 <template>
 
- <keep-alive>
+  <keep-alive>
     <div>
+      {{ form.values['quantity'] }}
       <div v-if="errors.message">
-       <transition name="fade" mode="out-in">
-         <Alert variant="destructive" >
-           <AlertCircle class="w-4 h-4" />
-           <AlertTitle>Error</AlertTitle>
-           <AlertDescription>
-             {{errors.message}}
-           </AlertDescription>
-         </Alert>
-       </transition>
+        <transition mode="out-in" name="fade">
+          <Alert variant="destructive">
+            <AlertCircle class="w-4 h-4"/>
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              {{ errors.message }}
+            </AlertDescription>
+          </Alert>
+        </transition>
 
       </div>
       <form class="space-y-4" @submit="onSubmit">
@@ -21,7 +22,7 @@
               <CardHeader>
                 <CardTitle>General</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent class="space-y-6">
                 <FormField v-slot="{ componentField }" name="name">
                   <FormItem>
                     <FormLabel>Name</FormLabel>
@@ -35,11 +36,20 @@
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <QuillEditor theme="snow"
-                                   v-model:content="description"
+                      <QuillEditor v-model:content="description"
                                    content-type="html"
+                                   theme="snow"
                                    v-bind="componentField"
                       />
+                    </FormControl>
+                    <FormMessage/>
+                  </FormItem>
+                </FormField>
+                <FormField v-slot="{ componentField }" name="quantity">
+                  <FormItem>
+                    <FormLabel>Quantity</FormLabel>
+                    <FormControl>
+                      <Input placeholder="..." type="text" v-bind="componentField"/>
                     </FormControl>
                     <FormMessage/>
                   </FormItem>
@@ -122,7 +132,7 @@
                       <FormField v-slot="{ componentField }" :name="`variants[${index}].unit`">
                         <FormItem>
                           <FormLabel v-if="index===0">Unit</FormLabel>
-                          <div class="relative flex items-center">
+                          <div class="relative flex items-start">
                             <FormControl>
                               <Input placeholder="enter unit" type="text" v-bind="componentField"/>
                             </FormControl>
@@ -165,12 +175,22 @@
                         type="button"
                         variant="outline"
                         @click="() => {
-                       push({ unit: '',  price: 0, quantity: 0 })
+                             const baseQuantity = form.values['quantity'] as number;
+                            if(!fields.length){
+                              push({ unit: '',  price: 0, quantity: 0 })
+                            }else{
+                                  const newData = toRaw(fields) as any
+                                  const checkUnit = newData.every((i:any) =>(( i.value.value.unit) as string).length > 0);
+                                  const checkQuantity = newData.every((i:any) => (i.value.value.quantity) as number > 1);
+                                  const checkPrice = newData.every((i:any) => (i.value.value.price) as number > 1000 && (i.value.value.price) as number<= 10000000);
+                                  if(checkUnit && checkQuantity && checkPrice) push({ unit: '',  price: 0, quantity: 0 })
+                                }
                     }"
                     >
                       <PlusCircle class="w-4 h-4 mr-2"/>
                       Add Variant
                     </Button>
+
                   </FieldArray>
                 </div>
               </CardContent>
@@ -180,11 +200,11 @@
             <Card>
               <CardHeader>Media</CardHeader>
               <CardContent>
-                <FormField v-slot="{ componentField }"  name="images">
+                <FormField v-slot="{ componentField }" name="images">
                   <FormItem>
                     <FormLabel>Images</FormLabel>
                     <FormControl>
-                      <Upload :folder-name="'product'" @set-images="setImages" :limit="3" v-bind="componentField"/>
+                      <Upload :folder-name="'product'" :limit="3" v-bind="componentField" @set-images="setImages"/>
 
                     </FormControl>
                     <FormMessage/>
@@ -237,56 +257,6 @@
                     <FormMessage/>
                   </FormItem>
                 </FormField>
-<!--                <div class="space-y-3">-->
-<!--                  <label class="font-semibold text-sm my-3">Collection</label>-->
-<!--                  <TagsInput :model-value="modelValue" class="px-0 gap-0 w-80">-->
-<!--                    <div class="flex gap-2 flex-wrap items-center px-3">-->
-<!--                      <TagsInputItem v-for="item in modelValue" :key="item" :value="item">-->
-<!--                        <TagsInputItemText/>-->
-<!--                        <TagsInputItemDelete/>-->
-<!--                      </TagsInputItem>-->
-<!--                    </div>-->
-
-
-<!--                    <ComboboxRoot v-model="modelValue" v-model:open="open" v-model:searchTerm="searchTerm" class="w-full">-->
-<!--                      <ComboboxAnchor as-child>-->
-<!--                        <ComboboxInput as-child placeholder="Enter collection name">-->
-<!--                          <TagsInputInput :class="modelValue.length > 0 ? 'mt-2' : ''" class="w-full px-3"-->
-<!--                                          @keydown.enter.prevent/>-->
-<!--                        </ComboboxInput>-->
-<!--                      </ComboboxAnchor>-->
-
-<!--                      <ComboboxPortal>-->
-<!--                        <CommandList-->
-<!--                            class="w-[&#45;&#45;radix-popper-anchor-width] rounded-md mt-2 border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"-->
-<!--                            position="popper"-->
-<!--                        >-->
-<!--                          <CommandEmpty/>-->
-<!--                          <CommandGroup>-->
-<!--                            <template v-if="filteredFrameworks">-->
-<!--                              <CommandItem-->
-<!--                                  v-for="(framework, j) in filteredFrameworks" :key="j" :value="framework.name"-->
-<!--                                  @select.prevent="(ev) => {-->
-<!--                            if (typeof ev.detail.value === 'string') {-->
-<!--                              searchTerm = ''-->
-<!--                              modelValue.push(ev.detail.value);-->
-<!--                            }-->
-
-<!--                            if (filteredFrameworks.length === 0) {-->
-<!--                              open = false-->
-<!--                            }-->
-<!--                          }"-->
-<!--                              >-->
-<!--                                {{ framework.name }}-->
-<!--                              </CommandItem>-->
-<!--                            </template>-->
-
-<!--                          </CommandGroup>-->
-<!--                        </CommandList>-->
-<!--                      </ComboboxPortal>-->
-<!--                    </ComboboxRoot>-->
-<!--                  </TagsInput>-->
-<!--                </div>-->
               </CardContent>
 
             </Card>
@@ -301,7 +271,7 @@
         </div>
       </form>
     </div>
- </keep-alive>
+  </keep-alive>
 
 
 </template>
@@ -309,11 +279,11 @@
 
 <script lang="ts" setup>
 import {Button} from "@/components/ui/button";
-import {Loader2, PlusCircle, XIcon,AlertCircle} from "lucide-vue-next";
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import {AlertCircle, Loader2, PlusCircle, XIcon} from "lucide-vue-next";
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
 import {FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card'
-import {computed, ref, toRefs} from 'vue';
+import {computed, ref, toRaw} from 'vue';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import {Input} from "@/components/ui/input";
 import {Switch} from '@/components/ui/switch'
@@ -323,57 +293,42 @@ import {useBrandStore} from "@/stores/brand.ts";
 import {useProductStore} from "@/stores/products";
 import CustomInputNumber from "@/components/ui/CustomInputNumber.vue";
 import {storeToRefs} from "pinia";
-import clsx from "clsx"
-import {useCollectionsStore} from "@/stores/collections.ts"
-import {ComboboxAnchor, ComboboxInput, ComboboxPortal, ComboboxRoot} from 'radix-vue'
-import {CommandEmpty, CommandGroup, CommandItem, CommandList} from '@/components/ui/command'
-import {
-  TagsInput,
-  TagsInputInput,
-  TagsInputItem,
-  TagsInputItemDelete,
-  TagsInputItemText
-} from '@/components/ui/tags-input'
-import {profitAndMarginAlg,removeVietnameseTones} from "@/lib/utils.ts"
+import clsx from "clsx";
+import {profitAndMarginAlg, removeVietnameseTones} from "@/lib/utils.ts"
 import Upload from "@/components/Upload.vue"
+import {productValidation} from "@/validation/products.ts"
+import {toTypedSchema} from "@vee-validate/zod";
 
 const brandStore = useBrandStore();
 const productStore = useProductStore();
 const {brands} = storeToRefs(brandStore)
-const {loading, errors} = storeToRefs(productStore)
-const collectionStore = useCollectionsStore();
-const {collections} = storeToRefs(collectionStore)
+const {loading, errors} = storeToRefs(productStore);
 const description = ref<string>("")
 
-const modelValue = ref<string[]>([]);
 
-const open = ref(false)
-const searchTerm = ref('')
-
-const filteredFrameworks = computed(() => collections.value.filter((i: any) => !modelValue.value.includes(i.name)))
-
-
-const form = useForm()
+const form = useForm({
+  validationSchema: toTypedSchema(productValidation),
+  keepValuesOnUnmount: true
+})
 const profit = computed(() => {
-  return profitAndMarginAlg(form.values['price'], form.values['cost'], form.values['cost_per_item'])
+  if (form.values['price'] && form.values['cost'] && form.values['cost_per_item']) {
+    return profitAndMarginAlg(form.values['price'], form.values['cost'], form.values['cost_per_item'])
+  } else return 0
 })
 
 
-const setImages = (images:any[]) => {
+const setImages = (images: any[]) => {
   form.setFieldValue('images', images)
 }
 
-console.log('nidel', modelValue)
-const onSubmit = form.handleSubmit(async (values) => {
-  // const newCollection = toRefs(modelValue);
 
-  const payload = {...values,slug: removeVietnameseTones(values.name), description: description.value};
+const onSubmit = form.handleSubmit(async (values) => {
+
+  const payload = {...values, slug: removeVietnameseTones(values.name), description: description.value};
   console.log('onSubmit', payload)
   await productStore.createNewProducts(payload)
 
 })
-
-
 
 
 </script>
