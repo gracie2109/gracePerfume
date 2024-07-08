@@ -53,9 +53,10 @@ export const useProductStore = defineStore('products',  () => {
         const rawData = {
             ...data.docs[0].data(),
             id:  data.docs[0].id
-        } as any
-        if(rawData && String(rawData.brand)){
-            const brand= await brandStore.getDetailBrand(rawData.brand);
+        } as any;
+        console.log('rawData',rawData)
+        if(rawData && rawData?.brand && rawData?.brand.length > 1){
+            const brand= await brandStore.getDetailBrand(rawData?.brand);
             const newData = {
                 ...rawData,
                 brandInfo: brand,
@@ -65,6 +66,7 @@ export const useProductStore = defineStore('products',  () => {
         }else{
             return detailProduct.value = rawData
         }
+
     }
 
     return { products, loading, errors,detailProduct,  createNewProducts, getListProducts, getDetailProduct}

@@ -1,7 +1,8 @@
 <template>
-  <div class="container" v-if="detailProduct">
 
-    <div class="grid grid-cols-3 gap-3 h-full">
+  <div class="container mt-8" v-if="detailProduct">
+
+    <div class="grid grid-cols-3 gap-6 h-full">
       <div id="left" class="col-span-1">
         <ThumbCarouselProduct :data="detailProduct"/>
       </div>
@@ -35,7 +36,7 @@
                 </div>
               </div>
 
-              <div id="detail_variant" v-if="detailProduct.variants" class="relative py-3 w-full flex items-center gap-3">
+              <div id="detail_variant" v-if="detailProduct.variants.length > 0" class="relative py-3 w-full flex items-center gap-3">
                 <p class="text-base font-semibold grid gap-y-3">Variants:</p>
                 <template v-for="i  in detailProduct.variants" :key="i.unit">
                   <template v-if="+i.quantity >0">
@@ -54,6 +55,7 @@
                   </template>
                 </template>
               </div>
+
               <div id="quantity" >
                 <NumberField
                     id="quantity"
@@ -74,10 +76,16 @@
               </div>
 
               <div id="button_action" class="flex items-center gap-3 w-">
-                <Button class="w-full text-custom-red border-custom-red" variant="outline" size="xl" :disabled="errors.status"
-                  @click="handleAddToCart"
-                  >Add To Cart</Button>
-                <Button class="w-full" variant="destructive" size="xl" :disabled="errors.status" @click="$router.push('/cart')">Buy Now</Button>
+                <Button class="w-full text-custom-red border-custom-red" variant="outline" size="xl"
+                        :disabled="errors.status"
+                          @click="handleAddToCart"
+                  >
+                  Add To Cart
+                </Button>
+
+
+                <Button class="w-full" variant="destructive" size="xl"
+                        :disabled="errors.status" @click="$router.push('/cart')">Buy Now</Button>
               </div>
 
             </div>
@@ -96,13 +104,8 @@
   </div>
 </template>
 
-
-
-
-
-
 <script lang="ts"  setup>
-import {computed, ref, watch, markRaw, h, onMounted} from "vue";
+import {computed, ref, markRaw, h, onMounted, watchEffect} from "vue";
 import {clsx} from "clsx"
 import {Button} from "@/components/ui/button"
 import ThunderIcon from "@/components/ThunderIcon.vue"
@@ -136,7 +139,7 @@ const errors = ref<{status:boolean, mess:string}>({
 })
 
 const detailModel = ref<{ variant: string | null | undefined,  quantity: number}>({
-  variant:'',
+  variant:null,
   quantity: 1
 })
 
@@ -150,11 +153,13 @@ const chooseVariant = (id:string) => {
 
 
 const handleAddToCart = () => {
-  cartStore.addToCart({
+  const payload = {
     product: detailProduct,
     quantity: Number(detailModel.value.quantity),
-    variant_id: String(detailModel.value.variant),
-  });
+    variant_id: detailModel.value?.variant || null,
+  }
+
+  cartStore.addToCart(payload);
 
   const AddPrd =  h('div', { class: 'flex items-start justify-between w-full gap-4' }, [
         h('img', {
@@ -176,19 +181,25 @@ const clearModel = () => {
   detailModel.value.quantity = 1;
 }
 
-watch(() => detailModel.value.variant,() => {
-  if(checkVariant && !detailModel.value.variant) errors.value.status = true;
-  else errors.value.status = false;
+watchEffect(() => {
+  if(detailProduct.value?.variants.length > 0) {
+    if(checkVariant && !detailModel.value.variant) errors.value.status = true;
+    else errors.value.status = false;
 
 
-  const variantSelected = detailProduct.value.variants.find((i:any) => i.unit === detailModel.value.variant)
-  variantSelected ? variant_price.value = Number(variantSelected?.price) : detailProduct.value.variants[0]['price']
+    const variantSelected = detailProduct.value.variants.find((i:any) => i.unit === detailModel.value.variant)
+    variantSelected ? variant_price.value = Number(variantSelected?.price) : detailProduct.value.variants[0]['price']
+  }else{
+    detailModel.value.variant = null;
+    errors.value.status = false;
+  }
+
 })
 
 
 
 onMounted(async () => {
-  await productStore.getDetailProduct(route.params.id.toString())
+  await productStore.getDetailProduct(route.params.id.toString());
 })
 
   const vouchers = [

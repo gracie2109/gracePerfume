@@ -37,6 +37,42 @@
               </div>
             </div>
         </div>
+    <div v-else>
+
+      <div id="media" class="h-24 border px-2 rounded-lg mt-5">
+        <div class="flex items-start gap-3 h-full">
+
+          <div if="media"  class="w-[20%] h-full relative">
+            <img :src="prop.data.image      " alt="image of" class="w-ful h-full relative object-cover">
+            <div class="cursor-pointer absolute -top-2 -left-4 bg-custom-primary w-6 h-6 rounded-full text-white text-sm"
+                 v-if="prop.showBtnDel"
+                 @click="deleteItemInCart(prop.data.id,null)">
+              <div class="grid h-full place-items-center">x</div>
+            </div>
+          </div>
+          <div id="content_variant" class="flex-1 h-full flex justify-between items-center">
+            <div >
+              <div >
+                <p v-if="prop.data.name">{{truncateText(prop.data.name,50)}}</p>
+              </div>
+
+            </div>
+            <div id="action">
+              <p class="text-sm text-end">{{formatPrice(prop.data.price * prop.data.quantity)}}</p>
+              <div class="max-w-32">
+                <NumberField id="price" :default-value="prop.data.quantity" :min="0">
+                  <NumberFieldContent >
+                    <NumberFieldDecrement @click="decrement(prop.data.id,null)"/>
+                    <NumberFieldInput :disabled="true"  />
+                    <NumberFieldIncrement @click="increment(prop.data.id,null)"/>
+                  </NumberFieldContent>
+                </NumberField>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

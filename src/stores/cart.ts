@@ -5,7 +5,7 @@ import {getTotalVariantLength} from "@/lib/utils.ts";
 type CartAdd = {
     product: any,
     quantity: number,
-    variant_id?: string
+    variant_id: string | null
 
 }
 
@@ -58,6 +58,7 @@ export const useCart = defineStore('cart',  () => {
         }
     }
     function addToCart(payload:CartAdd) {
+        console.log('payload', payload)
         getCart()
         if(!cart.value || cart.value.length === 0){
             if(payload.variant_id) {
@@ -113,7 +114,8 @@ export const useCart = defineStore('cart',  () => {
                         variant:[
                             {
                                 id: payload.variant_id,
-                                quantity: payload.quantity
+                                quantity: payload.quantity,
+                                price: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).price
                             }
                         ]
                     }]

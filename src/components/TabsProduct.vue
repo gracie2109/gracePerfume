@@ -14,7 +14,7 @@ const props = defineProps<{
 <template>
   <TabsRoot
       class="flex flex-col w-full w-full"
-      default-value="tab1"
+      :default-value="tabsList[0]"
   >
     <TabsList
         class="relative shrink-0 flex border-b  "

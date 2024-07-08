@@ -111,7 +111,7 @@ const handleDelete = (image:any) => {
            <Loading />
          </template>
        </template>
-       <div class="relative w-full h-full" v-else>
+       <div class="relative w-20 h-20" v-else>
          <div id="media" class="relative w-full h-full">
            <img :src="images[i-1]"  alt="" class="w-full h-full object-cover"/>
          </div>

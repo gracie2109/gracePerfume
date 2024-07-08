@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div ref="container" class="keen-slider">
+    <div ref="container" class="keen-slider w-full max-h-96 h-96 pb-5">
       <div class="keen-slider__slide" v-for="(i,j) in props.data.images" :key="j">
-        <img :src="i" :alt="props.data.name">
+        <img :src="i" :alt="props.data.name" class="w-full h-full object-cover" />
       </div>
     </div>
-    <div ref="thumbnail" class="keen-slider thumbnail">
+    <div ref="thumbnail" class="keen-slider thumbnail max-h-20 h-20 w-full cursor-pointer">
       <div class="keen-slider__slide " v-for="(i,j) in props.data.images" :key="j">
-        <img :src="i" :alt="props.data.name">
+        <img :src="i" :alt="props.data.name" class="w-full h-full object-cover">
       </div>
 
 
@@ -75,75 +75,9 @@ function ThumbnailPlugin(main) {
 </script>
 
 <style scoped>
-
-
-[class^="number-slide"],
-[class*=" number-slide"] {
-  background: grey;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 50px;
-  color: #fff;
-  font-weight: 500;
-  height: 200px;
-  max-height: 100vh;
-}
-
-
-.thumbnail .keen-slider__slide {
-  font-size: 30px;
-  margin-top: 10px;
-  height: 100px;
-}
-.thumbnail .keen-slider__slide {
-  cursor: pointer;
-}
 .thumbnail .keen-slider__slide.active {
   border: 1px solid #ff8906;
-}
-
-
-.dots {
-  display: flex;
-  padding: 10px 0;
-  justify-content: center;
-}
-.dot {
-  border: none;
-  width: 10px;
-  height: 10px;
-  background: #c5c5c5;
-  border-radius: 50%;
-  margin: 0 5px;
-  padding: 5px;
-  cursor: pointer;
-}
-.dot:focus {
-  outline: none;
-}
-.dot.active {
-  background: #000;
-}
-.arrow {
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  -webkit-transform: translateY(-50%);
-  fill: #fff;
-  cursor: pointer;
-}
-.arrow--left {
-  left: 5px;
-}
-.arrow--right {
-  left: auto;
-  right: 5px;
-}
-.arrow--disabled {
-  fill: rgba(255, 255, 255, 0.5);
+  padding: 2px
 }
 </style>
 
