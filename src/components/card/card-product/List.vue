@@ -1,15 +1,15 @@
 <template>
   <div class="relative group">
-    <RouterLink :to="`/product/this-is-slug`">
+    <RouterLink :to="`/product/${props.data.slug}`">
       <img
           class="block relative h-[20rem] w-full cursor-pointer rounded-lg object-cover drop-shadow-2xl transition-opacity hover:opacity-70 relative"
-          src="https://image.tmdb.org/t/p/w342/2H1TmgdfNtsKlU9jKdeNyYL5y8T.jpg"
+          :src="props.data.images[0]"
           alt="title"
           role="link"
       />
 
     </RouterLink>
-    <div class="ribbon" v-if="!hasSale"><span>30%</span></div>
+    <div class="ribbon" v-if="hasSale"><span>{{ calcSalePercentage(+props.data.price , +props.data.cost) }}%</span></div>
     <div class="absolute group hidden bottom-0 w-full p-5 group-hover:block bg-white/30 backdrop-blur-sm rounded-sm">
 
       <div class="container flex gap-3 items-center justify-between">
@@ -30,31 +30,39 @@
 
    <div class="space-y-3 my-3">
      <p class="text-[10px] text-muted-foreground text-center">
-       NARCISO RODRIGUEZ</p>
-     <p class="text-center">Galloway EDP</p>
+       NARCISO RODRIGUEZ
+
+     </p>
+     <p class="text-center">{{props.data.name}}</p>
    </div>
-    <div class="price flex justify-between items-center px-5" v-if="!hasSale">
+    <div class="price flex justify-between items-center px-5" v-if="hasSale">
       <div class="text-destructive line-through">
-        {{formatPrice(salePrice)}}
+        {{formatPrice(props.data.cost)}}
       </div>
-      <span>{{formatPrice(250000)}}</span>
+      <span>{{formatPrice(props.data.price)}}</span>
     </div>
 
-    <div v-else class="text-center">{{formatPrice(250000)}}</div>
+    <div v-else class="text-center">{{formatPrice(props.data.price)}}</div>
 
 
 </template>
 
 <script lang="ts" setup>
-  import {formatPrice} from "@/lib/utils.ts";
+import {calcSalePercentage, formatPrice} from "@/lib/utils.ts";
   import { ShoppingCart, Heart } from 'lucide-vue-next';
 
 
 
 
   import {computed} from "vue";
-  const salePrice = computed(() => 300000);
-  const hasSale = computed(() => false)
+  const hasSale = computed(() => {
+    if(props.data.cost) return true;
+    else return false
+  });
+
+  const props = defineProps<{
+    data:any
+  }>()
 </script>
 
 

@@ -5,7 +5,7 @@
   </transition>
 </router-view>
   <TailwindIndicator />
-<Toaster position="top-right" rich-colors  />
+<Toaster position="top-right" rich-colors :duration="1000" />
 </template>
 
 <script setup lang="ts">

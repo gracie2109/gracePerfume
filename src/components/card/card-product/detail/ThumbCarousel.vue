@@ -1,12 +1,12 @@
 <template>
   <div>
     <div ref="container" class="keen-slider">
-      <div class="keen-slider__slide" v-for="(i,j) in props.data.media" :key="j">
+      <div class="keen-slider__slide" v-for="(i,j) in props.data.images" :key="j">
         <img :src="i" :alt="props.data.name">
       </div>
     </div>
     <div ref="thumbnail" class="keen-slider thumbnail">
-      <div class="keen-slider__slide " v-for="(i,j) in props.data.media" :key="j">
+      <div class="keen-slider__slide " v-for="(i,j) in props.data.images" :key="j">
         <img :src="i" :alt="props.data.name">
       </div>
 

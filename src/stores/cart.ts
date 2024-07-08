@@ -1,5 +1,6 @@
 import {ref, type Ref, toRaw} from 'vue'
 import { defineStore } from 'pinia';
+import {getTotalVariantLength} from "@/lib/utils.ts";
 
 type CartAdd = {
     product: any,
@@ -12,6 +13,11 @@ export const useCart = defineStore('cart',  () => {
     const cart:Ref<any[] | null> = ref(JSON.parse(localStorage.getItem('cart') as string));
     const totalPrice:Ref<any> = ref(0);
     const loading:Ref<boolean> = ref(false);
+    const cartLength:Ref<number> = ref(0);
+
+
+
+
 
     function clearCart() {
         cart.value = null;
@@ -27,7 +33,12 @@ export const useCart = defineStore('cart',  () => {
 
         if(data?.length === 0)  cart.value = null
         else cart.value = data;
+        getCartLength()
+    }
 
+    function getCartLength () {
+        const dt = getTotalVariantLength(cart.value) ;
+        cartLength.value = +dt;
     }
 
     function calcTotalPrice () {
@@ -52,21 +63,26 @@ export const useCart = defineStore('cart',  () => {
             if(payload.variant_id) {
                 const data = {
                     id: payload.product.value.id,
+                    image: payload.product.value.images[0],
+                    status: payload.product.value.status,
+                    name: payload.product.value.name,
+                    variants: payload.product.value.variants,
                     variant:[
                         {
                             id: payload.variant_id,
                             quantity: payload.quantity,
-                            price: payload.product.value.variant.find((i:any) => i.id === payload.variant_id).price
+                            price: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).price
                         }
-                    ],
-                    image: payload.product.value.image,
+                    ]
 
                 }
                 cart.value = [data]
             }else{
                 const dataSpecific = {
                     id: payload.product.value.id,
-                    image: payload.product.value.image,
+                    image: payload.product.value.images[0],
+                    name: payload.product.value.name,
+                    status: payload.product.value.status,
                     quantity: payload.quantity,
                     price: payload.product.value.price,
                 }
@@ -81,7 +97,7 @@ export const useCart = defineStore('cart',  () => {
                     if(checkVariant){
                         checkVariant.quantity = Number(checkVariant.quantity) + Number(payload.quantity)
                     }else{
-                        existPrd.variant = [...existPrd.variant,{id: payload.variant_id, quantity: +payload.quantity, price: payload.product.value.variant.find((i:any) => i.id === payload.variant_id).price}]
+                        existPrd.variant = [...existPrd.variant,{id: payload.variant_id, quantity: +payload.quantity, price: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).price}]
                     }
                 }else{
                     existPrd.quantity  = Number(existPrd.quantity) + Number(payload.quantity)
@@ -90,7 +106,10 @@ export const useCart = defineStore('cart',  () => {
                 if(payload.variant_id){
                     const uploadData  = [...cart.value, {
                         id: payload.product.value.id,
-                        image: payload.product.value.image,
+                        image:payload.product.value.images[0],
+                        status: payload.product.value.status,
+                        variants: payload.product.value.variants,
+                        name: payload.product.value.name,
                         variant:[
                             {
                                 id: payload.variant_id,
@@ -104,8 +123,10 @@ export const useCart = defineStore('cart',  () => {
                     const uploadSpecific = [...cart.value, {
                         id: payload.product.value.id,
                         quantity: payload.quantity,
+                        status: payload.product.value.status,
                         price: payload.product.value.price,
-                        image: payload.product.value.image,
+                        image:payload.product.value.images[0],
+                        name: payload.product.value.name,
                     }];
                     cart.value = uploadSpecific
                 }
@@ -182,5 +203,5 @@ export const useCart = defineStore('cart',  () => {
         getCart()
     }
 
-    return {cart, totalPrice,loading,clearCart,addToCart, getCart, calcTotalPrice,decrementCartItem,incrementCartItem,deleteItemInCart}
+    return {cart, totalPrice,loading,cartLength,clearCart,addToCart, getCart, calcTotalPrice,decrementCartItem,incrementCartItem,deleteItemInCart}
 })

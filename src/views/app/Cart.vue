@@ -2,7 +2,7 @@
   <div class="relative top-0 ">
     <div class="h-10  rounded-lg mb-3 ml-5 w-[220px] flex items-center justify-between px-3">
       <p class="scroll-m-20 text-[18px] font-semibold tracking-tight pl-2">Cart</p>
-      <small> You have <span v-if="cart" class="mr-2">{{ cart.length }}</span>  <span class="mr-2" v-else>0</span>items in cart  </small>
+      <small> You have <span v-if="cart" class="mr-2">{{ cartLength }}</span>  <span class="mr-2" v-else>0</span>items in cart  </small>
     </div>
     <div class=" relative  flex  gap-8 px-5" >
       <div class="flex-1 rounded-lg  p-2 ">
@@ -63,14 +63,14 @@ import cartEmptyImg from '@/assets/images/cart_banner_image.webp'
 import {formatPrice} from "@/lib/utils.ts";
 import {onMounted, watchEffect} from "vue";
 const cartStore = useCart();
-const {totalPrice, cart} = storeToRefs(cartStore);
+const {totalPrice, cart,cartLength} = storeToRefs(cartStore);
 
 onMounted(() => {
   cartStore.calcTotalPrice();
 })
-watchEffect(() => {
-  cartStore.getCart();
-})
+// watchEffect(() => {
+//   cartStore.getCart();
+// })
 
 </script>
 

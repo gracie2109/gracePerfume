@@ -1,11 +1,11 @@
 <template>
-  <div class=" rounded-sm grid space-y-3">
+  <div class=" rounded-sm grid space-y-3 ">
 
         <div v-if="prop.data.variant" v-for="(j, jj) in prop.data.variant" :key="jj" class="h-24 border px-2 rounded-lg mt-5">
             <div class="flex items-start gap-3 h-full">
 
                 <div if="media"  class="w-[20%] h-full relative">
-                  <img :src="prop.data.image" alt="image of" class="w-ful h-full relative object-cover">
+                  <img :src="prop.data.image      " alt="image of" class="w-ful h-full relative object-cover">
                   <div class="cursor-pointer absolute -top-2 -left-4 bg-custom-primary w-6 h-6 rounded-full text-white text-sm"
                         v-if="prop.showBtnDel"
                        @click="deleteItemInCart(prop.data.id,j.id)">
@@ -16,11 +16,10 @@
                <div >
                  <div >
                    <p v-if="prop.data.name">{{truncateText(prop.data.name,50)}}</p>
-                   <p v-else>Product name</p>
                  </div>
                  <div>
-                   <small v-if="j.name">{{truncateText(j.name,50)}}</small>
-                   <small v-else>variant name</small>
+                   <small v-if="j.id">{{truncateText(j.id,50)}}</small>
+
                  </div>
                </div>
                 <div id="action">

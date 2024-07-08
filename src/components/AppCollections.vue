@@ -28,7 +28,7 @@
     </div>
 
     <div id="tabs_content" class="flex pt-8 flex-wrap items-center justify-between gap-3 container">
-      <div v-for="(i, j) in Array(5)" :key="j" class="w-60" v-if="collections.length">
+      <div v-for="(i, j) in products" :key="j" class="w-60" v-if="products.length">
         <CardProductList :data="i"/>
       </div>
       <div v-else>
@@ -42,7 +42,8 @@
 </template>
 
 <script lang="ts" setup>
-import {useCollectionsStore} from '@/stores/collections'
+import {useCollectionsStore} from '@/stores/collections';
+import {useProductStore} from '@/stores/products'
 import {storeToRefs} from 'pinia'
 import {clsx} from "clsx"
 import {ref, watchEffect} from "vue";
@@ -51,7 +52,9 @@ import SkeletonCard from "@/components/skeleton/CardSkeleton.vue"
 import SkeletonCollectionTabs from "@/components/skeleton/CollectionTabs.vue"
 import {ChevronsRight} from "lucide-vue-next"
 const collectionStore = useCollectionsStore();
+const productStore = useProductStore();
 const {collections} = storeToRefs(collectionStore);
+const {products} = storeToRefs(productStore);
 const initTabs = ref<string | null>(null)
 
 function changeTab(index: string) {

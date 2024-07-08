@@ -6,7 +6,9 @@ import Terms from '@/components/Term.vue';
 import FAQ from '@/components/FAQ.vue'
 
 const tabsList = ['Product Detail', 'Reviews', 'Terms of service', 'FAQ'];
-
+const props = defineProps<{
+  data:any
+}>()
 </script>
 
 <template>
@@ -29,7 +31,7 @@ const tabsList = ['Product Detail', 'Reviews', 'Terms of service', 'FAQ'];
       </TabsTrigger>
     </TabsList>
     <TabsContent class="grow p-5 bg-white rounded-b-md outline-none " :value="tabsList[0]">
-     <ProductDetail />
+     <ProductDetail :data="props.data"/>
     </TabsContent>
     <TabsContent class="grow p-5 bg-white rounded-b-md outline-none"   :value="tabsList[1]">
       <Reviews />

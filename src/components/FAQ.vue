@@ -12,4 +12,8 @@
 <script lang="ts" setup>
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import {listFaq} from "@/lib/constant.ts"
+
+
+console.log('fian;')
+
 </script>
