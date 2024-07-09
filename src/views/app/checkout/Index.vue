@@ -1,60 +1,136 @@
+<script lang="ts" setup>
+import Step1 from "@/components/checkout/Step1.vue";
+import Step2 from "@/components/checkout/Step2.vue";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
+import {useStepper} from '@vueuse/core'
+import {provide, ref, type Ref} from 'vue';
+import clsx from "clsx";
+import AppLogo from '@/components/AppLogo.vue'
+import {ICheckout} from "@/types/checkout.ts";
+
+
+const form: Ref<ICheckout> = ref({
+  shipping_address: {
+    available_id: "",
+    address: "",
+    province: "",
+    ward: ""
+  },
+  phoneNumber: "",
+  userName: "",
+  payment: 'credit-card' as 'paypal' | 'credit-card',
+})
+
+const showAlert = ref<string | null>(null)
+const stepper = useStepper({
+  'user-information': {
+    title: 'User information',
+    isValid: () => form.value.shipping_address.address && form.value.phoneNumber,
+  },
+  'payment': {
+    title: 'Payment',
+    isValid: () => ['credit-card', 'paypal'].includes(form.value.payment),
+  },
+
+})
+
+function submit() {
+  if (stepper.current.value.isValid())
+    stepper.goToNext()
+}
+
+function allStepsBeforeAreValid(index: number): boolean {
+  return !Array(index)
+      .fill(null)
+      .some((_, i) => !stepper.at(i)?.isValid())
+}
+
+function clearAlert() {
+  showAlert.value = null
+}
+
+function nextStep() {
+  if (allStepsBeforeAreValid(1) && !stepper.isBefore('payment')) {
+    stepper.goToNext();
+    clearAlert()
+  } else {
+    showAlert.value = "Fill all fields first!!"
+  }
+
+}
+
+
+provide('form', form)
+</script>
+
 <template>
- <div class="grid grid-cols-3 gap-3 h-full w-full justify-between px-3 py-5 " v-if="user">
-   <div id="infomation" class="col-span-2 mt-5">
-      <AppLogo />
-      <div class="mt-5 space-y-8">
-        <h3 class="font-semibold text-2xl mt-8">Checkout infomation</h3>
-        <div class="flex gap-3 items-center">
-          <img :src="user?.photoURL || fallbackImg" alt="user photo" class="w-12 h-12 rounded-full inline-block">
-          <div>
-            <small>@{{user.displayName}}</small>
-            <p>{{user.email}}</p>
+  <div class="mt-5">
+    <div class="space-y-3 pl-6">
+      <AppLogo/>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/cart">
+              Cart
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator/>
+          <template v-for="(step, id, i) in stepper.steps.value" :key="id">
+            <BreadcrumbItem>
+              <BreadcrumbPage :class="clsx({
+                'text-red-600': stepper.current.value.title === step.title
+              })" @click="() => {
+                if(allStepsBeforeAreValid(i) && !stepper.isBefore(id)){
+                  stepper.goTo(id);
+                  clearAlert()
+                }
+              }">{{ step.title }}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator v-if="i !== 1"/>
+          </template>
+        </BreadcrumbList>
+      </Breadcrumb>
+    </div>
+
+    <form class="" @submit.prevent="submit">
+      <div class="flex flex-col justify-center gap-2 mt-2">
+        <div>
+
+
+          <div v-if="stepper.isCurrent('user-information')">
+            <Step1 :alert="showAlert" @next-step="nextStep"/>
           </div>
+
+          <div v-if="stepper.isCurrent('payment')">
+            <Step2/>
+          </div>
+
+
         </div>
-        <div class="mt-3">
-          <CheckoutUserInfomation />
+
+        <div>
+
+          <button v-if="stepper.isLast.value" :disabled="!stepper.current.value.isValid()">
+            Submit
+          </button>
         </div>
       </div>
-   </div>
-   <div id="review_cat" class="col-span-1 space-y-8 mt-8  ">
+    </form>
 
-     <PreviewCartItem  />
-       <div class="space-y-4 mt-5">
-         <Separator />
-         <div class="grid grid-cols-2  gap-2 justify-between w-full ">
-           <p >Temp price: </p>
-           <p class="text-end">{{formatPrice(totalPrice)}}</p>
-           <p >Shipping fee: </p>
-           <p class="text-end">_</p>
-         </div>
-         <Separator />
-         <div class="flex  gap-2 justify-between items-center w-full">
-           <p class="text-md">Total price</p>
-           <p class="text-2xl font-semibold">{{formatPrice(totalPrice)}}</p>
-         </div>
-       </div>
+    <div class="flex flex-col gap-4 mt-12">
+      <div class="w-full px-4 py-2 rounded border border-red-600 space-y-2 overflow-auto h-full">
+        <span class="font-bold">Form</span>
+        <pre v-text="form"/>
+      </div>
 
-   </div>
- </div>
-
-  <div v-else class="container grid h-full w-full">
-    <router-link :to="'/auth/login'">You need to login first</router-link>
+    </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import {useCurrentUser} from 'vuefire';
-import fallbackImg from "@/assets/images/fallback.jpg";
-import CheckoutUserInfomation from "@/components/forms/CheckoutUserInfomation.vue";
-import PreviewCartItem from "@/components/card/cart-item/PreviewCartItem.vue";
-import AppLogo from "@/components/AppLogo.vue";
-import {formatPrice} from "@/lib/utils.ts";
-import {Separator} from "@/components/ui/separator";
-import {storeToRefs} from "pinia";
-import {useCart} from "@/stores/cart.ts";
-
-const cartStore = useCart();
-const user = useCurrentUser();
-const {totalPrice, cart} = storeToRefs(cartStore);
-
-</script>

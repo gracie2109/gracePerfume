@@ -3,9 +3,10 @@ import image2 from "@/assets/images/sliders/2.jpg"
 import image3 from "@/assets/images/sliders/3.jpg";
 import image4 from "@/assets/images/sliders/4.jpg"
 import image5 from "@/assets/images/sliders/5.jpg";
-
-
-
+import tech from "@/assets/logo/techcombank.png";
+import acb from "@/assets/logo/acb.png";
+import cod from "@/assets/payment_method/cod.svg"
+import transfer from "@/assets/payment_method/transfer.svg"
 
 export const carouselImages = [image1,image2,image3,image4,image5];
 
@@ -43,5 +44,33 @@ export const listFaq = [
         q:'Nếu tôi mua sản phẩm với số lượng nhiều thì giá có được giảm không?',
         a:'Khi mua hàng với số lượng nhiều khách hàng sẽ được hưởng chế độ ưu đãi, giảm giá ngay tại thời điểm mua hàng.<br />' +
             'Khách hàng vui lòng liên hệ Mode để được hỗ trợ trực tiếp qua số điện thoại: 1900.636.000'
+    }
+]
+
+
+
+export const basePaymentMethods = [
+    {
+        name: 'CASH',
+        img:cod
+    },
+    {
+        name: 'TRANSFER',
+        img:transfer
+    }
+]
+
+export const baseBanks = [
+    {
+        id:'techcombank',
+        name: 'Techcombank',
+        payNum: '19033557603022',
+        bankLogo: tech
+    },
+    {
+        id:'acb',
+        name: 'ACB',
+        payNum: '39982827',
+        bankLogo: acb
     }
 ]

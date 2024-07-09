@@ -1,76 +1,50 @@
 <template>
+  <div v-if="form" class="space-y-4  px-5">
     <div>
-      <form  class="space-y-4  max-w-screen-sm">
-        <div>
-          <Label>Address</Label>
-          <Select class="relative"  v-model="formModel.address.id">
-            <SelectTrigger class="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent  class="relative">
-              <SelectGroup>
-                <SelectItem value="apple">
-                  Apple
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label>User name</Label>
-          <Input type="text" v-model="formModel.userName" />
-        </div>
-        <div>
-          <Label>Phone number</Label>
-          <Input type="tel"  v-model="formModel.phoneNumber"  />
-        </div>
-        <div>
-          <Label>Address</Label>
-          <Input type="text"   v-model="formModel.address.address" />
-        </div>
-        <div class="grid grid-cols-2 items-center justify-between gap-3 w-full">
-          <div>
-            <Label>Province</Label>
-            <Input type="tel" v-model="formModel.address.province" />
-          </div>
-          <div>
-            <Label>Ward</Label>
-            <Input type="tel"    v-model="formModel.address.ward" />
-          </div>
-        </div>
-      </form>
+      <Label>User name</Label>
+      <Input v-model="form.userName"  type="text"/>
     </div>
+    <div>
+      <Label>Phone number</Label>
+      <Input v-model="form.phoneNumber" type="tel"/>
+    </div>
+    <div>
+      <Label>Address</Label>
+      <Input v-model="form.shipping_address.address" type="text"/>
+    </div>
+    <div class="grid grid-cols-2 items-center justify-between gap-3 w-full">
+      <div>
+        <Label>Province</Label>
+        <Input v-model="form.shipping_address.province" type="text"/>
+      </div>
+      <div>
+        <Label>Ward</Label>
+        <Input v-model="form.shipping_address.ward" type="text"/>
+      </div>
+    </div>
+  </div>
 </template>
 
 
 <script lang="ts" setup>
-    import {Input} from "@/components/ui/input";
-    import {Label} from "@/components/ui/label";
-    import {Select,SelectContent,SelectGroup,SelectItem,SelectTrigger,SelectValue} from '@/components/ui/select'
-    import {onMounted, ref} from "vue"
-    import {useCurrentUser} from 'vuefire'
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {inject, onMounted, type Ref} from "vue"
+import {ICheckout} from "@/types/checkout.ts";
+import {useCurrentUser} from "vuefire";
+
+const form = inject('form') as Ref<ICheckout>;
+
+const user = useCurrentUser() as any;
 
 
-    const user = useCurrentUser() as any;
+onMounted(() => {
+  if(user && form){
+    form.value.userName = user.value.displayName;
+    form.value.phoneNumber = user.value.phoneNumber
 
-    const formModel =ref( {
-      phoneNumber:'',
-      userName:'',
-      address:{
-        id: '',
-        ward: '',
-        address:'',
-        province: ''
-      }
-    })
+  }
+})
 
-    onMounted(() => {
-      if(user){
-        formModel.value.userName = user.value.displayName;
-        formModel.value.phoneNumber = user.value.phoneNumber
-
-      }
-    })
 
 </script>
