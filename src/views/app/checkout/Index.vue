@@ -18,24 +18,22 @@
    </div>
    <div id="review_cat" class="col-span-1 space-y-8 mt-8  ">
 
-     <PreviewCartItem v-if="cart">
-       <template v-slot:desc>
-          <div class="space-y-4">
-            <Separator />
-            <div class="grid grid-cols-2  gap-2 justify-between w-full ">
-              <p >Temp price: </p>
-              <p class="text-end">{{formatPrice(totalPrice)}}</p>
-              <p >Shipping fee: </p>
-              <p class="text-end">_</p>
-            </div>
-            <Separator />
-            <div class="flex  gap-2 justify-between items-center w-full">
-              <p class="text-md">Total price</p>
-              <p class="text-2xl font-semibold">{{formatPrice(totalPrice)}}</p>
-            </div>
-          </div>
-       </template>
-     </PreviewCartItem>
+     <PreviewCartItem  />
+       <div class="space-y-4 mt-5">
+         <Separator />
+         <div class="grid grid-cols-2  gap-2 justify-between w-full ">
+           <p >Temp price: </p>
+           <p class="text-end">{{formatPrice(totalPrice)}}</p>
+           <p >Shipping fee: </p>
+           <p class="text-end">_</p>
+         </div>
+         <Separator />
+         <div class="flex  gap-2 justify-between items-center w-full">
+           <p class="text-md">Total price</p>
+           <p class="text-2xl font-semibold">{{formatPrice(totalPrice)}}</p>
+         </div>
+       </div>
+
    </div>
  </div>
 

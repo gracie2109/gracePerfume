@@ -15,10 +15,6 @@ export const useCart = defineStore('cart',  () => {
     const loading:Ref<boolean> = ref(false);
     const cartLength:Ref<number> = ref(0);
 
-
-
-
-
     function clearCart() {
         cart.value = null;
         localStorage.removeItem('cart')
@@ -58,7 +54,6 @@ export const useCart = defineStore('cart',  () => {
         }
     }
     function addToCart(payload:CartAdd) {
-        console.log('payload', payload)
         getCart()
         if(!cart.value || cart.value.length === 0){
             if(payload.variant_id) {
@@ -146,7 +141,6 @@ export const useCart = defineStore('cart',  () => {
             if(selectedPrd.variant && selectedPrd.variant.length >0){
                 const variantSelected = selectedPrd.variant.find((i:any) => i.id === variant_id);
                 if(variantSelected){
-                    console.log('variantSelected',variantSelected)
                     if(variantSelected.quantity > 1 ){
                         variantSelected.quantity = variantSelected.quantity - 1;
                     }

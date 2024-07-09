@@ -1,11 +1,13 @@
 <template>
   <div class="w-full">
 
-    <div class="relative grid gap-y-3" v-for="(i, ii) in cart" :key="ii" v-if="cart">
-      <div class="relative" v-if="i.variant" v-for="(j, jj) in i.variant" :key="jj">
+    <div class="relative grid gap-y-3 my-3" v-for="(i, ii) in cart" :key="ii" v-if="cart">
+      <div class="relative my-3" v-if="i.variant" v-for="(j, jj) in i.variant" :key="jj">
         <div class="flex gap-3 items-center">
-          <div class="relative">
-            <img :src="i.image" alt="" class="w-14 h-14 border rounded-lg relative" />
+          <div>
+            <div  class="relative w-16 h-16">
+              <img :src="i.image" alt="" class="w-full h-full object-cover rounded-md relative" />
+            </div>
             <div class="absolute -top-1 -left-2 bg-custom-primary w-5 h-5 rounded-full text-[10px] text-white">
               <div class="h-full grid place-items-center"> {{j.quantity}} </div>
             </div>
@@ -28,8 +30,10 @@
       </div>
       <div v-else>
         <div class="flex gap-3 items-center">
-          <div class="relative">
-            <img :src="i.image" alt="" class="w-16 h-16 border rounded-lg relative" />
+          <div>
+           <div class="relative w-16 h-16">
+             <img :src="i.image" alt="" class="w-full h-full object-cover rounded-md relative" />
+           </div>
             <div class="absolute -top-1 -left-2 bg-custom-primary w-5 h-5 rounded-full text-[10px] text-white">
               <div class="h-full grid place-items-center"> {{i.quantity}} </div>
             </div>
@@ -49,9 +53,7 @@
           </div>
         </div>
       </div>
-      <div>
-        <slot name="desc"></slot>
-      </div>
+
     </div>
   </div>
 </template>

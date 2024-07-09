@@ -1,5 +1,5 @@
 <template>
-  <div class="relative top-0 ">
+  <div class="relative top-0  h-full">
     <div class="h-10  rounded-lg mb-3 ml-5 w-[220px] flex items-center justify-between px-3">
       <p class="scroll-m-20 text-[18px] font-semibold tracking-tight pl-2">Cart</p>
       <small> You have <span v-if="cart" class="mr-2">{{ cartLength }}</span>  <span class="mr-2" v-else>0</span>items in cart  </small>
@@ -21,7 +21,7 @@
        </ScrollArea>
       </div>
 
-      <div class="w-96  rounded-lg p-5 ">
+      <div class="w-96  rounded-lg p-5  h-full shadow-sm border">
         <h4 class="scroll-m-20 text-xl font-semibold tracking-tight">
          Cart Infomation
         </h4>

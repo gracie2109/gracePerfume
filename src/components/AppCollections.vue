@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div id="tabs_content" class="flex pt-8 flex-wrap items-center justify-between gap-3 container">
+    <div id="tabs_content" class="flex pt-8 flex-wrap items-center  gap-3 container">
       <div v-for="(i, j) in products" :key="j" class="w-60" v-if="products.length">
         <CardProductList :data="i"/>
       </div>
