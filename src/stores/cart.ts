@@ -1,31 +1,26 @@
 import {ref, type Ref, toRaw} from 'vue'
 import { defineStore } from 'pinia';
 import {getTotalVariantLength} from "@/lib/utils.ts";
+import {type CartAdd} from '@/types/cart.ts'
 
-type CartAdd = {
-    product: any,
-    quantity: number,
-    variant_id: string | null
-
-}
 
 export const useCart = defineStore('cart',  () => {
-    const cart:Ref<any[] | null> = ref(JSON.parse(localStorage.getItem('cart') as string));
+    const cart:Ref<any[] | null> = ref(JSON.parse(sessionStorage.getItem('cart') as string));
     const totalPrice:Ref<any> = ref(0);
     const loading:Ref<boolean> = ref(false);
     const cartLength:Ref<number> = ref(0);
 
     function clearCart() {
         cart.value = null;
-        localStorage.removeItem('cart')
+        sessionStorage.removeItem('cart')
     }
 
     function uploadStorage () {
-        localStorage.setItem('cart', JSON.stringify(cart.value));
+        sessionStorage.setItem('cart', JSON.stringify(cart.value));
     }
 
     function getCart ()  {
-        const data = JSON.parse(localStorage.getItem('cart') as string);
+        const data = JSON.parse(sessionStorage.getItem('cart') as string);
 
         if(data?.length === 0)  cart.value = null
         else cart.value = data;
@@ -62,7 +57,6 @@ export const useCart = defineStore('cart',  () => {
                     image: payload.product.value.images[0],
                     status: payload.product.value.status,
                     name: payload.product.value.name,
-                    variants: payload.product.value.variants,
                     variant:[
                         {
                             id: payload.variant_id,
@@ -104,7 +98,6 @@ export const useCart = defineStore('cart',  () => {
                         id: payload.product.value.id,
                         image:payload.product.value.images[0],
                         status: payload.product.value.status,
-                        variants: payload.product.value.variants,
                         name: payload.product.value.name,
                         variant:[
                             {

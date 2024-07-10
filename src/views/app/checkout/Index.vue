@@ -10,11 +10,12 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import {useStepper} from '@vueuse/core'
-import {provide, ref, type Ref} from 'vue';
+import {provide, ref, type Ref, onMounted} from 'vue';
 import clsx from "clsx";
 import AppLogo from '@/components/AppLogo.vue'
 import {ICheckout} from "@/types/checkout.ts";
-
+import {basePaymentMethods} from '@/lib/constant'
+import {useCheckout} from '@/stores/checkout'
 
 const form: Ref<ICheckout> = ref({
   shipping_address: {
@@ -25,8 +26,10 @@ const form: Ref<ICheckout> = ref({
   },
   phoneNumber: "",
   userName: "",
-  payment: 'credit-card' as 'paypal' | 'credit-card',
+  payment: basePaymentMethods.map((i) => i.name),
+  transfer_banks: null
 })
+const checkoutStore = useCheckout();
 
 const showAlert = ref<string | null>(null)
 const stepper = useStepper({
@@ -36,7 +39,7 @@ const stepper = useStepper({
   },
   'payment': {
     title: 'Payment',
-    isValid: () => ['credit-card', 'paypal'].includes(form.value.payment),
+    isValid: () => basePaymentMethods.map((i) => i.name).includes(form.value.payment),
   },
 
 })
@@ -65,6 +68,13 @@ function nextStep() {
   }
 
 }
+
+onMounted(  async() => {
+   const data =  await checkoutStore.checkIntegrityProduct();
+   console.warn('errors', data?.errors);
+    console.warn('response', data?.response)
+});
+
 
 
 provide('form', form)
@@ -118,19 +128,13 @@ provide('form', form)
 
         <div>
 
-          <button v-if="stepper.isLast.value" :disabled="!stepper.current.value.isValid()">
-            Submit
-          </button>
+<!--          <button v-if="stepper.isLast.value" :disabled="!stepper.current.value.isValid()">-->
+<!--            Submit-->
+<!--          </button>-->
         </div>
       </div>
     </form>
 
-    <div class="flex flex-col gap-4 mt-12">
-      <div class="w-full px-4 py-2 rounded border border-red-600 space-y-2 overflow-auto h-full">
-        <span class="font-bold">Form</span>
-        <pre v-text="form"/>
-      </div>
 
-    </div>
   </div>
 </template>

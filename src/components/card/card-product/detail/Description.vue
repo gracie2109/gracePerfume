@@ -6,7 +6,6 @@
 </template>
 
 <script setup lang="ts">
-  console.log('comp1');
 
   const props = defineProps<{
     data:any

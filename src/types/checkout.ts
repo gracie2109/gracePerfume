@@ -1,5 +1,3 @@
-
-
 export type ICheckout = {
     shipping_address: {
         available_id: string,
@@ -9,5 +7,7 @@ export type ICheckout = {
     },
     phoneNumber: string,
     userName: string,
-    payment: string
+    payment: string,
+    transfer_banks: string | null
 }
+

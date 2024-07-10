@@ -2,14 +2,15 @@ import { ref, type Ref} from 'vue'
 import { defineStore } from 'pinia'
 import {collection, addDoc} from 'firebase/firestore'
 import {useCollection,useFirestore,} from 'vuefire'
-import {checkItemExistence, getDetailData} from '@/lib/utils';
+import {checkItemExistence, getDetailData, getListFirebase} from '@/lib/utils';
 import { toast } from 'vue-sonner';
 import {useBrandStore} from "@/stores/brand.ts";
 
 
 export const useProductStore = defineStore('products',  () => {
     const db = useFirestore()
-    const products =  useCollection(collection(db, 'products'))
+    const products =  useCollection(collection(db, 'products'));
+
     const loading:Ref<boolean> = ref(false)
     const errors:Ref<{message: String, code: String}> = ref({message: "", code: ""})
     const detailProduct:Ref<any | null> = ref(null)
@@ -21,7 +22,6 @@ export const useProductStore = defineStore('products',  () => {
 
         try{
             loading.value = true;
-            console.log('paylad', value)
             const exist = await checkItemExistence('products','name', value.name);
             if(!exist){
                 await addDoc(collection(db, 'products'), value);
@@ -43,7 +43,14 @@ export const useProductStore = defineStore('products',  () => {
 
 
     const getListProducts = async () => {
-
+      try{
+          loading.value = true;
+          return  await  getListFirebase('products')
+      }catch(error){
+          console.log('fetch fail')
+      }finally {
+          loading.value = false
+      }
     }
 
 
@@ -54,7 +61,6 @@ export const useProductStore = defineStore('products',  () => {
             ...data.docs[0].data(),
             id:  data.docs[0].id
         } as any;
-        console.log('rawData',rawData)
         if(rawData && rawData?.brand && rawData?.brand.length > 1){
             const brand= await brandStore.getDetailBrand(rawData?.brand);
             const newData = {

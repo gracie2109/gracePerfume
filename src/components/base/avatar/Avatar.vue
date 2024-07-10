@@ -42,8 +42,6 @@ onMounted(() => {
   }
 });
 
-console.log( user.value?.displayName)
-
 async function logout() {
   try {
     await signOut(auth)
