@@ -1,14 +1,21 @@
 import {defineStore, storeToRefs} from 'pinia';
-import {generateId} from "@/lib/utils.ts";
+import {generateId, getDetailData, getListFirebase} from "@/lib/utils.ts";
 import {useCart} from "@/stores/cart.ts";
 import {useProductStore} from "@/stores/products";
+import {ICheckout} from "@/types/checkout.ts";
+import {ref, type Ref} from "vue";
+import {useCurrentUser, useFirestore} from "vuefire";
+import {addDoc, collection} from "firebase/firestore";
 
 export const useCheckout = defineStore('checkout', () => {
     const cartStore = useCart();
     const prdStore = useProductStore();
+    const loading: Ref<boolean> = ref(false);
 
-
-    const {cart} = storeToRefs(cartStore);
+    const {cart, totalPrice, cartLength} = storeToRefs(cartStore);
+    const currentUser = useCurrentUser();
+    const currentUserOrder: Ref<any[] | null> = ref(null)
+    const db = useFirestore();
 
 
     function createOrderId() {
@@ -94,14 +101,58 @@ export const useCheckout = defineStore('checkout', () => {
         }
     }
 
-    function createPayment() {
+    async function createPayment(orderInfo: ICheckout) {
         const orderId = createOrderId();
-        const checkIntegrity = checkIntegrityProduct();
-        console.log("checkIntegrity", checkIntegrity)
-        return orderId
+        const payload = {
+            ...orderInfo,
+            product: cart.value,
+            orderCode: orderId,
+            price: totalPrice.value,
+            totalItem: cartLength.value,
+            orderDate: new Date().toISOString(),
+            cancelDate: null,
+            cancelReason: null,
+            paymentStatus: "PENDING",
+            fulfillmentStatus: "not fulfilled",
+            status: "PENDING",
+            userId: currentUser.value?.uid
+        }
+        try {
+            loading.value = true;
+            await addDoc(collection(db, 'orders'), payload);
+
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            loading.value = false
+        }
     }
 
+    async function getCurrentUserOrder() {
+        try {
+            loading.value = true;
+        } catch (error) {
+            const allOrder = await getListFirebase('orders');
+            if (allOrder && currentUser.value) {
+                const order = allOrder.filter((i) => i.userId === (currentUser.value)?.uid) || [];
+                currentUserOrder.value = order
+            }
+        } finally {
 
-    return {createPayment, checkIntegrityProduct}
+        }
+    }
+
+    async function getDetailOrder (orderId: string) {
+            try{
+                loading.value = true;
+              return await getDetailData('orders', 'id', orderId)
+            }catch (e) {
+                console.log('err',e)
+            }finally {
+                loading.value = false
+            }
+    }
+
+    return {createPayment, currentUserOrder, checkIntegrityProduct, getCurrentUserOrder,getDetailOrder}
 
 })
