@@ -36,7 +36,7 @@
                 </div>
               </div>
 
-              <div id="detail_variant" v-if="detailProduct.variants.length > 0" class="relative py-3 w-full flex items-center gap-3">
+              <div id="detail_variant" v-if="detailProduct?.variants && detailProduct.variants.length > 0" class="relative py-3 w-full flex items-center gap-3">
                 <p class="text-base font-semibold grid gap-y-3">Variants:</p>
                 <template v-for="i  in detailProduct.variants" :key="i.unit">
                   <template v-if="+i.quantity >0">
@@ -151,7 +151,6 @@ const chooseVariant = (id:string) => {
   detailModel.value.variant = id
 }
 
-
 const handleAddToCart = () => {
   const payload = {
     product: detailProduct,
@@ -182,7 +181,7 @@ const clearModel = () => {
 }
 
 watchEffect(() => {
-  if(detailProduct.value?.variants.length > 0) {
+  if(detailProduct.value?.variants?.length > 0) {
     if(checkVariant && !detailModel.value.variant) errors.value.status = true;
     else errors.value.status = false;
 

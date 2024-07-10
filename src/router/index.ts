@@ -8,7 +8,8 @@ import AdminSettingLayout from "@/layouts/admin/AdminSettingLayout.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";
 import DetailProduct from "@/views/app/product/Detail.vue";
 import NoLayout from "@/layouts/no-layout/NoLayout.vue";
-
+import {useCurrentUser} from "vuefire"
+import {nextTick} from "vue";
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -25,11 +26,13 @@ const router = createRouter({
                     path: '',
                     component: HomeView,
                     name: 'home',
+                    meta: {title: ""},
                 },
                 {
                     path: 'cart',
                     component: () => import('@/views/app/Cart.vue'),
                     name: 'cart',
+                    meta: {title: "Cart"},
                 },
                 {
                     path: 'product/:id',
@@ -62,7 +65,6 @@ const router = createRouter({
         {
             path: '/auth/',
             component:AuthLayout,
-            meta: { requiresAuth: true },
             children:[
                 {
                     path: 'login',
@@ -79,6 +81,7 @@ const router = createRouter({
         {
             path: '/checkout/',
             component: NoLayout,
+            meta: { requiresAuth: true , title: "Checkout"},
             children:[
                 {
                     path: '',
@@ -92,7 +95,6 @@ const router = createRouter({
             component: AdminLayout,
             name:'admin',
             meta: { requiresAuth: true, isAdmin:true },
-
             children:[
                 //brands
                 {
@@ -173,6 +175,21 @@ const router = createRouter({
     ]
 });
 
+router.beforeEach( (to, from, next) => {
+    const user = useCurrentUser();
+    console.log('ti', to)
+    if(to.meta.requiresAuth) {
+      if(!user.value) next({name: 'login'})
+      else next()
+    }else  next()
 
-
+})
+router.afterEach((to) => {
+    nextTick(
+        () =>
+            (document.title =
+                (to?.meta?.title ? to?.meta?.title + "/" : "") +
+                import.meta.env.VITE_APP_TITLE),
+    );
+});
 export default router
