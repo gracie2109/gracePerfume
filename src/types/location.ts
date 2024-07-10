@@ -23,7 +23,7 @@ interface ILocation {
     name: string
 }
 
-export interface IUserLocation {
+export interface IAddress {
     ward: ILocation,
     province: ILocation,
     district: ILocation,

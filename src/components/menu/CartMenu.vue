@@ -46,7 +46,7 @@
           </div>
 
           <Button>
-            <router-link :to="$router.resolve('checkout')" class="flex gap-x-2 items-center">
+            <router-link :to="$router.resolve({name: 'checkout'})" class="flex gap-x-2 items-center">
               Checkout<ChevronsRight class="w-4 h-4"/> </router-link>
           </Button>
 

@@ -1,4 +1,4 @@
-import {GHNDistrict, GHNProvince, GHNWard} from "@/types/user.ts";
+import {GHNDistrict, GHNProvince, GHNWard} from "@/types/location.ts";
 
 const token = import.meta.env.VITE_APP_GHN_TOKEN;
 
@@ -13,7 +13,7 @@ export async function getProvince() {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-                'Token': token
+                "Token": token
             },signal
         })).json()).data;
 

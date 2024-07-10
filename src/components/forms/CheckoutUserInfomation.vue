@@ -8,20 +8,8 @@
       <Label>Phone number</Label>
       <Input v-model="form.phoneNumber" type="tel"/>
     </div>
-    <div>
-      <Label>Address</Label>
-      <Input v-model="form.shipping_address.address" type="text"/>
-    </div>
-    <div class="grid grid-cols-2 items-center justify-between gap-3 w-full">
-      <div>
-        <Label>Province</Label>
-        <Input v-model="form.shipping_address.province" type="text"/>
-      </div>
-      <div>
-        <Label>Ward</Label>
-        <Input v-model="form.shipping_address.ward" type="text"/>
-      </div>
-    </div>
+    <ProvinceAddress :form="form.shipping_address" />
+
   </div>
 </template>
 
@@ -29,6 +17,9 @@
 <script lang="ts" setup>
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
+import ProvinceAddress from "@/components/ProvinceAddress.vue";
+
+
 import {inject, onMounted, type Ref} from "vue"
 import {ICheckout} from "@/types/checkout.ts";
 import {useCurrentUser} from "vuefire";

@@ -13,22 +13,11 @@ import {useStepper} from '@vueuse/core'
 import {provide, ref, type Ref, onMounted} from 'vue';
 import clsx from "clsx";
 import AppLogo from '@/components/AppLogo.vue'
-import {ICheckout} from "@/types/checkout.ts";
+import {ICheckout, initialCheckoutValue} from "@/types/checkout.ts";
 import {basePaymentMethods} from '@/lib/constant'
 import {useCheckout} from '@/stores/checkout'
 
-const form: Ref<ICheckout> = ref({
-  shipping_address: {
-    available_id: "",
-    address: "",
-    province: "",
-    ward: ""
-  },
-  phoneNumber: "",
-  userName: "",
-  payment: basePaymentMethods.map((i) => i.name),
-  transfer_banks: null
-})
+const form: Ref<ICheckout> = ref(initialCheckoutValue)
 const checkoutStore = useCheckout();
 
 const showAlert = ref<string | null>(null)
@@ -109,7 +98,9 @@ provide('form', form)
         </BreadcrumbList>
       </Breadcrumb>
     </div>
-
+    <div class="my-5">
+      {{form}}
+    </div>
     <form class="" @submit.prevent="submit">
       <div class="flex flex-col justify-center gap-2 mt-2">
         <div>

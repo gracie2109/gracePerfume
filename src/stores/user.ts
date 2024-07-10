@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {useCurrentUser} from "vuefire";
-import {IUserLocation} from "@/types/user.ts";
+import {type IAddress} from "@/types/location.ts";
 import {type Ref, ref} from "vue";
 import {TErrors} from "@/types";
 
@@ -13,7 +13,7 @@ export const useUserStore = defineStore('user',  () => {
 
 
 
-   async function createUserLocation (payload: IUserLocation) {
+   async function createUserLocation (payload: IAddress) {
         console.log('payload', payload);
         if(!currentUser.value){
             errors.value.message = 'Login first!!'

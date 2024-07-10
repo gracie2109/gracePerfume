@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-20 w-full space-y-4 border border-red-600">
+  <div class="mt-20 w-full space-y-4">
     <div class="grid grid-cols-2 items-start gap-3 w-full">
       <div class="space-y-2">
         <Label for="province">Province</Label>
@@ -8,7 +8,7 @@
             @update:modelValue=" (v) => currySelected('province',v,'number', mapProvince, 'ProvinceID','ProvinceName')"
         >
           <SelectTrigger >
-            <SelectValue placeholder="enter"/>
+            <SelectValue placeholder="Choose province"/>
           </SelectTrigger>
           <SelectContent side="bottom">
             <template v-for="i in listProvince" v-if="listProvince" :key="i.ProvinceID">
@@ -27,7 +27,7 @@
             @update:modelValue=" (v) => currySelected('district',v,'number', mapDistricts, 'DistrictID','DistrictName')"
         >
           <SelectTrigger >
-            <SelectValue placeholder="enter"/>
+            <SelectValue placeholder="Choose district"/>
           </SelectTrigger>
           <SelectContent side="bottom">
             <template v-for="i in listDistricts" v-if="listDistricts" :key="i.DistrictID">
@@ -47,7 +47,7 @@
           @update:modelValue=" (v) => currySelected('ward',v,'string', mapWards, 'WardCode','WardName')"
       >
         <SelectTrigger >
-          <SelectValue placeholder="enter"/>
+          <SelectValue placeholder="Choose ward"/>
         </SelectTrigger>
         <SelectContent side="bottom">
           <template v-for="i in listWards" v-if="listWards" :key="i.WardCode">
@@ -59,9 +59,9 @@
       </Select>
     </div>
 
-    <div class=" gap-2">
+    <div class=" gap-2" v-if="props.form">
       <Label for="address">Address</Label>
-      <Textarea id="address" v-model="provinceModel.address" placeholder="Type your exactly address." />
+      <Textarea id="address" v-model="props.form.address" placeholder="Type your exactly address." />
     </div>
   </div>
 </template>
@@ -71,16 +71,10 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/c
 import {Label} from "@/components/ui/label"
 import {Textarea} from "@/components/ui/textarea"
 import {onMounted, reactive, ref, watch} from "vue";
-import {GHNDistrict, GHNProvince, GHNWard, IUserLocation} from "@/types/user.ts";
-import {getDistrict, getProvince, getWard} from "@/third_party_service/location.ts";
+import {GHNDistrict, GHNProvince, GHNWard, IAddress} from "@/types/location.ts";
+import {getDistrict, getProvince, getWard} from "@/services/location.ts";
+import {IShippingAddress} from "@/types/checkout.ts";
 
-
-const provinceModel = ref<IUserLocation>({
-  province: {code: 0, name: ''},
-  district: {code: 0, name: ''},
-  ward: {code: 0, name: ''},
-  address: ""
-});
 
 const listProvince = ref<GHNProvince[] | null | undefined>(null)
 const mapProvince = reactive<any>(new Map());
@@ -91,9 +85,12 @@ const mapDistricts = reactive<any>(new Map());
 const listWards = ref<GHNWard[] | null | undefined>(null)
 const mapWards = reactive(new Map());
 
+const props = defineProps<{
+  form: IShippingAddress;
+}>()
 
 const currySelected = (
-    modelName: keyof IUserLocation,
+    modelName: keyof IAddress,
     selectedId: string | number,
     selectedIdType: 'string' | 'number',
     listMapName: Map<string | number, any>,
@@ -101,11 +98,11 @@ const currySelected = (
     nameField: any
 ) => {
   const select = selectedIdType === 'number' ? listMapName.get(Number(selectedId)) : listMapName.get(String(selectedId));
-  if (select) {
+  if (select && props.form) {
     //@ts-ignore
-    provinceModel.value[modelName]['code'] = select[codeField];
+    props.form[modelName]['code'] = select[codeField];
     //@ts-ignore
-    provinceModel.value[modelName]['name'] = select[nameField];
+    props.form[modelName]['name'] = select[nameField];
   }
 };
 
@@ -119,9 +116,9 @@ onMounted(async () => {
 })
 
 
-watch(() => provinceModel.value.province.code, async () => {
-  if (provinceModel.value.province.code !== 0) {
-    const districts = await getDistrict(provinceModel.value.province.code);
+watch(() => props.form?.province?.code, async () => {
+  if (props.form?.province?.code !== 0) {
+    const districts = await getDistrict(props.form?.province?.code);
     listDistricts.value = districts
     if (districts) {
       districts.map((i: GHNDistrict) => mapDistricts.set(i.DistrictID, i))
@@ -130,9 +127,9 @@ watch(() => provinceModel.value.province.code, async () => {
 
 })
 
-watch(() => provinceModel.value.district.code, async () => {
-  if (provinceModel.value.district.code !== 0) {
-    const wards = await getWard(provinceModel.value.district.code);
+watch(() => props.form?.district?.code, async () => {
+  if (props.form?.district?.code !== 0) {
+    const wards = await getWard(props.form?.district?.code);
     listWards.value = wards
     if (wards) {
       wards.map((i: GHNWard) => mapWards.set(i.WardCode, i))

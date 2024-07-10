@@ -11,7 +11,7 @@
           </div>
         </div>
         <div class="mt-3">
-          <CheckoutUserInfomation/>
+          <CheckoutUserInfomation />
         </div>
       </div>
     </div>
@@ -66,7 +66,9 @@ import {storeToRefs} from "pinia";
 import {useCart} from "@/stores/cart.ts";
 import {Button} from "@/components/ui/button"
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+
 import {Beer} from "lucide-vue-next";
+
 const cartStore = useCart();
 const user = useCurrentUser();
 const {totalPrice} = storeToRefs(cartStore);
