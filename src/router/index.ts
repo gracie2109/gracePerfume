@@ -20,7 +20,7 @@ const router = createRouter({
                 {
                     name: 'test',
                     path:'test',
-                    component:() => import('@/components/Upload.vue')
+                    component:() => import('@/components/ProvinceAddress.vue')
                 },
                 {
                     path: '',
@@ -175,9 +175,8 @@ const router = createRouter({
     ]
 });
 
-router.beforeEach( (to, from, next) => {
+router.beforeEach( (to, _, next) => {
     const user = useCurrentUser();
-    console.log('ti', to)
     if(to.meta.requiresAuth) {
       if(!user.value) next({name: 'login'})
       else next()
