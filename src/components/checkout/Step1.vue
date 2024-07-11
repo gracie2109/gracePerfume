@@ -1,20 +1,10 @@
 <template>
   <div v-if="user" class="grid grid-cols-3 gap-3 h-full w-full justify-between px-3 py-5 ">
-    <div class="col-span-2 mt-5">
+    <div class="col-span-2 mt-5 space-y-8">
 
-      <div class="mt-5 space-y-8">
-        <div class="flex gap-3 items-center">
-          <img :src="user?.photoURL || fallbackImg" alt="user photo" class="w-12 h-12 rounded-full inline-block">
-          <div>
-            <small>@{{ user.displayName }}</small>
-            <p>{{ user.email }}</p>
-          </div>
-        </div>
-        <div class="mt-3">
-          <CheckoutUserInfomation />
-        </div>
-      </div>
-    </div>
+      <UserAvatar />
+      <CheckoutUserInfomation />
+     </div>
     <div id="review_cat" class="col-span-1 space-y-8 mt-8  ">
 
       <PreviewCartItem/>
@@ -57,7 +47,6 @@
 
 <script lang="ts" setup>
 import {useCurrentUser} from 'vuefire';
-import fallbackImg from "@/assets/images/fallback.jpg";
 import CheckoutUserInfomation from "@/components/forms/CheckoutUserInfomation.vue";
 import PreviewCartItem from "@/components/card/cart-item/PreviewCartItem.vue";
 import {formatPrice} from "@/lib/utils.ts";
@@ -68,6 +57,7 @@ import {Button} from "@/components/ui/button"
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 
 import {Beer} from "lucide-vue-next";
+import UserAvatar from "@/components/base/avatar/UserAvatar.vue";
 
 const cartStore = useCart();
 const user = useCurrentUser();

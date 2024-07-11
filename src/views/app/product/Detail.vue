@@ -108,7 +108,7 @@
 import {computed, ref, markRaw, h, onMounted, watchEffect} from "vue";
 import {clsx} from "clsx"
 import {Button} from "@/components/ui/button"
-import ThunderIcon from "@/components/ThunderIcon.vue"
+import ThunderIcon from "@/components/icons/ThunderIcon.vue"
 import VoucherList from '@/components/card/card-voucher/List.vue'
 import ProductTabs from '@/components/TabsProduct.vue'
 import {

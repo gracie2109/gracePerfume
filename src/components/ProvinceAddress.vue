@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-20 w-full space-y-4">
+  <div class="mt-2 w-full space-y-4">
     <div class="grid grid-cols-2 items-start gap-3 w-full">
       <div class="space-y-2">
         <Label for="province">Province</Label>
@@ -73,7 +73,6 @@ import {Textarea} from "@/components/ui/textarea"
 import {onMounted, reactive, ref, watch} from "vue";
 import {GHNDistrict, GHNProvince, GHNWard, IAddress} from "@/types/location.ts";
 import {getDistrict, getProvince, getWard} from "@/services/location.ts";
-import {IShippingAddress} from "@/types/checkout.ts";
 
 
 const listProvince = ref<GHNProvince[] | null | undefined>(null)
@@ -86,7 +85,7 @@ const listWards = ref<GHNWard[] | null | undefined>(null)
 const mapWards = reactive(new Map());
 
 const props = defineProps<{
-  form: IShippingAddress;
+  form: any
 }>()
 
 const currySelected = (

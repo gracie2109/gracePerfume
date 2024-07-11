@@ -29,5 +29,22 @@ export const navigation = {
             name: 'adminSettingPermissionList',
             icon:''
         }
+    ],
+    profileNav:[
+        {
+            path: 'general',
+            name: 'general',
+            icon:''
+        },
+        {
+            path: 'address',
+            name: 'address',
+            icon:''
+        },
+        {
+            path: 'transactions',
+            name: 'transactions',
+            icon:''
+        }
     ]
 }

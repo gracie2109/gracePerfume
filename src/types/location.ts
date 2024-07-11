@@ -29,3 +29,8 @@ export interface IAddress {
     district: ILocation,
     address: string
 }
+
+export interface UserAddress  extends IAddress {
+    name: string,
+    id: string
+}

@@ -60,6 +60,27 @@ const router = createRouter({
                     name: 'brandDetail',
 
                 },
+                {
+                    path:'profile/',
+                    component: () => import('@/layouts/profile/Index.vue'),
+                    children: [
+                        {
+                            path: 'general',
+                            name: 'general',
+                            component: () => import('@/views/app/auth/Profile.vue'),
+                        },
+                        {
+                            path: 'address',
+                            name: 'address',
+                            component: () => import('@/views/app/auth/Address.vue'),
+                        },
+                        {
+                            path: 'transactions',
+                            name: 'transactions',
+                            component: () => import('@/views/app/auth/Transaction.vue'),
+                        },
+                    ]
+                },
             ]
         },
         {
@@ -75,7 +96,7 @@ const router = createRouter({
                     path: 'register',
                     name: 'register',
                     component:  () =>import("@/views/auth/Register.vue")
-                }
+                },
             ]
         },
         {

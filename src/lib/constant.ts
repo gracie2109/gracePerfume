@@ -7,6 +7,9 @@ import tech from "@/assets/logo/techcombank.png";
 import acb from "@/assets/logo/acb.png";
 import cod from "@/assets/payment_method/cod.svg"
 import transfer from "@/assets/payment_method/transfer.svg"
+import googleIcon from "@/assets/provider/google.svg"
+import facebookIcon from "@/assets/provider/facebook.svg"
+
 
 export const carouselImages = [image1, image2, image3, image4, image5];
 
@@ -71,5 +74,19 @@ export const baseBanks = [
         name: 'ACB',
         bankLogo: acb,
         bankQr: import.meta.env.VITE_APP_QR_ACB
+    }
+]
+
+
+export const providerGate = [
+     {
+        name: ' GOOGLE   ',
+        img: googleIcon,
+        providerId: 'google.com'
+    },
+   {
+        name: ' GOOGLE   ',
+        img: facebookIcon,
+        providerId: 'facebook.com'
     }
 ]

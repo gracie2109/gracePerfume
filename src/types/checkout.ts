@@ -15,14 +15,17 @@ export type ICheckout = {
     transfer_banks: string | null
 }
 
+export const initAddress:IAddress = {
+    address: '',
+    ward: {  name: '', code: 0  },
+    district:{  name: '', code: 0  },
+    province:{  name: '', code: 0  },
+}
 
 export const initialCheckoutValue:ICheckout = {
     shipping_address:{
+        ...initAddress,
         available_id:null,
-        address: '',
-        ward: {  name: '', code: 0  },
-        district:{  name: '', code: 0  },
-        province:{  name: '', code: 0  },
     },
     phoneNumber: '',
     transfer_banks: null,
