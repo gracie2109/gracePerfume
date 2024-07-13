@@ -4,7 +4,6 @@ import image3 from "@/assets/images/sliders/3.jpg";
 import image4 from "@/assets/images/sliders/4.jpg"
 import image5 from "@/assets/images/sliders/5.jpg";
 import tech from "@/assets/logo/techcombank.png";
-import acb from "@/assets/logo/acb.png";
 import cod from "@/assets/payment_method/cod.svg"
 import transfer from "@/assets/payment_method/transfer.svg"
 import googleIcon from "@/assets/provider/google.svg"
@@ -69,12 +68,6 @@ export const baseBanks = [
         bankLogo: tech,
         bankQr: import.meta.env.VITE_APP_QR_TECH
     },
-    {
-        id: 'acb',
-        name: 'ACB',
-        bankLogo: acb,
-        bankQr: import.meta.env.VITE_APP_QR_ACB
-    }
 ]
 
 
@@ -89,4 +82,15 @@ export const providerGate = [
         img: facebookIcon,
         providerId: 'facebook.com'
     }
+]
+
+
+
+export const sampleCancelReason = [
+    "Change of shopping intention",
+    "Found a better price or deal elsewhere",
+    "Product out of stock or unavailable",
+    "Ordering mistake",
+    "Change in order details",
+    "Other"
 ]

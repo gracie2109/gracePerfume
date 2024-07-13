@@ -1,16 +1,16 @@
 <template>
   <PageHeader  :show-back-btn="false"   page-desc="Show all brands" page-title='Brands' />
   <DataTable
-      :columns="newColumn"
-      :data="brands"
-      :createNewLink="'/admin/brands/create'"
-      :searchableColumns="[
+    :columns="newColumn"
+    :data="brands"
+    :createNewLink="'/admin/brands/create'"
+    :searchableColumns="[
           {
             title: 'Brand name',
             id: 'name'
           }
       ]"
-  />
+/>
 </template>
 
 <script lang="ts" setup>

@@ -79,6 +79,11 @@ const router = createRouter({
                             name: 'transactions',
                             component: () => import('@/views/app/auth/Transaction.vue'),
                         },
+                        {
+                            path: 'transactions/:id',
+                            name: 'transactionsDetail',
+                            component: () => import('@/views/app/auth/TransactionDetail.vue'),
+                        },
                     ]
                 },
             ]
@@ -102,7 +107,6 @@ const router = createRouter({
         {
             path: '/checkout/',
             component: NoLayout,
-            meta: { requiresAuth: true , title: "Checkout"},
             children:[
                 {
                     path: '',

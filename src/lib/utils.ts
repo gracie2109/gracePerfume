@@ -23,17 +23,6 @@ export async function checkItemExistence(collectionName: string, fieldName: stri
 }
 
 
-export const generateId = () => {
-    let ID = "";
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZqwertyuiolkjhgfdsazxcvbnm0123456789";
-    for (let i = 0; i < characters.length; i++) {
-        ID += characters.charAt(Math.floor(Math.random() * 36));
-    }
-    return ID;
-
-}
-
-
 export function valueUpdater<T extends Updater<any>>(updaterOrValue: T, ref: Ref) {
     ref.value
         = typeof updaterOrValue === 'function'

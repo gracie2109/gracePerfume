@@ -1,11 +1,13 @@
 import {defineStore, storeToRefs} from 'pinia';
-import {generateId, getDetailData, getListFirebase} from "@/lib/utils.ts";
+import {getListFirebase} from "@/lib/utils.ts";
 import {useCart} from "@/stores/cart.ts";
 import {useProductStore} from "@/stores/products";
 import {ICheckout} from "@/types/checkout.ts";
 import {ref, type Ref} from "vue";
-import {useCurrentUser, useFirestore} from "vuefire";
-import {addDoc, collection} from "firebase/firestore";
+import {useCurrentUser, useDocument, useFirestore} from "vuefire";
+import {addDoc, collection, doc,getFirestore,updateDoc} from "firebase/firestore";
+import {toast} from "vue-sonner";
+import { uid } from 'uid';
 
 export const useCheckout = defineStore('checkout', () => {
     const cartStore = useCart();
@@ -19,7 +21,7 @@ export const useCheckout = defineStore('checkout', () => {
 
 
     function createOrderId() {
-        const id = generateId();
+        const id = uid();
         const prefix = 'NO_';
         return `${prefix}${id}`;
     }
@@ -115,12 +117,14 @@ export const useCheckout = defineStore('checkout', () => {
             paymentStatus: "PENDING",
             fulfillmentStatus: "not fulfilled",
             status: "PENDING",
-            userId: currentUser.value?.uid
+            userId: currentUser.value?.uid,
+            user_confirm_transfer: true,
+            admin_confirm_transfer: null
         }
         try {
             loading.value = true;
             await addDoc(collection(db, 'orders'), payload);
-
+            toast.success('Create Order success fully')
         } catch (error) {
             console.log('error', error)
         } finally {
@@ -131,28 +135,41 @@ export const useCheckout = defineStore('checkout', () => {
     async function getCurrentUserOrder() {
         try {
             loading.value = true;
-        } catch (error) {
             const allOrder = await getListFirebase('orders');
             if (allOrder && currentUser.value) {
                 const order = allOrder.filter((i) => i.userId === (currentUser.value)?.uid) || [];
                 currentUserOrder.value = order
             }
+        } catch (error) {
+            console.log('error',error)
         } finally {
-
+            loading.value = false;
         }
     }
 
-    async function getDetailOrder (orderId: string) {
+
+    async function updateOrder(orderId:string,  data:any) {
+
+
             try{
                 loading.value = true;
-              return await getDetailData('orders', 'id', orderId)
-            }catch (e) {
-                console.log('err',e)
+                const brandDoc = await doc(getFirestore(), "orders", orderId);
+                const detail = await useDocument(brandDoc);
+                if(detail){
+                    await updateDoc(doc(getFirestore(), "orders", orderId), {...data}).then(() => {
+                        toast.success('Update Order successfully!!!')
+                    })
+                }
+
+            }catch(error){
+                console.log('error', error)
             }finally {
                 loading.value = false
             }
+
+
     }
 
-    return {createPayment, currentUserOrder, checkIntegrityProduct, getCurrentUserOrder,getDetailOrder}
+    return {createPayment, currentUserOrder, checkIntegrityProduct, getCurrentUserOrder, loading, updateOrder}
 
 })

@@ -12,14 +12,14 @@ export type ICheckout = {
     phoneNumber: string,
     userName: string,
     payment: PaymentMethod,
-    transfer_banks: string | null
+    user_confirm_transfer: string | null
 }
 
 export const initAddress:IAddress = {
     address: '',
-    ward: {  name: '', code: 0  },
-    district:{  name: '', code: 0  },
-    province:{  name: '', code: 0  },
+    ward: {  WardName: '', WardCode: 0  },
+    district:{  DistrictName: '', DistrictID: 0  },
+    province:{  ProvinceName: '', ProvinceID: 0  },
 }
 
 export const initialCheckoutValue:ICheckout = {
@@ -28,7 +28,7 @@ export const initialCheckoutValue:ICheckout = {
         available_id:null,
     },
     phoneNumber: '',
-    transfer_banks: null,
+    user_confirm_transfer: null,
     payment: basePaymentMethods[0]['name'],
     userName:''
 }

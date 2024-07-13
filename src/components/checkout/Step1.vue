@@ -59,12 +59,17 @@ import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Beer} from "lucide-vue-next";
 import UserAvatar from "@/components/base/avatar/UserAvatar.vue";
 
-const cartStore = useCart();
-const user = useCurrentUser();
-const {totalPrice} = storeToRefs(cartStore);
 
 const emit = defineEmits(['nextStep']);
 const props = defineProps<{
   alert: string | null
 }>()
+
+const cartStore = useCart();
+const user = useCurrentUser();
+const {totalPrice} = storeToRefs(cartStore);
+
+
+
+
 </script>

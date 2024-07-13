@@ -16,8 +16,13 @@ export async function getProvince() {
                 "Token": token
             },signal
         })).json()).data;
-
-        return response ? response as GHNProvince[] : null
+        const responseMap = response.map((i:any) => {
+            return {
+                ...i,
+                ProvinceID: String(i.ProvinceID)
+            }
+        })
+        return responseMap ? responseMap as GHNProvince[] : null
 
     } catch (e:any) {
         console.log(new Error(e))
@@ -37,14 +42,20 @@ export async function getDistrict(provinceId: number | string) {
 
             const response =  (await (await fetch(url, {
                 method: 'GET',
+                //@ts-ignore
                 headers: {
                     "Content-Type": "application/json",
                     "token": token,
-                    "province_id":provinceId,
+                    "province_id":+provinceId,
                 },signal
             })).json()).data;
-
-            return response ? response as GHNDistrict[] : null
+            const responseMap = response.map((i:any) => {
+                return {
+                    ...i,
+                    DistrictID: String(i.DistrictID)
+                }
+            })
+            return responseMap ? responseMap as GHNDistrict[] : null
         }
 
     } catch (e:any) {

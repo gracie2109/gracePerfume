@@ -12,7 +12,9 @@ export const useCart = defineStore('cart',  () => {
 
     function clearCart() {
         cart.value = null;
-        sessionStorage.removeItem('cart')
+        totalPrice.value =0;
+        cartLength.value = 0;
+        sessionStorage.removeItem('cart');
     }
 
     function uploadStorage () {

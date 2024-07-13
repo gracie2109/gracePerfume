@@ -1,18 +1,20 @@
 <template>
   <div class="container space-y-8">
 
-    <Transition mode="out-in">
+    <div v-if="$route.name !== 'transactionsDetail'">
+      <Transition mode="out-in">
 
-      <div class="w-full flex gap-x-8 items-center  max-w-screen-sm">
-        <router-link v-for="i in navigation.profileNav" :key="i.name" :to="i.path"
+        <div class="w-full flex gap-x-8 items-center  max-w-screen-sm">
+          <router-link v-for="i in navigation.profileNav" :key="i.name" :to="i.path"
 
-                     active-class=" text-custom-primary/80 border-b border-red-600"
-                     class="font-semibold capitalize  inline-block w-1/3  text-center py-1.5 "
-        >
-          {{ i.name }}
-        </router-link>
-      </div>
-    </Transition>
+                       active-class=" text-custom-primary/80 border-b border-red-600"
+                       class="font-semibold capitalize  inline-block w-1/3  text-center py-1.5 "
+          >
+            {{ i.name }}
+          </router-link>
+        </div>
+      </Transition>
+    </div>
 
 
     <keep-alive>
@@ -36,4 +38,5 @@ import {Button} from "@/components/ui/button"
 import {provide} from "vue"
 const user = useCurrentUser();
 provide('user', user)
+
 </script>

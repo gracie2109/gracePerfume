@@ -65,7 +65,7 @@ const selectedLength = computed(() => {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-    <Button size="sm" variant="outline" @click="$router.push(String(props.createNewLink))">
+    <Button size="sm" v-if="props.createNewLink" variant="outline" @click="$router.push(String(props.createNewLink))">
       <PlusCircle class="mr-2 h-4 w-4" />
       Create
     </Button>
