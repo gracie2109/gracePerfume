@@ -8,7 +8,7 @@
     <DropdownMenuContent>
       <DropdownMenuLabel>My Account</DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenuItem class="cursor-pointer" @click="() => {$router.push({name: 'profile', params: {}}) }">Profile</DropdownMenuItem>
+      <DropdownMenuItem class="cursor-pointer" @click="() => {$router.push({name: 'general', params: {}}) }">Profile</DropdownMenuItem>
 
       <DropdownMenuItem class="cursor-pointer" @click="logout">Logout</DropdownMenuItem>
     </DropdownMenuContent>
@@ -41,8 +41,6 @@ onMounted(() => {
     displayName.value = user.value?.displayName && user.value?.displayName?.length >=1 ? user.value?.displayName : user?.value.email
   }
 });
-
-console.log( user.value?.displayName)
 
 async function logout() {
   try {

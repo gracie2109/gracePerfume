@@ -8,7 +8,8 @@ import AdminSettingLayout from "@/layouts/admin/AdminSettingLayout.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";
 import DetailProduct from "@/views/app/product/Detail.vue";
 import NoLayout from "@/layouts/no-layout/NoLayout.vue";
-
+import {useCurrentUser} from "vuefire"
+import {nextTick} from "vue";
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -19,17 +20,19 @@ const router = createRouter({
                 {
                     name: 'test',
                     path:'test',
-                    component:() => import('@/components/Upload.vue')
+                    component:() => import('@/components/ProvinceAddress.vue')
                 },
                 {
                     path: '',
                     component: HomeView,
                     name: 'home',
+                    meta: {title: ""},
                 },
                 {
                     path: 'cart',
                     component: () => import('@/views/app/Cart.vue'),
                     name: 'cart',
+                    meta: {title: "Cart"},
                 },
                 {
                     path: 'product/:id',
@@ -57,12 +60,37 @@ const router = createRouter({
                     name: 'brandDetail',
 
                 },
+                {
+                    path:'profile/',
+                    component: () => import('@/layouts/profile/Index.vue'),
+                    children: [
+                        {
+                            path: 'general',
+                            name: 'general',
+                            component: () => import('@/views/app/auth/Profile.vue'),
+                        },
+                        {
+                            path: 'address',
+                            name: 'address',
+                            component: () => import('@/views/app/auth/Address.vue'),
+                        },
+                        {
+                            path: 'transactions',
+                            name: 'transactions',
+                            component: () => import('@/views/app/auth/Transaction.vue'),
+                        },
+                        {
+                            path: 'transactions/:id',
+                            name: 'transactionsDetail',
+                            component: () => import('@/views/app/auth/TransactionDetail.vue'),
+                        },
+                    ]
+                },
             ]
         },
         {
             path: '/auth/',
             component:AuthLayout,
-            meta: { requiresAuth: true },
             children:[
                 {
                     path: 'login',
@@ -73,7 +101,7 @@ const router = createRouter({
                     path: 'register',
                     name: 'register',
                     component:  () =>import("@/views/auth/Register.vue")
-                }
+                },
             ]
         },
         {
@@ -92,7 +120,6 @@ const router = createRouter({
             component: AdminLayout,
             name:'admin',
             meta: { requiresAuth: true, isAdmin:true },
-
             children:[
                 //brands
                 {
@@ -173,6 +200,20 @@ const router = createRouter({
     ]
 });
 
+router.beforeEach( (to, _, next) => {
+    const user = useCurrentUser();
+    if(to.meta.requiresAuth) {
+      if(!user.value) next({name: 'login'})
+      else next()
+    }else  next()
 
-
+})
+router.afterEach((to) => {
+    nextTick(
+        () =>
+            (document.title =
+                (to?.meta?.title ? to?.meta?.title + "/" : "") +
+                import.meta.env.VITE_APP_TITLE),
+    );
+});
 export default router

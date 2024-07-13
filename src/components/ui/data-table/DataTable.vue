@@ -119,6 +119,6 @@ watchEffect(() => {
       </Table>
     </div>
 
-    <DataTablePagination :table="table" />
+    <DataTablePagination :table="table" v-if="props.data.length >=5 " />
   </div>
 </template>

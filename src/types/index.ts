@@ -25,3 +25,9 @@ export type IFilterModel ={
     },
     attributes:[]
 }
+
+
+export type TErrors = {
+    code: string | null,
+    message: string
+}
