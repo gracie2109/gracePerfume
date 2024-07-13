@@ -32,12 +32,6 @@ onMounted(async () => {
 
 const newColumn: ColumnDef<any>[] = reactive([
   {
-    id: 'action',
-    header: () => h('span', {}, '#'),
-
-    cell: () => {return h('p',{}, '')}
-  },
-  {
     accessorKey: 'orderCode',
     header: () => h('span', {}, 'Order Code'),
 
