@@ -1,6 +1,9 @@
 export const navigation = {
     adminNav:[
-
+        {
+            path: 'orders',
+            name:'orders'
+        },
         {
             path: 'brands',
             name: 'adminBrands',

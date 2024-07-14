@@ -1,13 +1,14 @@
 import {defineStore, storeToRefs} from 'pinia';
-import {getListFirebase} from "@/lib/utils.ts";
+import {formatPrice, getListFirebase} from "@/lib/utils.ts";
 import {useCart} from "@/stores/cart.ts";
 import {useProductStore} from "@/stores/products";
 import {ICheckout} from "@/types/checkout.ts";
-import {ref, type Ref} from "vue";
-import {useCurrentUser, useDocument, useFirestore} from "vuefire";
+import {ref, type Ref, toRaw} from "vue";
+import {useCollection, useCurrentUser, useDocument, useFirestore} from "vuefire";
 import {addDoc, collection, doc,getFirestore,updateDoc} from "firebase/firestore";
 import {toast} from "vue-sonner";
 import { uid } from 'uid';
+import emailjs from '@emailjs/browser';
 
 export const useCheckout = defineStore('checkout', () => {
     const cartStore = useCart();
@@ -18,8 +19,7 @@ export const useCheckout = defineStore('checkout', () => {
     const currentUser = useCurrentUser();
     const currentUserOrder: Ref<any[] | null> = ref(null)
     const db = useFirestore();
-
-
+    const {data:allOrder, pending, error} =  useCollection(collection(db, 'orders'))
     function createOrderId() {
         const id = uid();
         const prefix = 'NO_';
@@ -103,8 +103,35 @@ export const useCheckout = defineStore('checkout', () => {
         }
     }
 
+    function parseProduct (){
+        let product = [] as any[];
+
+        if(cart.value &&  cart.value.length > 0){
+            for (let prd of cart.value){
+                if(prd.variant){
+                    for(let v of prd.variant){
+                        const newData = {
+                            name: `${prd.name}/${v.id}`,
+                            price: formatPrice(+v.price),
+                            quantity: +v.quantity,
+                            image: prd.image,
+                        }
+                        product = [...product, toRaw(newData)]
+                    }
+                }else{
+                    product = [...product,toRaw({
+                        ...prd,
+                        price: formatPrice(+prd.price),
+                    })]
+                }
+            }
+        }
+        return product
+    }
+
     async function createPayment(orderInfo: ICheckout) {
         const orderId = createOrderId();
+
         const payload = {
             ...orderInfo,
             product: cart.value,
@@ -121,10 +148,30 @@ export const useCheckout = defineStore('checkout', () => {
             user_confirm_transfer: true,
             admin_confirm_transfer: null
         }
+        const emailProduct = parseProduct()
         try {
             loading.value = true;
-            await addDoc(collection(db, 'orders'), payload);
+            const order = await addDoc(collection(db, 'orders'), payload);
+
             toast.success('Create Order success fully')
+            await emailjs.send(import.meta.env.VITE_APP_EMAIL_SEVICE_ID,import.meta.env.VITE_APP_EMAIL_SEND_USER_ORDER, {
+                ...payload,
+                product:emailProduct,
+                name: payload.userName,
+                email: currentUser.value?.email,
+                orderId: order.id
+            },{
+                publicKey: 'evORyAftpWeR2IHqF',
+            })
+                .then(
+                    () => {
+                        console.log('SUCCESS!');
+                    },
+                    (error) => {
+                        toast.error(`Send Mail error: ${ error.text}`);
+                    },
+                );
+
         } catch (error) {
             console.log('error', error)
         } finally {
@@ -170,6 +217,10 @@ export const useCheckout = defineStore('checkout', () => {
 
     }
 
-    return {createPayment, currentUserOrder, checkIntegrityProduct, getCurrentUserOrder, loading, updateOrder}
+
+
+
+
+    return {createPayment, currentUserOrder, checkIntegrityProduct, getCurrentUserOrder, loading, updateOrder, allOrder,  pending, error}
 
 })

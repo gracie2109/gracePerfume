@@ -7,12 +7,14 @@ import {type CartAdd} from '@/types/cart.ts'
 export const useCart = defineStore('cart',  () => {
     const cart:Ref<any[] | null> = ref(JSON.parse(sessionStorage.getItem('cart') as string));
     const totalPrice:Ref<any> = ref(0);
+    const totalItems:Ref<any> = ref(0);
     const loading:Ref<boolean> = ref(false);
     const cartLength:Ref<number> = ref(0);
 
     function clearCart() {
         cart.value = null;
         totalPrice.value =0;
+        totalItems.value =0;
         cartLength.value = 0;
         sessionStorage.removeItem('cart');
     }
@@ -30,8 +32,9 @@ export const useCart = defineStore('cart',  () => {
     }
 
     function getCartLength () {
-        const dt = getTotalVariantLength(cart.value) ;
-        cartLength.value = +dt;
+        const dt = getTotalVariantLength(cart.value) as any;
+        cartLength.value = +dt.quantity;
+        totalItems.value = +dt.totalItems
     }
 
     function calcTotalPrice () {
@@ -127,7 +130,6 @@ export const useCart = defineStore('cart',  () => {
         uploadStorage();
         getCart()
     }
-
     function decrementCartItem(productId:string, variant_id:string | null) {
         getCart();
         const rawCart = toRaw(cart.value);
@@ -194,5 +196,5 @@ export const useCart = defineStore('cart',  () => {
         getCart()
     }
 
-    return {cart, totalPrice,loading,cartLength,clearCart,addToCart, getCart, calcTotalPrice,decrementCartItem,incrementCartItem,deleteItemInCart}
+    return {cart, totalPrice,loading,cartLength,clearCart,addToCart, getCart, calcTotalPrice,decrementCartItem,incrementCartItem,deleteItemInCart,totalItems}
 })

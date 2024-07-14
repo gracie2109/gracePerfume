@@ -126,7 +126,7 @@
 
 
 <script lang="ts" setup>
-import {useCheckout} from "@/stores/checkout";
+import {useCheckout} from "@/stores/order.ts";
 import {computed, onMounted, ref, watch,} from "vue";
 import {useRoute} from "vue-router";
 import {storeToRefs} from "pinia";

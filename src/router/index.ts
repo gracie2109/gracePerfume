@@ -20,7 +20,7 @@ const router = createRouter({
                 {
                     name: 'test',
                     path:'test',
-                    component:() => import('@/components/ProvinceAddress.vue')
+                    component:() => import('@/views/app/Test.vue')
                 },
                 {
                     path: '',
@@ -119,9 +119,19 @@ const router = createRouter({
             path: '/admin/',
             component: AdminLayout,
             name:'admin',
-            meta: { requiresAuth: true, isAdmin:true },
+
             children:[
                 //brands
+                {
+                    path: 'orders',
+                    name: 'orders',
+                    component:  () => import("@/views/admin/orders/PageListOrder.vue"),
+                },
+                {
+                    path: 'orders/:id',
+                    name: 'ordersDetail',
+                    component:  () => import("@/views/admin/orders/PageOrderDetail.vue"),
+                },
                 {
                     path: 'brands',
                     name: 'adminBrands',

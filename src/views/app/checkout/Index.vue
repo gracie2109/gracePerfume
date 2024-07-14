@@ -17,7 +17,7 @@ import clsx from "clsx";
 import AppLogo from '@/components/AppLogo.vue'
 import { ICheckout, initialCheckoutValue } from "@/types/checkout.ts";
 import { basePaymentMethods } from '@/lib/constant'
-import { useCheckout } from '@/stores/checkout';
+import { useCheckout } from '@/stores/order.ts';
 import { useCart } from "@/stores/cart.ts";
 import {
   AlertDialog,
