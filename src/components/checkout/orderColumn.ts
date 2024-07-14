@@ -1,43 +1,21 @@
-<template>
-  <div class="h-screen">
-    <div v-if="loading" class="h-full">
-        Loading....
-    </div>
-    <div v-if="currentUserOrder">
-      <h4 class="font-semibold">All Your Order</h4>
-      <DataTable
-          :columns="newColumn"
-          :data="currentUserOrder"
-      /></div>
-  </div>
-</template>
-<script setup lang="ts">
-import {useCheckout} from "@/stores/order.ts";
-import {h, onMounted, reactive} from "vue";
-import {storeToRefs} from "pinia";
-import DataTable from "@/components/ui/data-table/DataTable.vue";
+
 import {ColumnDef} from "@tanstack/vue-table";
-import {format} from "date-fns";
+import {reactive,h} from "vue";
 import DataTableColumnHeader from "@/components/ui/data-table/DataTableColumnHeader.vue";
 import {formatPrice} from "@/lib/utils.ts";
+import {format} from "date-fns";
 import {useRouter} from "vue-router";
 
-const store = useCheckout();
-const {currentUserOrder, loading} = storeToRefs(store);
 
-onMounted(async () => {
-  await store.getCurrentUserOrder()
-});
 const router = useRouter();
-
- const newColumn: ColumnDef<any>[] = reactive([
+export const newColumn: ColumnDef<any>[] = reactive([
   {
     accessorKey: 'orderCode',
     header: () => h('span', {}, 'Order Code'),
 
     cell: ({row}) => {
       return h('p', {class: 'hover:text-red-600 cursor-pointer font-medium', onClick:() =>
-            router.push({name: 'transactionsDetail', params: {id: row.original.id}})
+            router.push({name: 'orderDetail', params: {id: row.original.id}})
       }, row.getValue('orderCode'))
     },
   },
@@ -95,4 +73,3 @@ const router = useRouter();
   },
 
 ])
-</script>

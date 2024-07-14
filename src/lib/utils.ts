@@ -178,15 +178,24 @@ export const reduceData = (data: any) => {
 
 export function getTotalVariantLength(raw: any) {
     if (raw) {
-        const totalLength = raw.reduce((acc: any, item: any) => {
+        const items = raw.reduce((acc: any, item: any) => {
             if (item?.variant && Array.isArray(item?.variant)) {
                 return acc + item?.variant?.length;
             } else {
                 return acc + 1;
             }
         }, 0);
-
-        return totalLength;
+        const quantity = raw.reduce((total: any, product: any) => {
+            if (product.variant) {
+                return total + product.variant.reduce((variantTotal: any, variant: any) => variantTotal + variant.quantity, 0);
+            } else {
+                return total + product.quantity;
+            }
+        }, 0);
+        return {
+            totalItems: items,
+            quantity:quantity
+        };
     } else return 0
 
 }

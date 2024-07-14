@@ -16,12 +16,6 @@ export interface GHNWard {
     "WardName":string
 }
 
-
-//
-// interface ILocation {
-//     code: number ,
-//     name: string
-// }
 interface IProvince {
     ProvinceID: number ,
     ProvinceName: string

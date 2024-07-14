@@ -1,43 +1,51 @@
 <template>
-  <div class="h-screen">
-    <div v-if="loading" class="h-full">
-        Loading....
-    </div>
-    <div v-if="currentUserOrder">
-      <h4 class="font-semibold">All Your Order</h4>
+  <div>
+    <PageHeader :show-back-btn="false" page-desc="Show all orders" page-title='Orders'/>
+    pending:::{{pending}}
+    error:::{{error}}
+    <div v-if="allOrder">
       <DataTable
           :columns="newColumn"
-          :data="currentUserOrder"
-      /></div>
+          :data="allOrder"
+          :searchableColumns="[
+              {
+                title: 'User Name',
+                id: 'userName',
+              },
+               {
+                title: 'order Code',
+                id: 'orderCode',
+              }
+          ]"
+      />
+    </div>
   </div>
 </template>
-<script setup lang="ts">
-import {useCheckout} from "@/stores/order.ts";
-import {h, onMounted, reactive} from "vue";
+
+<script lang="ts" setup>
+import {useCheckout} from "@/stores/order";
+import PageHeader from "@/components/PageHeader.vue";
 import {storeToRefs} from "pinia";
 import DataTable from "@/components/ui/data-table/DataTable.vue";
 import {ColumnDef} from "@tanstack/vue-table";
+import {h, reactive} from "vue";
 import {format} from "date-fns";
 import DataTableColumnHeader from "@/components/ui/data-table/DataTableColumnHeader.vue";
 import {formatPrice} from "@/lib/utils.ts";
 import {useRouter} from "vue-router";
-
 const store = useCheckout();
-const {currentUserOrder, loading} = storeToRefs(store);
-
-onMounted(async () => {
-  await store.getCurrentUserOrder()
-});
+const {allOrder, pending, error} = storeToRefs(store);
 const router = useRouter();
 
- const newColumn: ColumnDef<any>[] = reactive([
+
+const newColumn: ColumnDef<any>[] = reactive([
   {
     accessorKey: 'orderCode',
     header: () => h('span', {}, 'Order Code'),
 
     cell: ({row}) => {
       return h('p', {class: 'hover:text-red-600 cursor-pointer font-medium', onClick:() =>
-            router.push({name: 'transactionsDetail', params: {id: row.original.id}})
+            router.push({name: 'ordersDetail', params: {id: row.original.id}})
       }, row.getValue('orderCode'))
     },
   },
@@ -95,4 +103,5 @@ const router = useRouter();
   },
 
 ])
+
 </script>
