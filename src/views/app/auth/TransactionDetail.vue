@@ -60,7 +60,6 @@
       </div>
 
       <div id="right_show_info" class="leading-7 space-y-4 col-span-1">
-        {{openDialog}}
         <h4 class="font-medium">Order Address</h4>
         <div id="order_address">
           <p>{{ detail.phoneNumber || 'Not found phone' }}</p>
@@ -80,7 +79,7 @@
           <p>{{ detail.address }}</p>
         </div>
         <div v-if="detail.fulfillmentStatus === 'not fulfilled' && detail.cancelDate === null">
-          openDialog:: {{openDialog}}
+
           <Dialog  v-model="openDialog" @update:open="(v) => openDialog= v">
             <DialogTrigger>
               <Button variant="destructive">Cancel Order </Button>

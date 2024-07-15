@@ -124,7 +124,7 @@ export function groupByPermissions(data: any[]) {
 
 export function truncateText(text: string, maxLength: number) {
     const newText = text.slice(0, maxLength);
-    return `${newText}...`;
+    return text.length > maxLength ? `${newText}...`: newText;
 }
 
 
