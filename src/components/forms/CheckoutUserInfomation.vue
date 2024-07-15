@@ -46,7 +46,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import {computed, inject, onMounted, type Ref, watch} from "vue"
+import { inject, type Ref, watch} from "vue"
 import {ICheckout} from "@/types/checkout.ts";
 import {useCurrentUser} from "vuefire";
 import {useUserStore} from "@/stores/user.ts";

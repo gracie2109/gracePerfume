@@ -175,7 +175,6 @@
                         type="button"
                         variant="outline"
                         @click="() => {
-                             const baseQuantity = form.values['quantity'] as number;
                             if(!fields.length){
                               push({ unit: '',  price: 0, quantity: 0 })
                             }else{
