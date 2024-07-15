@@ -80,7 +80,6 @@ import {Textarea} from "@/components/ui/textarea"
 import {onMounted, reactive, ref, watch} from "vue";
 import {GHNDistrict, GHNProvince, GHNWard, IAddress} from "@/types/location.ts";
 import {getDistrict, getProvince, getWard} from "@/services/location.ts";
-import { useMemoize } from '@vueuse/core'
 
 
 const listProvince = ref<GHNProvince[] | null | undefined>(null)

@@ -31,9 +31,9 @@
             </div>
         </CardHeader>
         <CardContent class="leading-7">
-          <p><b class="pr-2">Province:</b>{{i.province.name}}</p>
-          <p><b class="pr-2">District:</b>{{i.district.name}}</p>
-          <p><b class="pr-2">Ward:</b>{{i.ward.name}}</p>
+          <p><b class="pr-2">Province:</b>{{i.province.ProvinceName}}</p>
+          <p><b class="pr-2">District:</b>{{i.district.DistrictName}}</p>
+          <p><b class="pr-2">Ward:</b>{{i.ward.WardName}}</p>
           <p><b class="pr-2">Address:</b>{{i.address}}</p>
         </CardContent>
       </Card>

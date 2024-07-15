@@ -61,16 +61,13 @@ import {useCart} from "@/stores/cart"
 import {storeToRefs} from "pinia";
 import cartEmptyImg from '@/assets/images/cart_banner_image.webp'
 import {formatPrice} from "@/lib/utils.ts";
-import {onMounted, watchEffect} from "vue";
+import {onMounted} from "vue";
 const cartStore = useCart();
 const {totalPrice, cart,cartLength} = storeToRefs(cartStore);
 
 onMounted(() => {
   cartStore.calcTotalPrice();
 })
-// watchEffect(() => {
-//   cartStore.getCart();
-// })
 
 </script>
 
