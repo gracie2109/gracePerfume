@@ -88,10 +88,11 @@ const newColumn: ColumnDef<any>[] = reactive([
     },
   },
   {
-    accessorKey: 'totalItem',
-    header: ({column}) => h(DataTableColumnHeader, {column, title: 'Total Item'}),
+    accessorKey: 'totalQuantity',
+    header: ({column}) => h(DataTableColumnHeader, {column, title: 'Total Quantity'}),
     cell: ({row}) => {
-      return h('span', {}, row.getValue('totalItem'))
+      const data = `${row.getValue('totalQuantity')} (${row.original.totalItem} items)`
+      return h('span', {}, data)
     },
   },
   {

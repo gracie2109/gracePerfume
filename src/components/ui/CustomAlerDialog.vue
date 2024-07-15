@@ -1,8 +1,9 @@
 <template>
   <AlertDialog>
     <AlertDialogTrigger>
-      <Button variant="destructive" size="icon" >
-        <Trash class="w-4 h-4" />
+      <Button :variant="props.variant || 'destructive'" size="icon" >
+        <slot name="icon" v-if="props.disableDefaultIcon"></slot>
+        <Trash class="w-4 h-4" v-else/>
       </Button>
     </AlertDialogTrigger>
     <AlertDialogContent>
@@ -35,14 +36,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import {Button} from "@/components/ui/button"
+import {Button, type ButtonVariants} from "@/components/ui/button"
 import {Trash} from "lucide-vue-next"
 const emit = defineEmits(['onCancel', 'onConfirm'])
 const props = defineProps<{
   title: String,
   description?: String ,
   okText?:String,
-  triggerText:String
+  triggerText:String,
+  disableDefaultIcon?:boolean,
+  variant?: ButtonVariants['variant']
 }>()
 
 </script>

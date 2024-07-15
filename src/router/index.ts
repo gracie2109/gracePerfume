@@ -18,11 +18,6 @@ const router = createRouter({
             component: ClientLayout,
             children:[
                 {
-                    name: 'test',
-                    path:'test',
-                    component:() => import('@/views/app/Test.vue')
-                },
-                {
                     path: '',
                     component: HomeView,
                     name: 'home',

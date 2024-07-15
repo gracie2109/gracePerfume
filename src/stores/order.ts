@@ -14,8 +14,9 @@ export const useCheckout = defineStore('checkout', () => {
     const cartStore = useCart();
     const prdStore = useProductStore();
     const loading: Ref<boolean> = ref(false);
+    const detailOrder:Ref<any | null> = ref(null);
 
-    const {cart, totalPrice, cartLength} = storeToRefs(cartStore);
+    const {cart, totalPrice, cartLength, totalItems} = storeToRefs(cartStore);
     const currentUser = useCurrentUser();
     const currentUserOrder: Ref<any[] | null> = ref(null)
     const db = useFirestore();
@@ -137,7 +138,8 @@ export const useCheckout = defineStore('checkout', () => {
             product: cart.value,
             orderCode: orderId,
             price: totalPrice.value,
-            totalItem: cartLength.value,
+            totalItem: totalItems.value,
+            totalQuantity: cartLength.value,
             orderDate: new Date().toISOString(),
             cancelDate: null,
             cancelReason: null,
@@ -153,7 +155,8 @@ export const useCheckout = defineStore('checkout', () => {
             loading.value = true;
             const order = await addDoc(collection(db, 'orders'), payload);
 
-            toast.success('Create Order success fully')
+            toast.success('Create Order success fully');
+            cartStore.clearCart()
             await emailjs.send(import.meta.env.VITE_APP_EMAIL_SEVICE_ID,import.meta.env.VITE_APP_EMAIL_SEND_USER_ORDER, {
                 ...payload,
                 product:emailProduct,
@@ -217,10 +220,15 @@ export const useCheckout = defineStore('checkout', () => {
 
     }
 
+    async function getDetailOrder(orderId:string) {
+        const detail = await useDocument(await doc(getFirestore(), 'orders', orderId));
+        console.log('detaik', detail)
+        return detail
+    }
 
 
 
 
-    return {createPayment, currentUserOrder, checkIntegrityProduct, getCurrentUserOrder, loading, updateOrder, allOrder,  pending, error}
+    return {createPayment,detailOrder, currentUserOrder, checkIntegrityProduct,getDetailOrder, getCurrentUserOrder, loading, updateOrder, allOrder,  pending, error}
 
 })

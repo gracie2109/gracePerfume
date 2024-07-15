@@ -20,8 +20,7 @@
 import HomeCarousel from "@/components/HomeCarousel.vue"
 import AppCollections from "@/components/AppCollections.vue";
 import HeroSection from "@/components/HeroSection.vue";
-import {useCurrentUser} from "vuefire";
-const currentUser = useCurrentUser();
+
 </script>
 
 <style scoped>
