@@ -106,7 +106,7 @@ provide('form', form);
   <div class="mt-5">
     <div class="space-y-3 pl-6">
       <AppLogo/>
-      {{form}}
+
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

@@ -1,95 +1,67 @@
 <template>
-  <div class="relative group">
-    <RouterLink :to="`/product/${props.data.slug}`">
-     <div>
-       <img
-           class="block relative h-[20rem] w-full cursor-pointer rounded-lg object-cover drop-shadow-2xl transition-opacity hover:opacity-70 relative aspect-square"
-           :src="props.data.images[0]"
-           alt="title"
-           role="link"
-       />
-     </div>
+  <RouterLink :to="`/product/${props.data.slug}`">
+    <div class="relative" @click="$router.resolve({name:'productDetail', params:{id: props.data.slug}})">
+      <div class="w-full border rounded-lg h-full relative">
+        <div class="p-2 h-64 rounded-xl space-y-2 relative">
+          <div class="w-full h-full max-h-[70%] ">
+            <img
+                :src="props.data.images[0]"
+                alt="title"
+                class="cursor-pointer w-full h-full rounded-lg object-cover transition-opacity hover:opacity-70 relative aspect-video"
+                role="link"
+            />
+          </div>
+          <div>
+            <h6 class="font-semibold capitalize">{{ truncateText(props.data.name, 40) }}</h6>
+            <div>
+              <div v-if="hasSale" class="flex items-center justify-between">
+                <p class="text-red-600 font-semibold">{{ formatPrice(props.data.price) }}</p>
+                <p class="line-through">{{ formatPrice(props.data.cost) }}</p>
+              </div>
+              <div v-else>
+                <p>{{ formatPrice(props.data.price) }}</p>
+              </div>
 
-    </RouterLink>
-    <div class="ribbon" v-if="hasSale"><span>{{ calcSalePercentage(+props.data.price , +props.data.cost) }}%</span></div>
-    <div class="absolute group hidden bottom-0 w-full p-5 group-hover:block bg-white/30 backdrop-blur-sm rounded-sm">
-
-      <div class="container flex gap-3 items-center justify-between">
-
-          <ShoppingCart class="w-6 h-6 cursor-pointer"  />
-          <Heart  class="w-6 h-6 cursor-pointer"  />
-
+            </div>
+          </div>
+        </div>
+        <div v-if="hasSale" class="absolute w-full -top-2 ribbon text-white bg-red-600">
+          <span class="text-sm">Off {{ calcSalePercentage(props.data.price, props.data.cost) }}%</span>
+        </div>
       </div>
     </div>
-  </div>
-
-
-
-  <div>
-
-  </div>
-
-
-   <div class="space-y-3 my-3">
-     <p class="text-[10px] text-muted-foreground text-center">
-       NARCISO RODRIGUEZ
-
-     </p>
-     <p class="text-center">{{props.data.name}}</p>
-   </div>
-    <div class="price flex justify-between items-center px-5" v-if="hasSale">
-      <div class="text-destructive line-through">
-        {{formatPrice(props.data.cost)}}
-      </div>
-      <span>{{formatPrice(props.data.price)}}</span>
-    </div>
-
-    <div v-else class="text-center">{{formatPrice(props.data.price)}}</div>
-
-
+  </RouterLink>
 </template>
 
 <script lang="ts" setup>
-import {calcSalePercentage, formatPrice} from "@/lib/utils.ts";
-  import { ShoppingCart, Heart } from 'lucide-vue-next';
+import {calcSalePercentage, formatPrice, truncateText} from "@/lib/utils.ts";
 
+import {computed} from "vue";
 
+const hasSale = computed(() => {
+  if (props.data.cost) return true;
+  else return false
+});
 
+const props = defineProps<{
+  data: any
+}>()
 
-  import {computed} from "vue";
-  const hasSale = computed(() => {
-    if(props.data.cost) return true;
-    else return false
-  });
-
-  const props = defineProps<{
-    data:any
-  }>()
+console.log('props', props.data)
 </script>
 
 
 <style scoped>
 
-.ribbon {
-  font-size: 20px;
-  font-weight: bold;
-  color: #fff;
-}
-.ribbon {
-  --f: .5em; /* control the folded part*/
-  --r: .8em; /* control the ribbon shape */
+/* HTML: <div class="ribbon">Your text content</div> */
 
-  position: absolute;
-  right: 10px;
-  top: calc(-1*var(--f));
-  padding: .2em;
-  background: #BF4D28;
-  border-left: var(--f) solid #0005;
-  border-bottom: var(--r) solid #0000;
-  clip-path: polygon(var(--f) 0,100% 0,100% calc(100% - var(--r)),calc(50% + var(--f)/2) 100%, var(--f) calc(100% - var(--r)),var(--f) var(--f),0 var(--f));
-}
-
-.ribbon > span{
-  font-size: 18px
+.ribbon {
+  --r: .8em;
+  border-block: .5em solid #0000;
+  padding-inline: .5em calc(var(--r) + .25em);
+  clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%, 100% calc(100% - .25em), calc(100% - var(--r)) 50%, 100% .25em);
+  background: radial-gradient(.2em 50% at left, #000a, #0000) border-box,
+  red padding-box;
+  width: fit-content;
 }
 </style>
