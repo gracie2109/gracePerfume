@@ -94,3 +94,8 @@ export const sampleCancelReason = [
     "Change in order details",
     "Other"
 ]
+
+
+export const sampleOrderStatus = [
+
+]

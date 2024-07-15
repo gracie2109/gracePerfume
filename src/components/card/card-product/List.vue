@@ -1,12 +1,14 @@
 <template>
   <div class="relative group">
     <RouterLink :to="`/product/${props.data.slug}`">
-      <img
-          class="block relative h-[20rem] w-full cursor-pointer rounded-lg object-cover drop-shadow-2xl transition-opacity hover:opacity-70 relative"
-          :src="props.data.images[0]"
-          alt="title"
-          role="link"
-      />
+     <div>
+       <img
+           class="block relative h-[20rem] w-full cursor-pointer rounded-lg object-cover drop-shadow-2xl transition-opacity hover:opacity-70 relative aspect-square"
+           :src="props.data.images[0]"
+           alt="title"
+           role="link"
+       />
+     </div>
 
     </RouterLink>
     <div class="ribbon" v-if="hasSale"><span>{{ calcSalePercentage(+props.data.price , +props.data.cost) }}%</span></div>
