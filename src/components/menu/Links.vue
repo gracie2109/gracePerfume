@@ -3,7 +3,7 @@
     'text-white': route.name === 'home',
     'text-primary': route.name !== 'home'
   }) ">
-    <MenuLink v-for="link in links" :key="link.text" :link="link"/>
+    <MenuLink v-for="link in navigation.clientNav" :key="link.text" :link="link"/>
     <!--collections-->
     <DropdownMenu>
       <DropdownMenuTrigger class="flex gap-2 items-center">
@@ -21,8 +21,8 @@
     </DropdownMenu>
 
     <!--brands-->
-    <div class="relative">
-      <div class="brands relative flex gap-2 cursor-pointer" @click.stop="handleOpen" >
+    <div class="relative" ref="domRef">
+      <div class="brands relative flex gap-2 cursor-pointer" @click="handleOpen" >
         <p>Brands</p>
         <ChevronDown :class="clsx({  'rotate-[180deg] transition all duration-200': openBrands})"/>
       </div>
@@ -33,13 +33,14 @@
 
           <div class="flex items-center">
             <input id="all" class="hidden" name="brand" type="radio" value="all" @change="changeBrand('all')">
-            <label :class="clsx({'active': !currentBrands || currentBrands=== 'all'})" class=" label_custom" for="all">All</label>
+            <label :class="clsx({'currentSelected': !currentBrands || currentBrands=== 'all'})" class=" label_custom" for="all">All</label>
           </div>
+
           <div v-for="(i, j) in alphabet" :key="j" class="flex items-center">
             <input :id="i" :value="i" class="hidden" name="brand" type="radio" @change="changeBrand(i)"
 
             >
-            <label :class="clsx({'active': i === currentBrands})" :for="i"
+            <label :class="clsx({'currentSelected': i === currentBrands})" :for="i"
                    class=" label_custom"
             >
               {{ i }}
@@ -48,7 +49,7 @@
         </div>
 
 
-        <div class="relative list_brands w-full min-h-24" v-on-click-outside.bubble="dropdownHandler">
+        <div class="relative list_brands w-full min-h-24" >
           <div v-if="currentBrands === 'all'" class="grid grid-cols-5">
             <div v-for="(i, j) in newBrands" :key="j" class=" ">
               <router-link :to="`collection/${i}`" class="hover:text-custom-primary">{{ i }}</router-link>
@@ -76,9 +77,9 @@ import {useCollectionsStore} from '@/stores/collections.ts';
 import {storeToRefs} from "pinia";
 import {clsx} from "clsx"
 import {getAllAlphabet, getBrandsByCharacter, groupBrands} from "@/lib/utils.ts";
-import type { OnClickOutsideHandler } from '@vueuse/core'
 import {useBrandStore} from "@/stores/brand.ts";
 import {useRoute} from "vue-router"
+import {navigation} from "@/composables/app-config.ts"
 
 const collectionStore = useCollectionsStore();
 const {collections} = storeToRefs(collectionStore)
@@ -86,7 +87,6 @@ const brandStore = useBrandStore();
 const route = useRoute()
 
 const {brands} = storeToRefs(brandStore);
-
 
 const newBrands = computed(() =>brands.value ? groupBrands(brands.value.map((i) => i.name)) : [])
 const alphabet = getAllAlphabet();
@@ -104,10 +104,6 @@ function changeBrand(brand: string) {
   listBrandByChar.value = getBrandsByCharacter(newBrands.value, brand)
 }
 
-const dropdownHandler: OnClickOutsideHandler = () => {
-  openBrands.value = false;
-  listBrandByChar.value=[]
-}
 
 
 
@@ -122,20 +118,6 @@ const props = withDefaults(
     }
 )
 
-const links = ref([
-  {
-    text: 'Home',
-    url: '/'
-  },
-  {
-    text: 'About Us',
-    url: '/about-us'
-  },
-  {
-    text: 'Contact',
-    url: '/contact'
-  },
-])
 
 
 const navLinksClass = computed<string>(() => {
@@ -162,5 +144,9 @@ const navLinksClass = computed<string>(() => {
   margin-top: 12px;
   padding: 5px
 }
-
+.currentSelected{
+  background-color: red;
+  color: white;
+  outline: none;
+}
 </style>

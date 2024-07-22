@@ -12,7 +12,8 @@ interface DataTableToolbarProps {
   table: Table<any>,
   searchableColumns?: DataTableSearchableColumn<any[]>[],
   filterableColumns?:DataTableFilterableColumn<any[]>[],
-  createNewLink?:string
+  createNewLink?:string,
+  showViewOption?:boolean
 }
 
 const props = defineProps<DataTableToolbarProps>()
@@ -45,6 +46,6 @@ const isFiltered = computed(() => props.table.getState().columnFilters.length > 
         <X class="ml-2 h-4 w-4" />
       </Button>
     </div>
-    <DataTableViewOptions :table="table"  :createNewLink="props.createNewLink" />
+    <DataTableViewOptions :table="table"  :createNewLink="props.createNewLink" v-if="props.showViewOption || !props.showViewOption" />
   </div>
 </template>

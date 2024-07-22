@@ -3,80 +3,101 @@
     <FormItem>
       <FormLabel>{{ props.label}}</FormLabel>
       <!-- currency -->
-      <NumberField
-          v-if="props.option === 'currency'"
-          :disabled="disabled"
-          :format-options="{
+        <template v-if="props.option">
+          <NumberField
+              v-if="props.option === 'currency'"
+              :disabled="disabled"
+              :format-options="{
               style: 'currency',
               currency: 'vnd',
               currencyDisplay: 'code',
               currencySign: 'accounting',
             }"
-          :min="props.min"
-          :max="props.max"
-          class="gap-2"
-          @update:model-value="(v) => {
+              :min="props.min"
+              :max="props.max"
+              class="gap-2"
+              @update:model-value="(v) => {
            if (v) props.form.setFieldValue(String(props.name), v)
             else props.form.setFieldValue(String(props.name), undefined)
 
           }"
-      >
-        <NumberFieldContent>
-          <NumberFieldDecrement/>
-          <FormControl>
-            <NumberFieldInput/>
-          </FormControl>
-          <NumberFieldIncrement/>
-        </NumberFieldContent>
-      </NumberField>
+          >
+            <NumberFieldContent>
+              <NumberFieldDecrement/>
+              <FormControl>
+                <NumberFieldInput/>
+              </FormControl>
+              <NumberFieldIncrement/>
+            </NumberFieldContent>
+          </NumberField>
 
-      <!-- percentage -->
-      <NumberField
-          v-if="props.option ==='percentage'"
-          :disabled="disabled"
-          :format-options="{
+          <!-- percentage -->
+          <NumberField
+              v-if="props.option ==='percentage'"
+              :disabled="disabled"
+              :format-options="{
               style: 'percent',
             }"
-          :step="props.step"
-          class="gap-2"
-          @update:model-value="(v) => {
+              :step="props.step"
+              class="gap-2"
+              @update:model-value="(v) => {
            if (v) props.form.setFieldValue(String(props.name), v)
             else props.form.setFieldValue(String(props.name), undefined)
 
           }"
-      >
-        <NumberFieldContent>
-          <NumberFieldDecrement/>
-          <FormControl>
-            <NumberFieldInput/>
-          </FormControl>
-          <NumberFieldIncrement/>
-        </NumberFieldContent>
-      </NumberField>
+          >
+            <NumberFieldContent>
+              <NumberFieldDecrement/>
+              <FormControl>
+                <NumberFieldInput/>
+              </FormControl>
+              <NumberFieldIncrement/>
+            </NumberFieldContent>
+          </NumberField>
 
-      <!-- decimal -->
-      <NumberField
-          v-if="props.option === 'decimal'"
-          :disabled="disabled"
-          :format-options="{
+          <!-- decimal -->
+          <NumberField
+              v-if="props.option === 'decimal'"
+              :disabled="disabled"
+              :format-options="{
             signDisplay: 'exceptZero',
             minimumFractionDigits: 1,
           }"
-          class="gap-2"
-          @update:model-value="(v) => {
+              class="gap-2"
+              @update:model-value="(v) => {
            if (v) props.form.setFieldValue(String(props.name), v)
             else props.form.setFieldValue(String(props.name), undefined)
 
           }"
-      >
-        <NumberFieldContent>
-          <NumberFieldDecrement/>
-          <FormControl>
-            <NumberFieldInput/>
-          </FormControl>
-          <NumberFieldIncrement/>
-        </NumberFieldContent>
-      </NumberField>
+          >
+            <NumberFieldContent>
+              <NumberFieldDecrement/>
+              <FormControl>
+                <NumberFieldInput/>
+              </FormControl>
+              <NumberFieldIncrement/>
+            </NumberFieldContent>
+          </NumberField>
+        </template>
+        <template v-else>
+          <NumberField
+              :disabled="disabled"
+              class="gap-2"
+              @update:model-value="(v) => {
+             if (v) props.form.setFieldValue(String(props.name), v)
+            else props.form.setFieldValue(String(props.name), undefined)
+
+          }"
+          >
+            <NumberFieldContent>
+              <NumberFieldDecrement/>
+              <FormControl>
+                <NumberFieldInput/>
+              </FormControl>
+              <NumberFieldIncrement/>
+            </NumberFieldContent>
+          </NumberField>
+        </template>
       <FormMessage/>
     </FormItem>
   </FormField>

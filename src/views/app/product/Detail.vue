@@ -90,8 +90,11 @@
 
             </div>
             <div id="coupon" class="col-span-1 ">
-              <div v-for="(i, j) in vouchers" :key="j" class="mb-2">
+              <div v-for="(i, j) in vouchers" :key="j" class="mb-2" v-if="vouchers">
                 <VoucherList :data="i" />
+              </div>
+              <div v-if="pending">
+
               </div>
             </div>
           </div>
@@ -123,6 +126,7 @@ import {useCart} from "@/stores/cart"
 import {formatPrice, truncateText,calcSalePercentage} from "@/lib/utils";
 import {toast} from "vue-sonner";
 import {useProductStore} from "@/stores/products.ts";
+import {useVouchersStore} from "@/stores/vouchers";
 import {storeToRefs} from "pinia";
 import {useRoute} from "vue-router";
 
@@ -130,7 +134,12 @@ const route = useRoute();
 
 const cartStore = useCart();
 const productStore = useProductStore();
-const {detailProduct} = storeToRefs(productStore)
+const voucherStore = useVouchersStore();
+
+
+
+const {detailProduct} = storeToRefs(productStore);
+const {vouchers, pending} = storeToRefs(voucherStore)
 const variant_price = ref<number>(0)
 
 const errors = ref<{status:boolean, mess:string}>({
@@ -201,37 +210,6 @@ onMounted(async () => {
   await productStore.getDetailProduct(route.params.id.toString());
 })
 
-  const vouchers = [
-    {
-      id: 'code 1',
-      name: 'Miễn phí vận chuyển\n',
-      condition:'Đơn hàng từ 300k',
-      code:'A87TYRT55H',
-      end_date:'10/12/2022',
-      type:'freeship',
-      desc:'<ol><li>Dành cho đơn hàng từ 300k</li><li>Mỗi khách hàng được sử dụng tối đa 1 lần.</li><li>Sao chép mã và nhập mã khuyến mãi ở trang thanh toán</li></ol>'
-    },
-    {
-      id: 'code 2',
-      name: 'Giảm 20%',
-      condition:'Đơn hàng từ 200k\n' +
-          '\n',
-      code:'QH5G8J0YC',
-      end_date:'05/12/2022',
-      type:'coupon',
-      desc:'<ol><li>Dành cho đơn hàng từ 200k</li><li>Mỗi khách hàng được sử dụng tối đa 1 lần.</li><li>Sao chép mã và nhập mã khuyến mãi ở trang thanh toán</li></ol>'
-    },
-    {
-      id: 'code 3',
-      name: 'Giảm 50k\n',
-      condition:'Đơn hàng từ 500k\n' +
-          '\n',
-      code:'FT45YUO8H',
-      end_date:'10/12/2022',
-      desc:'<ul><li>Dành cho đơn hàng từ 500k</li><li>Mỗi khách hàng được sử dụng tối đa 1 lần.</li><li>Sao chép mã và nhập mã khuyến mãi ở trang thanh toán</li></ul>',
-      type:'cash'
-    }
-  ]
 
 </script>
 

@@ -23,7 +23,9 @@ interface DataTableProps {
   data: any[],
   searchableColumns?: DataTableSearchableColumn<any>[],
   filterableColumns?:DataTableFilterableColumn<any>[],
-  createNewLink?:string
+  createNewLink?:string,
+  showPagination?:boolean,
+  showViewOption?:boolean
 }
 
 const props = defineProps<DataTableProps>()
@@ -81,6 +83,7 @@ watchEffect(() => {
               :searchableColumns="props.searchableColumns"
               :filterableColumns="props.filterableColumns"
               :createNewLink="props.createNewLink"
+              :showViewOption="props.showViewOption"
     />
     <div class="rounded-md border">
       <Table>
@@ -119,6 +122,6 @@ watchEffect(() => {
       </Table>
     </div>
 
-    <DataTablePagination :table="table" v-if="props.data.length >=5 " />
+    <DataTablePagination :table="table" v-if="props.data.length >=5 && props.showPagination || !props.showPagination " />
   </div>
 </template>

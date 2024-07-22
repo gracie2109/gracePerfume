@@ -99,3 +99,35 @@ export const sampleCancelReason = [
 export const sampleOrderStatus = [
 
 ]
+
+
+export const voucherCondition = [
+    {
+        name: 'Product Discount',
+        desc:'Discounts for specific products or product collections.',
+        value:'product_discount'
+    },
+    {
+        name: 'Order Discount',
+        desc:'Discount for total order amount.',
+        value: 'order_discount'
+    },
+    {
+        name: 'Free Shipping',
+        desc:'Free shipping for orders.',
+        value: 'free_shipping'
+    }
+];
+
+export const number_of_usage = [
+    {
+        name: 'One time',
+        value: '1'
+    },
+    {
+        name: 'Unlimited',
+        value: 'unlimited'
+    }
+]
+
+export const voucherFilter = ['all', 'active','coming_soon']
