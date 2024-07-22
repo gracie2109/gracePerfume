@@ -241,3 +241,26 @@ export const getListFirebase = async (collectionName: string) => {
     }
 
 }
+
+export const modifyVariantProduct = (products:any[]) => {
+    if (products) {
+        let data = [] as any[];
+        products.map((i) => {
+            if (i.variants && i.variants.length > 0) {
+                for (let j of i.variants) {
+                    const variant = {
+                        ...j,
+                        name: `${i.name}/${j.unit}`,
+                        images: i.images
+                    }
+                    data = [...data, variant]
+                }
+            } else {
+                data = [...data, i]
+            }
+        });
+
+        return data
+    }
+    else return []
+}

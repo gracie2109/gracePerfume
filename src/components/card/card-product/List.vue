@@ -1,9 +1,9 @@
 <template>
   <RouterLink :to="`/product/${props.data.slug}`">
     <div class="relative" @click="$router.resolve({name:'productDetail', params:{id: props.data.slug}})">
-      <div class="w-full border rounded-lg h-full relative">
+      <div class="w-full  rounded-lg h-full relative">
         <div class="p-2 h-64 rounded-xl space-y-2 relative">
-          <div class="w-full h-full max-h-[70%] ">
+          <div class="w-full h-full max-h-[90%] ">
             <img
                 :src="props.data.images[0]"
                 alt="title"

@@ -5,6 +5,10 @@ export const navigation = {
             name:'orders'
         },
         {
+            path: 'vouchers',
+            name:'vouchers'
+        },
+        {
             path: 'brands',
             name: 'adminBrands',
         },
@@ -48,6 +52,24 @@ export const navigation = {
             path: 'transactions',
             name: 'transactions',
             icon:''
+        }
+    ],
+    clientNav:[
+        {
+            text: 'Home',
+            url: '/'
+        },
+        {
+            text: 'About Us',
+            url: '/about-us'
+        },
+        {
+            text: 'Contact',
+            url: '/contact'
+        },
+        {
+            text:'Coupons',
+            url:'/coupons'
         }
     ]
 }

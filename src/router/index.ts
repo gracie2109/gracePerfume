@@ -81,6 +81,10 @@ const router = createRouter({
                         },
                     ]
                 },
+                {
+                    path: 'coupons',
+                    component: () => import('@/views/app/vouchers/ListVoucherApp.vue'),
+                }
             ]
         },
         {
@@ -121,6 +125,16 @@ const router = createRouter({
                     path: 'orders',
                     name: 'orders',
                     component:  () => import("@/views/admin/orders/PageListOrder.vue"),
+                },
+                {
+                    path: 'vouchers',
+                    name: 'vouchers',
+                    component:  () => import("@/views/admin/vouchers/PageListVoucher.vue"),
+                },
+                {
+                    path: 'vouchers/create',
+                    name: 'vouchersCreate',
+                    component:  () => import("@/views/admin/vouchers/PageCreateVoucher.vue"),
                 },
                 {
                     path: 'orders/:id',

@@ -2,13 +2,13 @@
   <div class="border p-2 rounded-lg ">
       <div class="flex gap-x-4 items-center text-sm">
         <div id="media" class=" w-[50px] h-[50px]">
-          <template v-if="props.data.type ==='coupon'">
+          <template v-if="props.data.type ==='order_discount'">
             <img :src="couponImage" alt="props.data.name"  class="w-full h-full">
           </template>
-          <template v-if="props.data.type ==='freeship'">
+          <template v-if="props.data.type ==='free_shipping'">
             <img :src="freeshipImage" alt="props.data.name" class="w-full h-full">
           </template>
-          <template v-if="props.data.type ==='cash'">
+          <template v-if="props.data.type ==='product_discount'">
             <img :src="cashImage" alt="props.data.name" class="w-full h-full">
           </template>
         </div>
@@ -25,8 +25,9 @@
                    <TooltipContent class="text-black bg-white border p-3 px-5" >
                      <div class="min-w-40 space-y-3">
                        <div class="flex justify-between items-center"><p>Code: </p> <b>{{props.data.code}}</b>  </div>
-                       <div class="flex justify-between items-center"><p>End Date: </p> <span>{{props.data.end_date}}</span>  </div>
-                       <div class="px-3 list-disc" v-html="props.data.desc">
+                       <div class="flex justify-between items-center"><p>Start Date: </p> <span>{{props.data.startDate}}</span>  </div>
+                       <div class="flex justify-between items-center"><p>End Date: </p> <span>{{props.data.endDate}}</span>  </div>
+                       <div class="px-3 list-disc" v-html="props.data.description">
                        </div>
                      </div>
                    </TooltipContent>
@@ -37,7 +38,8 @@
           <div id="last" class="flex justify-between items-center">
             <div class="grid gap-y-1">
               <p>Code: <span class="font-semibold">{{props.data.code}}</span></p>
-              <small class="inline-block">HSD: {{props.data.end_date}}</small>
+              <small class="inline-block" v-if="props.data.endDate">HSD: {{props.data.endDate }}</small>
+              <small class="inline-block" v-else>HSD: Unlimited</small>
             </div>
             <div v-if="isSupported">
               <button @click="copy(props.data.code)" class="bg-primary text-white py-0.5 px-1.5 rounded-lg flex items-center hover:bg-primary/85 ">
@@ -47,6 +49,7 @@
               </button>
             </div>
           </div>
+
         </div>
       </div>
   </div>

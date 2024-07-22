@@ -297,6 +297,8 @@ import {profitAndMarginAlg, removeVietnameseTones} from "@/lib/utils.ts"
 import Upload from "@/components/Upload.vue"
 import {productValidation} from "@/validation/products.ts"
 import {toTypedSchema} from "@vee-validate/zod";
+import { uid } from 'uid';
+
 
 const brandStore = useBrandStore();
 const productStore = useProductStore();
@@ -323,7 +325,7 @@ const setImages = (images: any[]) => {
 
 const onSubmit = form.handleSubmit(async (values) => {
 
-  const payload = {...values, slug: removeVietnameseTones(values.name), description: description.value};
+  const payload = {...values, slug: removeVietnameseTones(values.name), description: description.value, uid: uid()};
   console.log('onSubmit', payload)
   await productStore.createNewProducts(payload)
 

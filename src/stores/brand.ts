@@ -1,4 +1,4 @@
-    import { ref, type Ref} from 'vue'
+import { ref, type Ref} from 'vue'
 import { defineStore } from 'pinia'
 import { collection, addDoc,deleteDoc,doc } from 'firebase/firestore'
 import { useCollection, useDocument, useFirestore,  } from 'vuefire'

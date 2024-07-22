@@ -1,10 +1,12 @@
 import { ref, type Ref} from 'vue'
 import { defineStore } from 'pinia'
-import {collection, addDoc} from 'firebase/firestore'
-import {useCollection,useFirestore,} from 'vuefire'
+import {collection, addDoc, doc, getFirestore, updateDoc} from 'firebase/firestore'
+import {useCollection, useDocument, useFirestore,} from 'vuefire'
 import {checkItemExistence, getDetailData, getListFirebase} from '@/lib/utils';
 import { toast } from 'vue-sonner';
 import {useBrandStore} from "@/stores/brand.ts";
+import { uid } from 'uid';
+
 
 
 export const useProductStore = defineStore('products',  () => {
@@ -24,7 +26,25 @@ export const useProductStore = defineStore('products',  () => {
             loading.value = true;
             const exist = await checkItemExistence('products','name', value.name);
             if(!exist){
-                await addDoc(collection(db, 'products'), value);
+                let newVariant = [] as any[]
+                if(value.variants && value.variants.length > 0){
+                    for(let i of value.variants){
+                        const payload = {
+                            ...i,
+                            parent_uid:uid(),
+                            uid: `${value.uid}/unit/${uid()}`,
+                        }
+                        newVariant =[...newVariant, payload]
+                    }
+
+                }
+                const payload = {
+                    ...value,
+                    variants:newVariant,
+
+                }
+                await addDoc(collection(db, 'products'), payload)
+
                 toast.success('products has been created')
             }else{
                 toast.error("Item is already exist")
@@ -52,7 +72,20 @@ export const useProductStore = defineStore('products',  () => {
           loading.value = false
       }
     }
-
+    const updateProduct = async (id: string, payload: any) => {
+        try{
+            loading.value = true;
+            const brandDoc = await doc(getFirestore(), "products", id);
+            const detail = await useDocument(brandDoc);
+            if(detail){
+                await updateDoc(doc(getFirestore(), "products", id), {...payload})
+            }
+        }catch(e) {
+            console.log('e', e)
+        }finally{
+            loading.value = false
+        }
+    }
 
     const getDetailProduct = async (slug: string) => {
         const data = await getDetailData('products', 'slug', slug);
@@ -75,5 +108,5 @@ export const useProductStore = defineStore('products',  () => {
 
     }
 
-    return { products, loading, errors,detailProduct,  createNewProducts, getListProducts, getDetailProduct}
+    return { products, loading, errors,detailProduct,  createNewProducts, getListProducts, getDetailProduct,updateProduct}
 })
