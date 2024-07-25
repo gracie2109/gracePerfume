@@ -131,14 +131,12 @@ export function truncateText(text: string, maxLength: number) {
 export function getUniquePermissions(array1: any, array2: any) {
     if (!(array1 && array2)) return [];
     const setA = new Set(array1?.map((item: any) => item?.id));
-    const uniqueElements = array2?.filter((item: any) => {
+    return array2?.filter((item: any) => {
         if (!setA.has(item?.id)) {
             setA.add(item?.name);
             return item;
         }
     });
-
-    return uniqueElements;
 }
 
 
@@ -264,3 +262,4 @@ export const modifyVariantProduct = (products:any[]) => {
     }
     else return []
 }
+

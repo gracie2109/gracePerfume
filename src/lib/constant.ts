@@ -130,4 +130,6 @@ export const number_of_usage = [
     }
 ]
 
+export const discount_by = ['percent', 'cash']
+
 export const voucherFilter = ['all', 'active','coming_soon']

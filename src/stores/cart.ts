@@ -62,6 +62,7 @@ export const useCart = defineStore('cart',  () => {
                     image: payload.product.value.images[0],
                     status: payload.product.value.status,
                     name: payload.product.value.name,
+                    uid: payload.product.value.uid,
                     variant:[
                         {
                             id: payload.variant_id,
@@ -80,6 +81,7 @@ export const useCart = defineStore('cart',  () => {
                     status: payload.product.value.status,
                     quantity: payload.quantity,
                     price: payload.product.value.price,
+                    uid: payload.product.value.uid,
                 }
                 cart.value = [dataSpecific]
             }
@@ -104,6 +106,7 @@ export const useCart = defineStore('cart',  () => {
                         image:payload.product.value.images[0],
                         status: payload.product.value.status,
                         name: payload.product.value.name,
+                        uid: payload.product.value.uid,
                         variant:[
                             {
                                 id: payload.variant_id,
@@ -122,6 +125,7 @@ export const useCart = defineStore('cart',  () => {
                         price: payload.product.value.price,
                         image:payload.product.value.images[0],
                         name: payload.product.value.name,
+                        uid: payload.product.value.uid,
                     }];
                     cart.value = uploadSpecific
                 }

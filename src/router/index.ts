@@ -109,7 +109,7 @@ const router = createRouter({
             children:[
                 {
                     path: '',
-                    component: () => import('@/views/app/checkout/Index.vue'),
+                    component: () => import('@/views/app/checkout/Index2.vue'),
                     name: 'checkout',
                 },
             ]

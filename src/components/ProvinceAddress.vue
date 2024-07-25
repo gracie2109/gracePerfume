@@ -1,7 +1,6 @@
 <template>
   <div class="mt-2 w-full space-y-4">
     <div class="grid grid-cols-2 items-start gap-3 w-full">
-
       <div class="space-y-2">
         <Label for="province">Province</Label>
         <Select
@@ -77,7 +76,7 @@
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import {Label} from "@/components/ui/label"
 import {Textarea} from "@/components/ui/textarea"
-import {onMounted, reactive, ref, watch} from "vue";
+import {onMounted, reactive, ref, watchEffect} from "vue";
 import {GHNDistrict, GHNProvince, GHNWard, IAddress} from "@/types/location.ts";
 import {getDistrict, getProvince, getWard} from "@/services/location.ts";
 
@@ -122,7 +121,7 @@ onMounted(async () => {
 })
 
 
-watch(() => props.form?.province?.ProvinceID, async () => {
+watchEffect(async () => {
   if (props.form?.province?.ProvinceID !== 0 ) {
     const districts = await getDistrict(props.form?.province?.ProvinceID);
     listDistricts.value = districts
@@ -130,10 +129,6 @@ watch(() => props.form?.province?.ProvinceID, async () => {
       districts.map((i: GHNDistrict) => mapDistricts.set(i.DistrictID, i))
     }
   }
-
-})
-
-watch(() => props.form?.district?.DistrictID, async () => {
   if (props.form?.district?.DistrictID !== 0) {
     const wards = await getWard(props.form?.district?.DistrictID);
     listWards.value = wards
@@ -141,7 +136,6 @@ watch(() => props.form?.district?.DistrictID, async () => {
       wards.map((i: GHNWard) => mapWards.set(i.WardCode, i))
     }
   }
-
-});
+})
 
 </script>

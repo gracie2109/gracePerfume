@@ -22,6 +22,7 @@ export const useCollectionsStore = defineStore('collection',  () => {
     const errors:Ref<{message: String, code: String}> = ref({message: "", code: ""})
     const detail:Ref<any | undefined> = ref(undefined)
 
+
     const createNewCollection = async (value: Omit<IBrands, "id">) => {
         try{
             loading.value = true;
@@ -51,9 +52,7 @@ export const useCollectionsStore = defineStore('collection',  () => {
         return detail.value = dt;
     }
 
-    const resetForm = () => {
 
-    };
 
 
     const deleteCollection = async(id:string) => {
@@ -70,5 +69,5 @@ export const useCollectionsStore = defineStore('collection',  () => {
     const resetDetail = () => {
         detail.value = undefined
     }
-    return { collections, errors, loading, detail,resetDetail, createNewCollection, getDetailCollection,resetForm,deleteCollection}
+    return { collections, errors, loading, detail,resetDetail, createNewCollection, getDetailCollection,deleteCollection}
 })

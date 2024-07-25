@@ -4,6 +4,7 @@
     <div class="my-4" v-if="userAddress">
       <Label>Choose exist address</Label>
       <Select
+          v-model:model-value="tempSelected"
           @update:modelValue=" (v) => form.shipping_address.available_id = v"
       >
         <SelectTrigger >
@@ -46,7 +47,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import { inject, type Ref, watch} from "vue"
+import {inject, ref, type Ref, toRaw, watchEffect} from "vue"
 import {ICheckout} from "@/types/checkout.ts";
 import {useCurrentUser} from "vuefire";
 import {useUserStore} from "@/stores/user.ts";
@@ -57,7 +58,7 @@ const form = inject('form') as Ref<ICheckout>;
 
 const user = useCurrentUser() as any;
 
-
+const tempSelected = ref('')
 
 const useStore = useUserStore();
 const {userAddress} = storeToRefs(useStore)
@@ -66,29 +67,32 @@ const {userAddress} = storeToRefs(useStore)
 computedAsync(async () => {
   await useStore.getCurrentUserAdress();
   if(user){
-    form.value.userName = user.value.displayName || '';
-    form.value.phoneNumber = user.value.phoneNumber || ''
+    form.value.userName = form.value.userName ||  user.value.displayName;
+    form.value.phoneNumber = form.value.phoneNumber || user.value.phoneNumber
   }
 })
 
-watch(() => form.value.shipping_address.available_id,() => {
+watchEffect(() => {
   if(form.value.shipping_address.available_id && userAddress.value){
-    const selected = userAddress.value.find((i) => i.id === form.value.shipping_address.available_id);
+    const {shipping_address} = form.value
+    const selected = toRaw(userAddress.value.find((i) => i.id === form.value.shipping_address.available_id))
+
     if(selected){
-      form.value.shipping_address.available_id = selected['id'];
-      form.value.shipping_address.address = selected['address'];
+      tempSelected.value = form.value.shipping_address.available_id.toString() || selected.id.toString();
+
+      shipping_address.available_id = form.value.shipping_address.available_id.toString() || selected.id.toString()
+      shipping_address.address = form.value.shipping_address.address || selected.address
+      //@ts-ignore
+      shipping_address.province.ProvinceID = selected['province']['ProvinceID'].toString();
+      shipping_address.province.ProvinceName =  selected['province']['ProvinceName'];
 
       //@ts-ignore
-      form.value.shipping_address.province.ProvinceID = selected['province']['ProvinceID'].toString();
-      form.value.shipping_address.province.ProvinceName = selected['province']['ProvinceName'];
-
-      //@ts-ignore
-      form.value.shipping_address.district.DistrictID = selected['district']['DistrictID'].toString();
-      form.value.shipping_address.district.DistrictName = selected['district']['DistrictName'];
+      shipping_address.district.DistrictID = selected['district']['DistrictID'].toString();
+      shipping_address.district.DistrictName = selected['district']['DistrictName'];
 
       // //ward
-      form.value.shipping_address.ward.WardCode = selected['ward']['WardCode'];
-      form.value.shipping_address.ward.WardName = selected['ward']['WardName'];
+      shipping_address.ward.WardCode =selected['ward']['WardCode'];
+      shipping_address.ward.WardName =selected['ward']['WardName'];
     }
 
 

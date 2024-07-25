@@ -312,8 +312,9 @@ const form = useForm({
   keepValuesOnUnmount: true
 })
 const profit = computed(() => {
-  if (form.values['price'] && form.values['cost'] && form.values['cost_per_item']) {
-    return profitAndMarginAlg(form.values['price'], form.values['cost'], form.values['cost_per_item'])
+  const {price, cost, cost_per_item} = form.values
+  if (price && cost && cost_per_item) {
+    return profitAndMarginAlg(price, cost, cost_per_item)
   } else return 0
 })
 

@@ -10,13 +10,21 @@
       <PreviewCartItem/>
       <div class="space-y-4 mt-5">
         <Separator/>
+        <ApplyVoucher />
+        <Separator/>
         <div class="grid grid-cols-2  gap-2 justify-between w-full ">
           <p>Temp price: </p>
           <p class="text-end">{{ formatPrice(totalPrice) }}</p>
           <p>Shipping fee: </p>
-          <p class="text-end">_</p>
+          <p class="text-end" >
+            <span v-if="form.shipping_fee.fee">{{formatPrice(form.shipping_fee.fee)}}</span>
+            <span v-else>_</span>
+          </p>
         </div>
+
         <Separator/>
+
+
         <div class="flex  gap-2 justify-between items-center w-full">
           <p class="text-md">Total price</p>
           <p class="text-2xl font-semibold">{{ formatPrice(totalPrice) }}</p>
@@ -55,10 +63,13 @@ import {storeToRefs} from "pinia";
 import {useCart} from "@/stores/cart.ts";
 import {Button} from "@/components/ui/button"
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
-
 import {Beer} from "lucide-vue-next";
 import UserAvatar from "@/components/base/avatar/UserAvatar.vue";
+import ApplyVoucher from '@/components/checkout/ApplyVoucher.vue'
+import {inject, type Ref} from "vue";
+import {ICheckout} from "@/types/checkout.ts";
 
+const form = inject("form") as Ref<ICheckout>;
 
 const emit = defineEmits(['nextStep']);
 const props = defineProps<{

@@ -7,7 +7,8 @@
 
         <div class="w-[20%]  h-full relative" if="media">
          <div class="w-full h-full max-w-[50px]">
-           <img :src="prop.data.image" alt="image of" class="w-full h-full relative object-cover max-w-[50px] max-h-[50px]">
+           <img :src="prop.data.image " alt="image of" class="w-full h-full relative object-cover aspect-square ">
+
          </div>
           <div v-if="prop.showBtnDel"
                class="cursor-pointer absolute -top-1 -left-2 bg-custom-primary w-6 h-6 rounded-full text-white text-sm"
