@@ -43,11 +43,7 @@ const form = useForm({
     startDate: '',
     endDate:null,
     product_apply: [],
-    discount_by:{
-      type: discount_by[0],
-      value: 0,
-      maxValue: 0
-    }
+    discount_by:undefined
   },
 });
 

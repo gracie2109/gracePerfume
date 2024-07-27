@@ -17,8 +17,8 @@ export const voucherValidation = z.object({
     product_apply: z.array(z.string()).optional().transform(value => value || null),
     quantity: z.number().min(1),
     discount_by: z.object({
-        type: z.string().min(1, {message: "Choose the discount type"}),
-        value: z.number(),
-        maxValue: z.number()
-    })
+        type: z.string().min(1, {message: "Choose the discount type"}).optional().transform(value => value || null),
+        value: z.number().optional().transform(value => value || null),
+        maxValue: z.number().optional().transform(value => value || null)
+    }).optional().transform(value => value || null),
 })

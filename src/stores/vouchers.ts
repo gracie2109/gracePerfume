@@ -1,18 +1,26 @@
 import {ref, type Ref} from 'vue'
-import {defineStore} from 'pinia'
+import {defineStore, storeToRefs} from 'pinia'
 import {checkItemExistence, getDetailData} from '@/lib/utils';
 import {toast} from 'vue-sonner'
 import {differenceInDays} from "date-fns"
 import {addDoc, collection, doc, getFirestore, updateDoc} from "firebase/firestore";
 import {useCollection, useDocument, useFirestore} from "vuefire";
+import {voucherConditionValue} from "@/lib/constant.ts";
+import {useCart} from "@/stores/cart.ts";
 
 export const useVouchersStore = defineStore('vouchers', () => {
+    const cartStore = useCart()
+
     const loading: Ref<boolean> = ref(false);
 
     const db = useFirestore()
     const errors: Ref<string> = ref('');
 
     const {data: vouchers, pending, error} = useCollection(collection(db, 'vouchers'))
+    const {cart} = storeToRefs(cartStore)
+    const cartMap = new Map();
+
+
 
     async function createVoucherUsage(payload: any) {
         try {
@@ -115,6 +123,34 @@ export const useVouchersStore = defineStore('vouchers', () => {
         }
     }
 
+     function checkProductCanApply(detailVoucher:any) {
+        try{
+            loading.value = true;
+            let result:boolean = false
+            if(cart.value){
+                for(let i of cart.value){
+                    if(i.variant){
+                        for(let j of i.variant) {
+                            cartMap.set(j.uid,j.uid)
+                        }
+                    }else{
+                        cartMap.set(i.uid, i.uid)
+                    }
+                }
+
+                for(let k of detailVoucher.product_apply){
+                    result = (cartMap.has(k))
+                }
+
+            }
+            if(result) return detailVoucher
+            else return errors.value = 'Cart Product can access this voucher'
+        }catch(err){
+            console.log('err', err)
+        }finally {
+            loading.value = false
+        }
+    }
 
     async function checkApplyVoucher(price: number, orderCode: string, userId: string) {
         try {
@@ -131,19 +167,32 @@ export const useVouchersStore = defineStore('vouchers', () => {
                 const compareOrderWithMinPrice = price - +detailValue.minPrice;
                 const canAccess = await checkUserCanApplyVoucher(detailValue, userId);
 
+
                 if (checkActiveQuantity <= 0) return errors.value = 'Voucher quantity is full';
                 if (compareOrderWithMinPrice < 0) return errors.value = 'The minimum order price has not been reached';
                 if (!canAccess) return errors.value = 'You has been use this voucher';
 
                 if (detailValue.endDate) {
                     const checkExpireDate = differenceInDays(new Date(detailValue.endDate), new Date());
-                    if ((checkExpireDate && checkActiveQuantity && compareOrderWithMinPrice) > 0 && canAccess) {
-                        errors.value = ''
-                        return {
-                            voucher: detailValue,
-                            voucherUsedItem: canAccess
-                        }
-                    }
+                   if(detailValue.type !== voucherConditionValue.PRODUCT_DISCOUNT){
+                       if ((checkExpireDate && checkActiveQuantity && compareOrderWithMinPrice) > 0 && canAccess) {
+                           errors.value = ''
+                           return {
+                               voucher: detailValue,
+                               voucherUsedItem: canAccess
+                           }
+                       }
+                   }else{
+                       const productAccess =  checkProductCanApply(detailValue);
+
+                       if ((checkExpireDate && checkActiveQuantity && compareOrderWithMinPrice) > 0 && canAccess && productAccess) {
+                           errors.value = ''
+                           return {
+                               voucher: detailValue,
+                               voucherUsedItem: canAccess
+                           }
+                       }
+                   }
                 } else {
                     if ((checkActiveQuantity && compareOrderWithMinPrice) > 0 && canAccess) {
                         errors.value = ''
@@ -164,7 +213,7 @@ export const useVouchersStore = defineStore('vouchers', () => {
         }
     }
 
-    function calcValueWithMaxValue(type: 'percent' | 'cash', oldPrice: number, target: any) {
+    function calcByDiscountTypeTotalOrderPrice(type: 'percent' | 'cash', oldPrice: number, target: any) {
         let newPrice: number = (type === 'percent') ? (oldPrice * (+target.value) / 100) : (oldPrice - +target.value);
         if (newPrice > +target.maxValue) return {
             newData: oldPrice - +target.maxValue,
@@ -176,11 +225,24 @@ export const useVouchersStore = defineStore('vouchers', () => {
         }
     }
 
+    function calcByDiscountTypeFreeship (oldPrice: number, tagret:any) {
+        const newPrice = oldPrice - +tagret.maxValue
+        return {
+            newData: newPrice,
+            discountValue: newPrice
+        }
+    }
+
+
     function calcDiscountValue(totalPrice: number, voucherDetail: any) {
 
         if (!(voucherDetail || totalPrice)) return;
-        if (voucherDetail.discount_by.type === 'percent') return calcValueWithMaxValue('percent', +totalPrice, voucherDetail.discount_by)
-        else return calcValueWithMaxValue('cash', +totalPrice, voucherDetail.discount_by)
+        if(voucherDetail.type === voucherConditionValue.FREE_SHIPPING){
+            if (voucherDetail.discount_by.type === 'percent') return calcByDiscountTypeTotalOrderPrice('percent', +totalPrice, voucherDetail.discount_by)
+            else return calcByDiscountTypeTotalOrderPrice('cash', +totalPrice, voucherDetail.discount_by);
+        }else{
+             return calcByDiscountTypeFreeship(+totalPrice, voucherDetail.discount_by)
+        }
     }
 
     async function updateVoucherQuantity(id: string) {
@@ -189,9 +251,7 @@ export const useVouchersStore = defineStore('vouchers', () => {
             loading.value = true;
             const brandDoc = await doc(getFirestore(), "vouchers", id);
             const detail = await useDocument(brandDoc);
-            console.log('updateVoucherQuantity', detail)
             if(detail.value){
-
                 return await updateDoc(doc(getFirestore(), "vouchers", id), {
                     usage: +detail.value.usage + 1
                 })

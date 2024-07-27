@@ -1,6 +1,7 @@
 import {IAddress} from "@/types/location.ts";
 import {basePaymentMethods} from "@/lib/constant.ts";
 
+
 export interface IShippingAddress extends IAddress {
     available_id: string | null,
 }
@@ -20,8 +21,8 @@ export type ICheckout = {
     salePrice:number,
     totalPrice: number,
     shipping_fee:{
-        fee?: number,
-        totalFee?:number
+        fee: number,
+        totalFee:number
     },
     usedVoucherObj:any
 }

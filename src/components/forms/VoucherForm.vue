@@ -49,7 +49,7 @@
       </FormItem>
     </FormField>
     <div class="space-y-3">
-      <FormField v-slot="{ componentField }" name="discount_by.type" type="radio">
+      <FormField v-slot="{ componentField }" name="discount_by.type" type="radio" v-if="type !=='free_shipping'">
         <FormItem class="space-y-3 w-full">
           <FormLabel>Discount By</FormLabel>
           <FormControl>
@@ -79,15 +79,17 @@
 
       <div class="grid grid-cols-2 gap-3 items-start">
         <CustomInputNumber
+            v-if="type !== 'free_shipping' && discountBy"
             :form="props.form"
             :min="discountBy.type == discount_by[0] ? 1 : 1000"
             :name="'discount_by.value'"
             :option="discountBy.type == discount_by[0] ? 'percentage' : 'currency'"
-            label="Discount  (percentage or cash)"
+            label="Discount (percentage or cash)"
         />
 
 
         <CustomInputNumber
+            v-if="discountBy"
             :form="props.form"
             :min="1000"
             :option="'currency'"
@@ -263,7 +265,7 @@ const props = defineProps<{
 
 
 const type = computed(() => props.form.values.type);
-const discountBy = computed(() => props.form.values.discount_by)
+const discountBy = computed(() =>  props.form.values.discount_by)
 const emits = defineEmits(['onSubmit']);
 const productStore = useProductStore();
 const {products} = storeToRefs(productStore);
@@ -340,7 +342,7 @@ watchEffect(() => {
     props.form.setFieldError('endDate', "EndDate must before StartDate");
   }
 
-  if (discount_by.type === 'percent' && (discount_by.value < 0 || discount_by.value > 100)) {
+  if (discount_by && discount_by.type === 'percent' && (discount_by.value < 0 || discount_by.value > 100)) {
     props.form.setFieldError('discount_by.type', 'Percent around 1 - 100%')
   }
 })

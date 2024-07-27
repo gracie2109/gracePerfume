@@ -27,21 +27,11 @@
 
         <div class="flex  gap-2 justify-between items-center w-full">
           <p class="text-md">Total price</p>
-          <p class="text-2xl font-semibold">{{ formatPrice(totalPrice) }}</p>
+          <p class="text-2xl font-semibold">{{ formatPrice(form.totalPrice) }}</p>
         </div>
       </div>
 
-        <div v-if="props.alert" class="max-w-screen-sm">
-          <transition>
-            <Alert variant="destructive">
-              <Beer className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>
-                {{props.alert }}
-              </AlertDescription>
-            </Alert>
-          </transition>
-      </div>
+
       <div>
         <Button class="w-full" @click="emit('nextStep')">Continue</Button>
       </div>
@@ -62,8 +52,7 @@ import {Separator} from "@/components/ui/separator";
 import {storeToRefs} from "pinia";
 import {useCart} from "@/stores/cart.ts";
 import {Button} from "@/components/ui/button"
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
-import {Beer} from "lucide-vue-next";
+
 import UserAvatar from "@/components/base/avatar/UserAvatar.vue";
 import ApplyVoucher from '@/components/checkout/ApplyVoucher.vue'
 import {inject, type Ref} from "vue";
@@ -72,9 +61,6 @@ import {ICheckout} from "@/types/checkout.ts";
 const form = inject("form") as Ref<ICheckout>;
 
 const emit = defineEmits(['nextStep']);
-const props = defineProps<{
-  alert: string | null
-}>()
 
 const cartStore = useCart();
 const user = useCurrentUser();

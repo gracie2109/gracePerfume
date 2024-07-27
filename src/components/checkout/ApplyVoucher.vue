@@ -38,7 +38,7 @@ const code = ref();
 const form = inject("form") as Ref<ICheckout>;
 const cartStore = useCart();
 
-const {totalPrice} = storeToRefs(cartStore);
+const {totalPrice, cart} = storeToRefs(cartStore);
 const {loading, errors} = storeToRefs(voucherStore);
 
 
@@ -53,7 +53,8 @@ function updateFormData(totalPrice: any, data: any) {
 
 const checkVoucher = async () => {
   if (currentUser.value) {
-    const data = await voucherStore.checkApplyVoucher(totalPrice.value, code.value.toUpperCase(), currentUser.value?.uid) as any;
+    const data = await voucherStore.checkApplyVoucher(totalPrice.value, code.value.toUpperCase(), currentUser.value?.uid, cart) as any;
+
     if (data.voucher && data.voucherUsedItem) {
       form.value.voucher.code = data.voucher.code;
       form.value.voucher.id = data.voucher.id;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {CreditCard, Truck } from 'lucide-vue-next'
-import {onUnmounted, provide, reactive, ref} from 'vue'
+import {computed, onUnmounted, provide, reactive, ref, watchEffect} from 'vue'
 import { Stepper, StepperDescription, StepperIndicator, StepperItem, StepperSeparator, StepperTitle, StepperTrigger } from '@/components/ui/stepper'
 import {
   Breadcrumb,
@@ -27,6 +27,7 @@ import {
 import {toast} from "vue-sonner";
 import {useCheckout} from "@/stores/order.ts";
 import {useCart} from "@/stores/cart.ts";
+import {storeToRefs} from "pinia";
 
 const steps = reactive([
   {
@@ -46,18 +47,21 @@ const steps = reactive([
 const router = useRouter();
 
 const stepper = ref(steps[0].step);
-const form = ref<ICheckout>(initialCheckoutValue);
-const showAlert = ref<string | null>(null);
+
 const showConfirmTransfer = ref(false);
 const checkoutStore = useCheckout();
 const cartStore = useCart();
-
+const {totalPrice} = storeToRefs(cartStore)
 let timeout: ReturnType<typeof setTimeout>;
 
+const form = ref<ICheckout>(initialCheckoutValue);
 
-function clearAlert() {
-  showAlert.value = null;
-}
+const currentOrderPrice = computed(() => {
+  return +totalPrice.value + +form.value.shipping_fee.totalFee
+})
+watchEffect(() => {
+  form.value.totalPrice = currentOrderPrice.value;
+})
 
 function nextStep() {
   stepper.value = steps[1].step;
@@ -97,6 +101,7 @@ async function submit() {
 
 
 provide('form', form);
+
 
 onUnmounted(() => {
   clearTimeout(timeout);
@@ -176,7 +181,7 @@ onUnmounted(() => {
          <div class="grid">
 
            <div v-if="stepper === steps[0].step">
-             <Step1  :alert="showAlert" @next-step="nextStep"/>
+             <Step1  @next-step="nextStep"/>
 
            </div>
            <div v-if="stepper === steps[1].step">
