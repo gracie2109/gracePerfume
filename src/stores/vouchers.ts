@@ -214,18 +214,22 @@ export const useVouchersStore = defineStore('vouchers', () => {
     }
 
     function calcByDiscountTypeTotalOrderPrice(type: 'percent' | 'cash', oldPrice: number, target: any) {
-        let newPrice: number = (type === 'percent') ? (oldPrice * (+target.value) / 100) : (oldPrice - +target.value);
-        if (newPrice > +target.maxValue) return {
-            newData: oldPrice - +target.maxValue,
-            discountValue: newPrice
-        }
-        else return {
-            newData: oldPrice - +newPrice,
-            discountValue: newPrice
+        if(!target) return
+       else{
+            let newPrice: number = (type === 'percent') ? (oldPrice * (+target.value) / 100) : (oldPrice - +target.value);
+            if (newPrice > +target.maxValue) return {
+                newData: oldPrice - +target.maxValue,
+                discountValue: newPrice
+            }
+            else return {
+                newData: oldPrice - +newPrice,
+                discountValue: newPrice
+            }
         }
     }
 
     function calcByDiscountTypeFreeship (oldPrice: number, tagret:any) {
+        if(!tagret) return
         const newPrice = oldPrice - +tagret.maxValue
         return {
             newData: newPrice,
@@ -237,11 +241,11 @@ export const useVouchersStore = defineStore('vouchers', () => {
     function calcDiscountValue(totalPrice: number, voucherDetail: any) {
 
         if (!(voucherDetail || totalPrice)) return;
-        if(voucherDetail.type === voucherConditionValue.FREE_SHIPPING){
-            if (voucherDetail.discount_by.type === 'percent') return calcByDiscountTypeTotalOrderPrice('percent', +totalPrice, voucherDetail.discount_by)
-            else return calcByDiscountTypeTotalOrderPrice('cash', +totalPrice, voucherDetail.discount_by);
+        if(voucherDetail?.type === voucherConditionValue.FREE_SHIPPING){
+            if (voucherDetail.discount_by?.type === 'percent') return calcByDiscountTypeTotalOrderPrice('percent', +totalPrice, voucherDetail?.discount_by)
+            else return calcByDiscountTypeTotalOrderPrice('cash', +totalPrice, voucherDetail?.discount_by);
         }else{
-             return calcByDiscountTypeFreeship(+totalPrice, voucherDetail.discount_by)
+             return calcByDiscountTypeFreeship(+totalPrice, voucherDetail?.discount_by)
         }
     }
 

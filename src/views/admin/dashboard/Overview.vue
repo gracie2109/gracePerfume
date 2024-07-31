@@ -9,7 +9,10 @@
 <div>
 <div class="space-y-4">
   <div>
-     Revenue: {{formatPrice(response.totalPrice)}}
+     totalSalePruce: {{formatPrice(response.totalPrice)}}
+  </div>
+  <div>
+    revenue: {{formatPrice(response.revenue)}}
   </div>
   <div>
     today product quantity sale: {{response.totalQuantity}}
@@ -26,7 +29,7 @@
       <div id="dashboard_price" class="h-[50px]">
         <div v-if="i.name.includes('/')">
           <p class="font-semibold">{{truncateText(i.name.split('/')[0],20)}}</p>
-          <p class="text-muted-foreground text-sm">{{truncateText(i.name.split('/')[1],20)}}</p>
+          <p class="text-muted-foreground text-sm">{{truncateText(i.name.split('/')[1],20)}}ml</p>
         </div>
         <p v-else>{{truncateText(i.name,20)}}</p>
       </div>
@@ -46,7 +49,7 @@
         <div id="dashboard_price" class="h-[50px]">
           <div v-if="i.name.includes('/')">
             <p class="font-semibold">{{truncateText(i.name.split('/')[0],20)}}</p>
-            <p class="text-muted-foreground text-sm">{{truncateText(i.name.split('/')[1],20)}}</p>
+            <p class="text-muted-foreground text-sm">{{truncateText(i.name.split('/')[1],20)}}ml</p>
           </div>
           <p v-else>{{truncateText(i.name,20)}}</p>
         </div>
@@ -82,13 +85,14 @@ const response = reactive<{
   topRevenue:any[],
   topSale:any[],
   totalPrice:number,
-  totalQuantity:number
+  totalQuantity:number,
+  revenue:number
 }>({
   topRevenue:[],
   topSale:[],
   totalPrice:0,
-  totalQuantity:0
-
+  totalQuantity:0,
+  revenue:0
 });
 
 
@@ -111,7 +115,7 @@ onMounted(async () => {
     start: '2024-07-30',
     end: '2024-07-31'
   });
-  console.log('range', range)
+  // console.log('range', range)
 
 })
 

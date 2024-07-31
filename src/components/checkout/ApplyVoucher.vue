@@ -1,9 +1,10 @@
 <template>
   <Transition mode="out-in" name="fade">
-    <div v-if="errors">
+    <div v-if="errors || getDataErrors">
       <Alert variant="destructive">
         <AlertTitle>
-          {{ errors }}
+          <span v-if="errors"> {{ errors }}</span>
+          <span v-else>{{getDataErrors}}</span>
         </AlertTitle>
       </Alert>
     </div>
@@ -19,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, type Ref, ref, Transition, watch} from 'vue';
+import {inject, type Ref, ref, Transition} from 'vue';
 import {ICheckout} from "@/types/checkout.ts";
 import {Input} from "@/components/ui/input"
 import {Button} from "@/components/ui/button"
@@ -47,7 +48,7 @@ const cartStore = useCart();
 
 const {totalPrice} = storeToRefs(cartStore);
 const {loading, errors} = storeToRefs(voucherStore);
-
+const getDataErrors = ref('')
 
 
 function updateFormData(totalPrice: any, data: any) {
@@ -66,22 +67,24 @@ const reset = () => {
   form.value.usedVoucherObj = null;
   form.value.salePrice = 0;
   form.value.totalPrice = currentOrderPrice.value;
+  getDataErrors.value = ''
 }
 
 const checkVoucher = async () => {
   if (currentUser.value) {
     const data = await voucherStore.checkApplyVoucher(totalPrice.value, code.value.toUpperCase(), currentUser.value?.uid) as any;
-
+    console.log('data', data)
     if (data && data.voucher && data.voucherUsedItem) {
       form.value.voucher.code = data.voucher.code;
       form.value.voucher.id = data.voucher.id;
       form.value.usedVoucherObj = {...data.voucherUsedItem}
       if(data.voucher.type === voucherConditionValue.FREE_SHIPPING){
-          form.value.shipping_fee.totalFee = data.voucher.discount_by.maxValue
+          form.value.shipping_fee.totalFee = data.voucher.discount_by?.maxValue || 40000
       }
       updateFormData(totalPrice.value, data.voucher);
     }else{
-      reset()
+      reset();
+      getDataErrors.value = "Something went wrong"
     }
 
   }

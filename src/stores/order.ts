@@ -164,7 +164,6 @@ export const useCheckout = defineStore('checkout', () => {
                 voucherUsageId: voucherUsageId
             }
 
-
             const emailProduct = parseProduct();
             const order = await addDoc(collection(db, 'orders'), payload)
 

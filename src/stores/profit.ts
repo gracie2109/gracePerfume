@@ -1,9 +1,9 @@
 import {defineStore, storeToRefs} from "pinia";
 import {ref, Ref} from "vue";
-import {setDoc, doc, query, collection, where, getDocs} from "firebase/firestore";
+import {collection, doc, getDocs, query, setDoc, where} from "firebase/firestore";
 import {useFirestore} from "vuefire";
 import {format} from "date-fns";
-import {getFirestore, getDoc} from "@firebase/firestore";
+import {getDoc, getFirestore} from "@firebase/firestore";
 import {useProductStore} from "@/stores/products.ts";
 
 export const useProfit = defineStore('profit', () => {
@@ -13,23 +13,65 @@ export const useProfit = defineStore('profit', () => {
     const db2 = getFirestore()
     const productStore = useProductStore();
     const {products} = storeToRefs(productStore);
-    const productMap:Ref<any> = ref(new Map());
 
-    function setMapUidAndGetProfit(payload:any){
-        if(products.value){
+
+    function getRevenue(data: { profit: number, unit: string, variant_unit?: string, quantity: number }[]) {
+        let revenue = 0;
+        data.map((i) => {
+            if (i.variant_unit) {
+                const profitVariant = (i.profit / +i.unit) * +i.variant_unit * i.quantity;
+                revenue = revenue + profitVariant
+            } else {
+                revenue += i.profit * i.quantity
+            }
+        })
+        return revenue
+    }
+
+    function MapProduct() {
+        const productMap = new Map()
+        if (products.value) {
             products.value.map((prd) => {
-                if(prd.variants.length > 0){
-                    prd.variants.map((variant:any) => {
-                        productMap.value.set(variant.uid, variant.uid)
+                if (prd.variants && prd.variants.length > 0) {
+                    prd.variants.map((variant: any) => {
+                        productMap.set(variant.uid, {
+                            profit: prd.profit,
+                            unit: prd.unit,
+                            variant_unit: variant.unit,
+                        })
                     })
-                }else{
-                    productMap.value.set(prd.uid, prd.uid)
+                } else {
+                    productMap.set(prd.uid, {
+                        profit: prd.profit,
+                        unit: prd.unit,
+                    })
                 }
             });
+        }
+        return productMap
+    }
 
-            console.log('payload', payload)
+    function getAndSetQuantityFromMap(payload: any) {
+        const productMap = MapProduct();
 
+        const dataKeys = Object.keys(payload).map((i) => {
+            return {...payload[i], uid: i}
+        }) as any[];
 
+        let res = [] as any[]
+        for (let i of dataKeys) {
+            const test = productMap.get(i.uid);
+            res = [...res, {...test, quantity: i.quantity}]
+        }
+
+        return res
+    }
+
+    function calcRevenue(payload: any) {
+        const res = getAndSetQuantityFromMap(payload);
+        if (res && res.length > 0) {
+            const revenue = getRevenue(res);
+            return revenue
         }
 
     }
@@ -64,21 +106,65 @@ export const useProfit = defineStore('profit', () => {
         return cvData
     }
 
+
+
+
+
+
     async function createProfitCollection(payload: any) {
-        console.log('payload', payload);
-
-
-
-
         try {
 
             loading.value = true;
             const profit = parseProfitData('profit', payload);
             const profitTemp = parseProfitData('profit_temp', payload);
-            return await Promise.all([
-                await setDoc(doc(db, "profit", today), profit),
-                await setDoc(doc(db, "profitTemp", today), profitTemp)
-            ])
+            const q = query(collection(db, 'profitTemp'),
+                where('__name__', '==', today));
+            const querySnapshot = await getDocs(q);
+            if (querySnapshot.empty) {
+                return await Promise.all([
+                    await setDoc(doc(db, "profit", today), profit),
+                    await setDoc(doc(db, "profitTemp", today), profitTemp)
+                ])
+            } else {
+
+                const dataDocs = querySnapshot.docs[0].data();
+
+                let newPayload = {}  as any
+
+                const keysDocs  = dataDocs && String(Object.keys(dataDocs));
+                for(let i of payload){
+
+                    if(i.variant){
+                        for(let j of i.variant){
+                            if(keysDocs.includes(j.uid)){
+
+                                newPayload= {
+                                    ...newPayload,
+                                    [j.uid]:{
+                                        ...dataDocs[j.uid],
+                                        quantity: +dataDocs[j.uid].quantity + j.quantity
+                                    }
+                                }
+                            }else{
+                                newPayload= {
+                                    ...newPayload,
+                                  [j.uid]:{ ...j, image: i.image, name: i.name}
+
+                                }
+                            }
+                        }
+                    }else{
+                        newPayload= {
+                            ...newPayload,
+                            [i.uid]:{ ...i,image: i.image, name: i.name}
+                        }
+                    }
+                }
+                  return await Promise.all([
+                    await setDoc(doc(db, "profitTemp", today), newPayload),
+                ])
+            }
+
         } catch
             (e) {
             console.log('e', e)
@@ -99,10 +185,10 @@ export const useProfit = defineStore('profit', () => {
     }
 
 
-    async function getRevenueByRangeDate(rangeDate:{start:any, end:any})  {
+    async function getRevenueByRangeDate(rangeDate: { start: any, end: any }) {
 
-        try{
-            if(!rangeDate) return;
+        try {
+            if (!rangeDate) return;
             loading.value = true;
             const profitCollection = collection(db, 'profitTemp');
 
@@ -114,16 +200,14 @@ export const useProfit = defineStore('profit', () => {
             const results = [] as any[];
 
             querySnapshot.forEach((doc) => {
-                results.push({ id: doc.id, ...doc.data() });
+                results.push({id: doc.id, ...doc.data()});
             });
 
 
-
-
             return results;
-        }catch (e) {
+        } catch (e) {
             console.log('e', e)
-        }finally {
+        } finally {
             loading.value = false
         }
 
@@ -140,28 +224,29 @@ export const useProfit = defineStore('profit', () => {
         return sortedProducts;
     }
 
-    function getTopQuantityAndPrice (products: Product) {
+    function getTopQuantityAndPrice(products: Product) {
         let totalPrice = 0;
         let totalQuantity = 0;
         for (const product of Object.values(products)) {
-            totalQuantity =totalQuantity + product.quantity;
-            totalPrice =totalPrice +( product.price * product.quantity);
+            totalQuantity = totalQuantity + product.quantity;
+            totalPrice = totalPrice + (product.price * product.quantity);
         }
-        const getPrd = setMapUidAndGetProfit(products)
+        const revenue = calcRevenue(products);
+
         return {
             totalQuantity: totalQuantity,
             totalPrice: totalPrice,
-            getPrd:getPrd
+            revenue: revenue
         }
     }
 
-    async function getRevenueByDate(date:any) {
-        try{
-            if(!date) return
+    async function getRevenueByDate(date: any) {
+        try {
+            if (!date) return
             loading.value = true;
-            const data = ( await getDoc(doc(db2, "profitTemp", date))).data();
+            const data = (await getDoc(doc(db2, "profitTemp", date))).data();
 
-            if(data){
+            if (data) {
                 const maxPrice = findTopTierByDay(data, 'price')
                 const maxQuantity = findTopTierByDay(data, 'quantity');
                 const topTier = getTopQuantityAndPrice(data)
@@ -172,16 +257,14 @@ export const useProfit = defineStore('profit', () => {
                 }
             }
 
-             return data
+            return data
 
-        }catch (e) {
+        } catch (e) {
             console.log('e', e)
-        }finally {
+        } finally {
             loading.value = false
         }
     }
-
-
 
 
     return {
