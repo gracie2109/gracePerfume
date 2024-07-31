@@ -13,23 +13,65 @@ export const useProfit = defineStore('profit', () => {
     const db2 = getFirestore()
     const productStore = useProductStore();
     const {products} = storeToRefs(productStore);
-    const productMap:Ref<any> = ref(new Map());
 
-    function setMapUidAndGetProfit(payload:any){
+
+    function getRevenue (data: {profit: number, unit: string, variant_unit?:string, quantity:number}[]) {
+        let revenue = 0;
+            data.map((i) => {
+                if(i.variant_unit) {
+                    const profitVariant = (i.profit / +i.unit) * +i.variant_unit * i.quantity;
+                    revenue = revenue + profitVariant
+                }else{
+                    revenue += i.profit * i.quantity
+                }
+            })
+        return revenue
+    }
+
+    function MapProduct() {
+        const productMap = new Map()
         if(products.value){
             products.value.map((prd) => {
-                if(prd.variants.length > 0){
+                if(prd.variants && prd.variants.length > 0){
                     prd.variants.map((variant:any) => {
-                        productMap.value.set(variant.uid, variant.uid)
+                        productMap.set(variant.uid,{
+                            profit:prd.profit,
+                            unit: prd.unit,
+                            variant_unit: variant.unit,
+                        })
                     })
                 }else{
-                    productMap.value.set(prd.uid, prd.uid)
+                    productMap.set(prd.uid, {
+                        profit:prd.profit,
+                        unit: prd.unit,
+                    })
                 }
             });
+        }
+        return productMap
+    }
 
-            console.log('payload', payload)
+    function getAndSetQuantityFromMap (payload:any) {
+        const productMap = MapProduct();
 
+        const dataKeys = Object.keys(payload).map((i) =>  {
+            return {...payload[i],uid:i }
+        }) as any[];
 
+        let res = [] as any[]
+        for(let i of dataKeys){
+            const test = productMap.get(i.uid);
+            res = [...res, {...test,quantity: i.quantity}]
+        }
+
+        return res
+    }
+
+    function calcRevenue(payload:any){
+        const res = getAndSetQuantityFromMap(payload);
+        if(res && res.length > 0){
+           const revenue = getRevenue(res);
+           return revenue
         }
 
     }
@@ -65,11 +107,6 @@ export const useProfit = defineStore('profit', () => {
     }
 
     async function createProfitCollection(payload: any) {
-        console.log('payload', payload);
-
-
-
-
         try {
 
             loading.value = true;
@@ -145,13 +182,14 @@ export const useProfit = defineStore('profit', () => {
         let totalQuantity = 0;
         for (const product of Object.values(products)) {
             totalQuantity =totalQuantity + product.quantity;
-            totalPrice =totalPrice +( product.price * product.quantity);
+            totalPrice =totalPrice +(product.price * product.quantity);
         }
-        const getPrd = setMapUidAndGetProfit(products)
+        const revenue = calcRevenue(products);
+
         return {
             totalQuantity: totalQuantity,
             totalPrice: totalPrice,
-            getPrd:getPrd
+            revenue:revenue
         }
     }
 

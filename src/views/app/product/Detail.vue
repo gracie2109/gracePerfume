@@ -151,7 +151,7 @@ const detailModel = ref<{ variant: string | null | undefined,  quantity: number}
   variant:null,
   quantity: 1
 })
-console.log('detailModel__', detailModel.value)
+
 const checkVariant = computed(() => {
   if(detailProduct.value.variants.some((i:any) => i.quantity > 0))  return true
   else return false

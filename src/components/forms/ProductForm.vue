@@ -317,8 +317,6 @@ const setImages = (images: any[]) => {
 const onSubmit = form.handleSubmit(async (values) => {
   const payload = {...values, slug: removeVietnameseTones(values.name), description: description.value, uid: uid()};
   await productStore.createNewProducts(payload)
-  form.setFieldValue('images', []);
-  Object.assign(form.values, null)
 })
 
 
