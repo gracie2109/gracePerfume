@@ -117,9 +117,13 @@ const router = createRouter({
         {
             path: '/admin/',
             component: AdminLayout,
-            name:'admin',
-
+            name: 'admin',
             children:[
+                {
+                    path: 'dashboard',
+                    name: 'dashboardOverview',
+                    component:  () => import("@/views/admin/dashboard/Overview.vue"),
+                },
                 //brands
                 {
                     path: 'orders',

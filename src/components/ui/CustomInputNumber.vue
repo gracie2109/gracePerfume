@@ -8,6 +8,7 @@
         <div v-if="props.option">
           <template  v-if="props.option === 'currency'">
             <NumberField
+                :default-value="props.value"
                 :disabled="disabled"
                 :format-options="{
               style: 'currency',
@@ -131,13 +132,14 @@ import {FormContext, GenericObject} from "vee-validate";
 
 type Props = {
   label:string,
-  option?: "currency"  | "decimal" | "percentage",
+  option?: "currency"  | "decimal" | "percentage" |"default",
   min?: number,
   max?: number,
   name:string,
   form: FormContext<GenericObject, GenericObject>,
   disabled?:boolean,
-  step?:number
+  step?:number,
+  value?:number
 }
 const props = defineProps<Props>();
 

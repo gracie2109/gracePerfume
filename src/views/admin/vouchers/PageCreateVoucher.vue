@@ -23,7 +23,7 @@ import {useVouchersStore} from "@/stores/vouchers"
 import {storeToRefs} from "pinia";
 import {toTypedSchema} from "@vee-validate/zod";
 import {voucherValidation} from "@/validation/voucher.ts";
-import {discount_by} from "@/lib/constant"
+
 
 const description = ref<string>("")
 const store = useVouchersStore()

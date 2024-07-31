@@ -54,7 +54,6 @@ export const useCart = defineStore('cart',  () => {
         }
     }
     function addToCart(payload:CartAdd) {
-        console.log('payload', payload)
         getCart()
         if(!cart.value || cart.value.length === 0){
             if(payload.variant_id) {
@@ -96,7 +95,12 @@ export const useCart = defineStore('cart',  () => {
                     if(checkVariant){
                         checkVariant.quantity = Number(checkVariant.quantity) + Number(payload.quantity)
                     }else{
-                        existPrd.variant = [...existPrd.variant,{id: payload.variant_id, quantity: +payload.quantity, price: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).price}]
+                        existPrd.variant = [...existPrd.variant,{
+                            id: payload.variant_id,
+                            quantity: +payload.quantity,
+                            price: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).price,
+                            uid: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).uid
+                        }]
                     }
                 }else{
                     existPrd.quantity  = Number(existPrd.quantity) + Number(payload.quantity)

@@ -1,6 +1,5 @@
 <template>
   <div v-if="form" class="space-y-4  px-5">
-
     <div class="my-4" v-if="userAddress">
       <Label>Choose exist address</Label>
       <Select
@@ -21,6 +20,7 @@
             </div>
         </SelectContent>
       </Select>
+
     </div>
     <ProvinceAddress :form="form.shipping_address" />
     <div>

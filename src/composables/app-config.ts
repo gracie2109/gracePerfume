@@ -1,6 +1,10 @@
 export const navigation = {
     adminNav:[
         {
+            path: 'dashboard',
+            name:'dashboardOverview'
+        },
+        {
             path: 'orders',
             name:'orders'
         },

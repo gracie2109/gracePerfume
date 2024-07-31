@@ -12,11 +12,9 @@ import { uid } from 'uid';
 export const useProductStore = defineStore('products',  () => {
     const db = useFirestore()
     const products =  useCollection(collection(db, 'products'));
-
     const loading:Ref<boolean> = ref(false)
     const errors:Ref<{message: String, code: String}> = ref({message: "", code: ""})
     const detailProduct:Ref<any | null> = ref(null)
-
     const brandStore = useBrandStore()
 
 
@@ -31,8 +29,8 @@ export const useProductStore = defineStore('products',  () => {
                     for(let i of value.variants){
                         const payload = {
                             ...i,
-                            parent_uid:uid(),
                             uid: `${value.uid}/unit/${uid()}`,
+                            unit: String(i.unit),
                         }
                         newVariant =[...newVariant, payload]
                     }
@@ -41,6 +39,7 @@ export const useProductStore = defineStore('products',  () => {
                 const payload = {
                     ...value,
                     variants:newVariant,
+                    unit: String(value.unit)
 
                 }
                 await addDoc(collection(db, 'products'), payload)

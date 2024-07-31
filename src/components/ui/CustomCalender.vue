@@ -22,9 +22,11 @@
           <Calendar
               v-model="value2"
               v-model:placeholder="placeholder2"
-              :min-value="today(getLocalTimeZone())"
+              :min-value="props.minDate"
               calendar-label="Date of birth"
               initial-focus
+              :default-value="props.defaultValue"
+              :default-placeholder="props.defaultValue"
               @update:model-value="(v) => {
                 if (v) {
                   props.form.setFieldValue(props.name, v.toString())
@@ -42,14 +44,14 @@
 </template>
 <script setup lang="ts">
 import {cn} from "@/lib/utils.ts";
-import {DateFormatter, getLocalTimeZone, parseDate, today} from "@internationalized/date";
+import {DateFormatter, parseDate} from "@internationalized/date";
 import {toDate} from "radix-vue/date";
 import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {CalendarIcon} from "@radix-icons/vue";
 import {Calendar} from "@/components/ui/calendar";
-import {computed, ref} from "vue";
+import {computed, inject, ref} from "vue";
 
 
 const props = defineProps<{
@@ -57,18 +59,18 @@ const props = defineProps<{
   form:any;
   minDate?:any;
   maxDate?:any;
+  defaultValue?:any,
   label:string
 }>();
 
 
 const value2 = computed({
-  get: () => props.form.values[props.name]? parseDate(props.form.values[props.name]) : undefined,
+  get: () => props.form.values[props.name]? parseDate(props.form.values[props.name], ) : undefined,
   set: val => val,
 })
 
+
 const placeholder2 = ref()
-const df = new DateFormatter('en-US', {
-  dateStyle: 'long',
-})
+const df = inject('df') as  DateFormatter
 
 </script>

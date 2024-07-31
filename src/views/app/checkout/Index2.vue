@@ -28,6 +28,9 @@ import {toast} from "vue-sonner";
 import {useCheckout} from "@/stores/order.ts";
 import {useCart} from "@/stores/cart.ts";
 import {storeToRefs} from "pinia";
+// import {useForm} from "vee-validate";
+// import {voucherValidation} from "@/validation/checkout.ts";
+// import {toTypedSchema} from "@vee-validate/zod";
 
 const steps = reactive([
   {
@@ -53,19 +56,17 @@ const checkoutStore = useCheckout();
 const cartStore = useCart();
 const {totalPrice} = storeToRefs(cartStore)
 let timeout: ReturnType<typeof setTimeout>;
+const formErrors = ref<boolean>(false)
+
 
 const form = ref<ICheckout>(initialCheckoutValue);
 
 const currentOrderPrice = computed(() => {
   return +totalPrice.value + +form.value.shipping_fee.totalFee
 })
-watchEffect(() => {
-  form.value.totalPrice = currentOrderPrice.value;
-})
 
 function nextStep() {
-  stepper.value = steps[1].step;
-  
+    stepper.value = steps[1].step;
 }
 function back() {
   stepper.value = steps[0].step
@@ -91,7 +92,6 @@ async function confirmAndCreateOrder() {
 }
 
 async function submit() {
-
   if(form.value.payment ==="TRANSFER"){
     showConfirmTransfer.value = true;
   }else{
@@ -99,13 +99,21 @@ async function submit() {
   }
 }
 
+watchEffect(() => {
+  form.value.totalPrice = currentOrderPrice.value;
+})
+
+
 
 provide('form', form);
+provide('currentOrderPrice', currentOrderPrice);
+provide('formErrors', formErrors);
 
 
 onUnmounted(() => {
   clearTimeout(timeout);
 });
+
 
 
 </script>
@@ -128,7 +136,7 @@ onUnmounted(() => {
         </BreadcrumbList>
       </Breadcrumb>
     </div>
-    ::: {{form}}
+
      <div>
        <Stepper v-model:model-value="stepper" :default-value="steps[0].step">
          <StepperItem
@@ -177,24 +185,26 @@ onUnmounted(() => {
 
 
        </Stepper>
+
        <keep-alive>
-         <div class="grid">
+         <form >
+           <div class="grid">
 
-           <div v-if="stepper === steps[0].step">
-             <Step1  @next-step="nextStep"/>
+             <div v-if="stepper === steps[0].step">
+               <Step1  @next-step="nextStep"/>
 
+             </div>
+             <div v-if="stepper === steps[1].step">
+               <Step2 />
+                <div class="flex gap-3 items-center">
+                  <Button variant="outline" type="button" @click="back">Back</Button>
+                  <Button type="button" @click="submit">Submit</Button>
+                </div>
+             </div>
            </div>
-           <div v-if="stepper === steps[1].step">
-             <Step2 />
-              <div class="flex gap-3 items-center">
-                <Button variant="outline" type="button" @click="back">Back</Button>
-                <Button type="button" @click="submit">Submit</Button>
-              </div>
-           </div>
-         </div>
+         </form>
        </keep-alive>
      </div>
-
 
     <div>
       <AlertDialog :open="showConfirmTransfer">

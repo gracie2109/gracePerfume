@@ -120,7 +120,6 @@ onMounted(async () => {
   }
 })
 
-
 watchEffect(async () => {
   if (props.form?.province?.ProvinceID !== 0 ) {
     const districts = await getDistrict(props.form?.province?.ProvinceID);
@@ -129,6 +128,8 @@ watchEffect(async () => {
       districts.map((i: GHNDistrict) => mapDistricts.set(i.DistrictID, i))
     }
   }
+})
+watchEffect(async () => {
   if (props.form?.district?.DistrictID !== 0) {
     const wards = await getWard(props.form?.district?.DistrictID);
     listWards.value = wards
@@ -137,5 +138,4 @@ watchEffect(async () => {
     }
   }
 })
-
 </script>
