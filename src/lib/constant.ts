@@ -118,7 +118,11 @@ export const voucherCondition = [
         value: 'free_shipping'
     }
 ];
-
+export const voucherConditionValue = {
+    PRODUCT_DISCOUNT: 'product_discount',
+    ORDER_DISCOUNT: 'order_discount',
+    FREE_SHIPPING: 'free_shipping',
+}
 export const number_of_usage = [
     {
         name: 'One time',
@@ -129,5 +133,7 @@ export const number_of_usage = [
         value: 'unlimited'
     }
 ]
+
+export const discount_by = ['percent', 'cash']
 
 export const voucherFilter = ['all', 'active','coming_soon']

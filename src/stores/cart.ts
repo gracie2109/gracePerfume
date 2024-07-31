@@ -62,11 +62,13 @@ export const useCart = defineStore('cart',  () => {
                     image: payload.product.value.images[0],
                     status: payload.product.value.status,
                     name: payload.product.value.name,
+                    uid: payload.product.value.uid,
                     variant:[
                         {
                             id: payload.variant_id,
                             quantity: payload.quantity,
-                            price: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).price
+                            price: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).price,
+                            uid: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).uid,
                         }
                     ]
 
@@ -80,6 +82,7 @@ export const useCart = defineStore('cart',  () => {
                     status: payload.product.value.status,
                     quantity: payload.quantity,
                     price: payload.product.value.price,
+                    uid: payload.product.value.uid,
                 }
                 cart.value = [dataSpecific]
             }
@@ -92,7 +95,12 @@ export const useCart = defineStore('cart',  () => {
                     if(checkVariant){
                         checkVariant.quantity = Number(checkVariant.quantity) + Number(payload.quantity)
                     }else{
-                        existPrd.variant = [...existPrd.variant,{id: payload.variant_id, quantity: +payload.quantity, price: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).price}]
+                        existPrd.variant = [...existPrd.variant,{
+                            id: payload.variant_id,
+                            quantity: +payload.quantity,
+                            price: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).price,
+                            uid: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).uid
+                        }]
                     }
                 }else{
                     existPrd.quantity  = Number(existPrd.quantity) + Number(payload.quantity)
@@ -104,11 +112,13 @@ export const useCart = defineStore('cart',  () => {
                         image:payload.product.value.images[0],
                         status: payload.product.value.status,
                         name: payload.product.value.name,
+                        uid: payload.product.value.uid,
                         variant:[
                             {
                                 id: payload.variant_id,
                                 quantity: payload.quantity,
-                                price: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).price
+                                price: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).price,
+                                uid: payload.product.value.variants.find((i:any) => i.unit === payload.variant_id).uid,
                             }
                         ]
                     }]
@@ -122,6 +132,7 @@ export const useCart = defineStore('cart',  () => {
                         price: payload.product.value.price,
                         image:payload.product.value.images[0],
                         name: payload.product.value.name,
+                        uid: payload.product.value.uid,
                     }];
                     cart.value = uploadSpecific
                 }

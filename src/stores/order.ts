@@ -5,22 +5,27 @@ import {useProductStore} from "@/stores/products";
 import {ICheckout} from "@/types/checkout.ts";
 import {ref, type Ref, toRaw} from "vue";
 import {useCollection, useCurrentUser, useDocument, useFirestore} from "vuefire";
-import {addDoc, collection, doc,getFirestore,updateDoc} from "firebase/firestore";
+import {addDoc, collection, doc, getFirestore, updateDoc} from "firebase/firestore";
 import {toast} from "vue-sonner";
-import { uid } from 'uid';
+import {uid} from 'uid';
 import emailjs from '@emailjs/browser';
+import {useVouchersStore} from "@/stores/vouchers.ts";
+import {useProfit} from "@/stores/profit.ts";
 
 export const useCheckout = defineStore('checkout', () => {
     const cartStore = useCart();
+    const voucherStore = useVouchersStore();
     const prdStore = useProductStore();
+    const profitStore = useProfit();
     const loading: Ref<boolean> = ref(false);
-    const detailOrder:Ref<any | null> = ref(null);
+    const detailOrder: Ref<any | null> = ref(null);
 
     const {cart, totalPrice, cartLength, totalItems} = storeToRefs(cartStore);
     const currentUser = useCurrentUser();
     const currentUserOrder: Ref<any[] | null> = ref(null)
     const db = useFirestore();
-    const {data:allOrder, pending, error} =  useCollection(collection(db, 'orders'))
+    const {data: allOrder, pending, error} = useCollection(collection(db, 'orders'));
+
     function createOrderId() {
         const id = uid();
         const prefix = 'NO_';
@@ -104,25 +109,27 @@ export const useCheckout = defineStore('checkout', () => {
         }
     }
 
-    function parseProduct (){
+    function parseProduct() {
         let product = [] as any[];
 
-        if(cart.value &&  cart.value.length > 0){
-            for (let prd of cart.value){
-                if(prd.variant){
-                    for(let v of prd.variant){
+        if (cart.value && cart.value.length > 0) {
+            for (let prd of cart.value) {
+                if (prd.variant) {
+                    for (let v of prd.variant) {
                         const newData = {
                             name: `${prd.name}/${v.id}`,
                             price: formatPrice(+v.price),
                             quantity: +v.quantity,
                             image: prd.image,
+                            uid: prd.uid
                         }
                         product = [...product, toRaw(newData)]
                     }
-                }else{
-                    product = [...product,toRaw({
+                } else {
+                    product = [...product, toRaw({
                         ...prd,
                         price: formatPrice(+prd.price),
+                        uid: prd.uid
                     })]
                 }
             }
@@ -131,52 +138,67 @@ export const useCheckout = defineStore('checkout', () => {
     }
 
     async function createPayment(orderInfo: ICheckout) {
-        const orderId = createOrderId();
 
-        const payload = {
-            ...orderInfo,
-            product: cart.value,
-            orderCode: orderId,
-            price: totalPrice.value,
-            totalItem: totalItems.value,
-            totalQuantity: cartLength.value,
-            orderDate: new Date().toISOString(),
-            cancelDate: null,
-            cancelReason: null,
-            paymentStatus: "PENDING",
-            fulfillmentStatus: "not fulfilled",
-            status: "PENDING",
-            userId: currentUser.value?.uid,
-            user_confirm_transfer: true,
-            admin_confirm_transfer: null
-        }
-        const emailProduct = parseProduct()
         try {
             loading.value = true;
-            const order = await addDoc(collection(db, 'orders'), payload);
+            const orderId = createOrderId();
+            const voucher = orderInfo.voucher?.id.length > 1 ? orderInfo.voucher.id : null
+            const voucherUsageId = orderInfo.usedVoucherObj ? orderInfo.usedVoucherObj.id : null
+            const payload = {
+                ...orderInfo,
+                product: cart.value,
+                orderCode: orderId,
+                price: totalPrice.value,
+                totalItem: totalItems.value,
+                totalQuantity: cartLength.value,
+                orderDate: new Date().toISOString(),
+                cancelDate: null,
+                cancelReason: null,
+                paymentStatus: "PENDING",
+                fulfillmentStatus: "not fulfilled",
+                status: "PENDING",
+                userId: currentUser.value?.uid,
+                user_confirm_transfer: true,
+                admin_confirm_transfer: null,
+                voucher: voucher,
+                voucherUsageId: voucherUsageId
+            }
 
-            toast.success('Create Order success fully');
-            cartStore.clearCart()
-            await emailjs.send(import.meta.env.VITE_APP_EMAIL_SEVICE_ID,import.meta.env.VITE_APP_EMAIL_SEND_USER_ORDER, {
-                ...payload,
-                product:emailProduct,
-                name: payload.userName,
-                email: currentUser.value?.email,
-                orderId: order.id
-            },{
-                publicKey: 'evORyAftpWeR2IHqF',
-            })
-                .then(
-                    () => {
-                        console.log('SUCCESS!');
-                    },
-                    (error) => {
-                        toast.error(`Send Mail error: ${ error.text}`);
-                    },
-                );
+
+            const emailProduct = parseProduct();
+            const order = await addDoc(collection(db, 'orders'), payload)
+
+            if (orderInfo.voucher.id && currentUser.value?.uid && orderInfo.usedVoucherObj.id) {
+
+                await Promise.all([
+                    await voucherStore.updateVoucherQuantity(orderInfo.voucher.id),
+                    await voucherStore.assignUserUseVoucher(orderInfo.usedVoucherObj.id, currentUser.value?.uid)
+                ])
+            }
+
+
+            if (order) {
+                await Promise.all([
+                    await emailjs.send(import.meta.env.VITE_APP_EMAIL_SEVICE_ID, import.meta.env.VITE_APP_EMAIL_SEND_USER_ORDER, {
+                        ...payload,
+                        product: emailProduct,
+                        name: payload.userName,
+                        email: currentUser.value?.email,
+                        orderId: order.id,
+                        totalPrice: formatPrice(payload.totalPrice),
+                    }, {
+                        publicKey: 'evORyAftpWeR2IHqF',
+                    }),
+                    await profitStore.createProfitCollection(toRaw(payload.product))
+                ])
+
+                toast.success('Create Order success fully');
+                cartStore.clearCart();
+            }
 
         } catch (error) {
-            console.log('error', error)
+            console.log('error', error);
+            toast.error('Payment fail')
         } finally {
             loading.value = false
         }
@@ -191,44 +213,54 @@ export const useCheckout = defineStore('checkout', () => {
                 currentUserOrder.value = order
             }
         } catch (error) {
-            console.log('error',error)
+            console.log('error', error)
         } finally {
             loading.value = false;
         }
     }
 
 
-    async function updateOrder(orderId:string,  data:any) {
+    async function updateOrder(orderId: string, data: any) {
 
 
-            try{
-                loading.value = true;
-                const brandDoc = await doc(getFirestore(), "orders", orderId);
-                const detail = await useDocument(brandDoc);
-                if(detail){
-                    await updateDoc(doc(getFirestore(), "orders", orderId), {...data}).then(() => {
-                        toast.success('Update Order successfully!!!')
-                    })
-                }
-
-            }catch(error){
-                console.log('error', error)
-            }finally {
-                loading.value = false
+        try {
+            loading.value = true;
+            const brandDoc = await doc(getFirestore(), "orders", orderId);
+            const detail = await useDocument(brandDoc);
+            if (detail) {
+                await updateDoc(doc(getFirestore(), "orders", orderId), {...data}).then(() => {
+                    toast.success('Update Order successfully!!!')
+                })
             }
+
+        } catch (error) {
+            console.log('error', error)
+        } finally {
+            loading.value = false
+        }
 
 
     }
 
-    async function getDetailOrder(orderId:string) {
+    async function getDetailOrder(orderId: string) {
         const detail = await useDocument(await doc(getFirestore(), 'orders', orderId));
         console.log('detaik', detail)
         return detail
     }
 
 
-
-
-    return {createPayment,detailOrder, currentUserOrder, checkIntegrityProduct,getDetailOrder, getCurrentUserOrder, loading, updateOrder, allOrder,  pending, error}
+    return {
+        createPayment,
+        detailOrder,
+        currentUserOrder,
+        checkIntegrityProduct,
+        getDetailOrder,
+        getCurrentUserOrder,
+        loading,
+        updateOrder,
+        allOrder,
+        pending,
+        error
+    }
 
 })

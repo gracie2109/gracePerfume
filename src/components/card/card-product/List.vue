@@ -47,7 +47,6 @@ const props = defineProps<{
   data: any
 }>()
 
-console.log('props', props.data)
 </script>
 
 

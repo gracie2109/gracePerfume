@@ -109,7 +109,7 @@ const router = createRouter({
             children:[
                 {
                     path: '',
-                    component: () => import('@/views/app/checkout/Index.vue'),
+                    component: () => import('@/views/app/checkout/Index2.vue'),
                     name: 'checkout',
                 },
             ]
@@ -117,9 +117,13 @@ const router = createRouter({
         {
             path: '/admin/',
             component: AdminLayout,
-            name:'admin',
-
+            name: 'admin',
             children:[
+                {
+                    path: 'dashboard',
+                    name: 'dashboardOverview',
+                    component:  () => import("@/views/admin/dashboard/Overview.vue"),
+                },
                 //brands
                 {
                     path: 'orders',

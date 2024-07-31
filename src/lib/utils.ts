@@ -30,8 +30,8 @@ export function valueUpdater<T extends Updater<any>>(updaterOrValue: T, ref: Ref
         : updaterOrValue
 }
 
-export const profitAndMarginAlg = (sale_price: number, cost_price: number, puschase_price: number) => {
-    if (!(sale_price && cost_price && puschase_price)) return 0;
+export const profitAndMarginAlg = (sale_price: number, puschase_price: number) => {
+    if (!(sale_price  && puschase_price)) return 0;
     return Number(sale_price - puschase_price);
 }
 
@@ -122,6 +122,7 @@ export function groupByPermissions(data: any[]) {
     }
 }
 
+
 export function truncateText(text: string, maxLength: number) {
     const newText = text.slice(0, maxLength);
     return text.length > maxLength ? `${newText}...`: newText;
@@ -131,14 +132,12 @@ export function truncateText(text: string, maxLength: number) {
 export function getUniquePermissions(array1: any, array2: any) {
     if (!(array1 && array2)) return [];
     const setA = new Set(array1?.map((item: any) => item?.id));
-    const uniqueElements = array2?.filter((item: any) => {
+    return array2?.filter((item: any) => {
         if (!setA.has(item?.id)) {
             setA.add(item?.name);
             return item;
         }
     });
-
-    return uniqueElements;
 }
 
 
@@ -170,6 +169,7 @@ export function matchingTwoObject(obj1: any, ob2: any): any[] {
 
 
 export const reduceData = (data: any) => {
+
     return data.reduce((acc: any, curr: any) => {
         acc[curr] = (acc[curr] || 0) + 1;
         return acc;
@@ -264,3 +264,4 @@ export const modifyVariantProduct = (products:any[]) => {
     }
     else return []
 }
+

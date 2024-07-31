@@ -1,8 +1,6 @@
 <template>
-
-  <keep-alive>
     <div>
-      {{ form.values['quantity'] }}
+
       <div v-if="errors.message">
         <transition mode="out-in" name="fade">
           <Alert variant="destructive">
@@ -71,6 +69,15 @@
                         :option="'currency'"
                     />
                   </div>
+                  <FormField v-slot="{ componentField }"  name="unit">
+                    <FormItem>
+                      <FormLabel>Product Unit (ml)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter net weight" type="text" v-bind="componentField" />
+                      </FormControl>
+                      <FormMessage/>
+                    </FormItem>
+                  </FormField>
                   <div>
                     <CustomInputNumber
                         :form="form"
@@ -92,11 +99,11 @@
                     />
                   </div>
                   <div>
-                    <FormField v-slot="{ componentField }" :model-value="profit" data-disabled name="profit">
+                    <FormField v-slot="{ componentField }"  :model-value="profit" data-disabled name="profit">
                       <FormItem>
                         <FormLabel> Profit</FormLabel>
                         <FormControl>
-                          <Input placeholder="----" readonly type="text" v-bind="componentField"/>
+                          <Input placeholder="----" readonly type="text" v-bind="componentField" :value="formatPrice(profit)"/>
                         </FormControl>
                         <FormMessage/>
                       </FormItem>
@@ -104,15 +111,7 @@
                   </div>
                   <div>
 
-                    <FormField v-slot="{ componentField }" :model-value="`${profit}%`" name="profit_margin">
-                      <FormItem>
-                        <FormLabel>Profit margin</FormLabel>
-                        <FormControl>
-                          <Input placeholder="----" readonly type="text" v-bind="componentField"/>
-                        </FormControl>
-                        <FormMessage/>
-                      </FormItem>
-                    </FormField>
+
                   </div>
                 </div>
               </CardContent>
@@ -129,17 +128,13 @@
 
                     <div v-for="(field, index) in fields" :key="`variants-${field.key}`"
                          class="flex gap-3 mb-3 items-center">
-                      <FormField v-slot="{ componentField }" :name="`variants[${index}].unit`">
-                        <FormItem>
-                          <FormLabel v-if="index===0">Unit</FormLabel>
-                          <div class="relative flex items-start">
-                            <FormControl>
-                              <Input placeholder="enter unit" type="text" v-bind="componentField"/>
-                            </FormControl>
-                          </div>
-                          <FormMessage/>
-                        </FormItem>
-                      </FormField>
+                        <CustomInputNumber
+                            :form="form"
+                            :label="'Unit (ml)'"
+                            :min="10"
+                            :name="`variants[${index}].unit`"
+
+                        />
                       <FormField v-slot="{ componentField }" :name="`variants[${index}].price`">
                         <FormItem>
                           <FormLabel v-if="index===0">Price</FormLabel>
@@ -270,9 +265,6 @@
         </div>
       </form>
     </div>
-  </keep-alive>
-
-
 </template>
 
 
@@ -298,7 +290,7 @@ import Upload from "@/components/Upload.vue"
 import {productValidation} from "@/validation/products.ts"
 import {toTypedSchema} from "@vee-validate/zod";
 import { uid } from 'uid';
-
+import {formatPrice} from '@/lib/utils'
 
 const brandStore = useBrandStore();
 const productStore = useProductStore();
@@ -308,15 +300,14 @@ const description = ref<string>("")
 
 
 const form = useForm({
-  validationSchema: toTypedSchema(productValidation),
-  keepValuesOnUnmount: true
+  validationSchema: toTypedSchema(productValidation)
 })
 const profit = computed(() => {
-  if (form.values['price'] && form.values['cost'] && form.values['cost_per_item']) {
-    return profitAndMarginAlg(form.values['price'], form.values['cost'], form.values['cost_per_item'])
+  const {price, cost_per_item} = form.values
+  if (price  && cost_per_item) {
+    return profitAndMarginAlg(price, cost_per_item)
   } else return 0
 })
-
 
 const setImages = (images: any[]) => {
   form.setFieldValue('images', images)
@@ -324,11 +315,10 @@ const setImages = (images: any[]) => {
 
 
 const onSubmit = form.handleSubmit(async (values) => {
-
   const payload = {...values, slug: removeVietnameseTones(values.name), description: description.value, uid: uid()};
-  console.log('onSubmit', payload)
   await productStore.createNewProducts(payload)
-
+  form.setFieldValue('images', []);
+  Object.assign(form.values, null)
 })
 
 
