@@ -107,10 +107,6 @@ export const useProfit = defineStore('profit', () => {
     }
 
 
-
-
-
-
     async function createProfitCollection(payload: any) {
         try {
 
@@ -185,10 +181,10 @@ export const useProfit = defineStore('profit', () => {
     }
 
 
-    async function getRevenueByRangeDate(rangeDate: { start: any, end: any }) {
+    async function getRevenueByRangeDate(rangeDate: { start: any , end: any }) {
+        if (!rangeDate.end || !rangeDate.start) return;
 
         try {
-            if (!rangeDate) return;
             loading.value = true;
             const profitCollection = collection(db, 'profitTemp');
 
@@ -200,11 +196,27 @@ export const useProfit = defineStore('profit', () => {
             const results = [] as any[];
 
             querySnapshot.forEach((doc) => {
-                results.push({id: doc.id, ...doc.data()});
+                results.push({id: doc.id, data:[doc.data()]});
             });
 
+            if(results && results.length> 0){
+                let response = [] as any;
+                results.map((day) => {
+                    const maxPrice = findTopTierByDay(day.data[0], 'price')
+                    const maxQuantity = findTopTierByDay(day.data[0], 'quantity');
+                    const topTier = getTopQuantityAndPrice(day.data[0])
 
-            return results;
+                    response = [...response,  {
+                        ...topTier,
+                        topSale: maxQuantity,
+                        topRevenue: maxPrice
+                    }]
+                });
+                return response;
+            }else{
+                console.log('not result')
+                return []
+            }
         } catch (e) {
             console.log('e', e)
         } finally {
@@ -245,7 +257,6 @@ export const useProfit = defineStore('profit', () => {
             if (!date) return
             loading.value = true;
             const data = (await getDoc(doc(db2, "profitTemp", date))).data();
-
             if (data) {
                 const maxPrice = findTopTierByDay(data, 'price')
                 const maxQuantity = findTopTierByDay(data, 'quantity');
@@ -271,7 +282,8 @@ export const useProfit = defineStore('profit', () => {
         createProfitCollection,
         updateProfit,
         getRevenueByRangeDate,
-        getRevenueByDate
+        getRevenueByDate,
+        loading
 
     }
 })

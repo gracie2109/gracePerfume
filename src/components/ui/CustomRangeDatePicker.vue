@@ -6,7 +6,7 @@ import {
 } from '@internationalized/date'
 
 import { Calendar as CalendarIcon } from 'lucide-vue-next'
-import type { DateRange } from 'radix-vue'
+// import {type DateRangeValueType} from "@/types"
 import { RangeCalendar } from '@/components/ui/range-calendar'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -14,20 +14,16 @@ import { cn } from '@/lib/utils.ts'
 import {inject} from "vue"
 
 const df = inject('df') as  DateFormatter
-
-interface ValueType extends DateRange{
-  start: any,
-  end: any
-}
 const props = defineProps<{
-  value:ValueType
+  value:any
 }>()
 
 function updateStart(value:any) {
-  props.value.start = value.start;
-  props.value.end = value.end
+ if(props.value && value){
+   props.value.start = value.start;
+   props.value.end = value.end
+ }
 }
-
 
 
 
@@ -35,7 +31,7 @@ function updateStart(value:any) {
 
 <template>
 
-  <Popover>
+  <Popover v-if="props.value">
     <PopoverTrigger as-child>
       <Button
           variant="outline"

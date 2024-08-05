@@ -1,4 +1,6 @@
 import type {Component} from "vue";
+import type {DateRange} from "radix-vue";
+import {DateValue} from "@internationalized/date";
 
 
 export interface Option {
@@ -30,4 +32,9 @@ export type IFilterModel ={
 export type TErrors = {
     code: string | null,
     message: string
+}
+
+export interface DateRangeValueType extends DateRange{
+    start:DateValue | undefined,
+    end: DateValue | undefined
 }

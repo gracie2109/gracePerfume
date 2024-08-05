@@ -6,7 +6,7 @@ import { createPinia } from 'pinia'
 import { VueFire, VueFireAuth, VueFireFirestoreOptionsAPI  } from 'vuefire'
 import { firebaseApp } from '@/plugins/firebase'
 import VueImageZoomer from 'vue-image-zoomer'
-import { QuillEditor } from '@vueup/vue-quill'
+import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 
