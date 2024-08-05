@@ -12,6 +12,8 @@ import { parseISO, compareAsc } from 'date-fns';
 
 export const useProfit = defineStore('profit', () => {
     const loading: Ref<boolean> = ref(false);
+    const loadingRange: Ref<boolean> = ref(false);
+
     const db = useFirestore();
     const today = format(new Date().toISOString(), "yyyy-MM-dd");
     const db2 = getFirestore()
@@ -188,9 +190,9 @@ export const useProfit = defineStore('profit', () => {
 
     async function getRevenueByRangeDate(rangeDate: { start: any , end: any }) {
         if (!rangeDate.end || !rangeDate.start) return;
-            console.log('callPA', rangeDate)
+
         try {
-            loading.value = true;
+            loadingRange.value = true;
             const profitCollection = collection(db, 'profitTemp');
 
             const q = query(profitCollection,
@@ -244,7 +246,7 @@ export const useProfit = defineStore('profit', () => {
         } catch (e) {
             console.log('e', e)
         } finally {
-            loading.value = false
+            loadingRange.value = false
         }
 
 
@@ -308,6 +310,7 @@ export const useProfit = defineStore('profit', () => {
         getRevenueByRangeDate,
         getRevenueByDate,
         loading,
+        loadingRange,
         resultRangeDate
 
     }

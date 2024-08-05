@@ -9,13 +9,13 @@
        />
      </div>
     </div>
-   <div>
+   <div class="space-y-12">
      <div class="space-y-4">
        <h1 class="font-bold text-2xl">Today Report</h1>
        <MiniTodayChart :form="form"/>
      </div>
      <div class="space-y-4">
-       <h1 class="font-bold text-2xl">Weekly Report</h1>
+       <h1 class="font-bold text-2xl">Weekly Report ({{rangeDate.start}} to {{rangeDate.end}}) </h1>
        <RangeDateChart :value="rangeDate"/>
      </div>
    </div>

@@ -282,3 +282,8 @@ export function findMissingDay(start:any, end:any, aviableDate:any[]) {
     return missingDates.map(date => format(date, 'yyyy-MM-dd'));
 }
 
+export function convertToSentenceCaseCharacter (input:String) {
+    let convertedString = input.replace(/[A-Z]/g, match => ' ' + match.toLowerCase());
+    convertedString = convertedString.trim();
+    return convertedString
+}
