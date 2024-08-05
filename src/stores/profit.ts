@@ -1,10 +1,14 @@
 import {defineStore, storeToRefs} from "pinia";
-import {ref, Ref} from "vue";
+import {ref, Ref, toRaw} from "vue";
 import {collection, doc, getDocs, query, setDoc, where} from "firebase/firestore";
 import {useFirestore} from "vuefire";
 import {format} from "date-fns";
 import {getDoc, getFirestore} from "@firebase/firestore";
 import {useProductStore} from "@/stores/products.ts";
+import {findMissingDay} from "@/lib/utils.ts";
+import { parseISO, compareAsc } from 'date-fns';
+
+
 
 export const useProfit = defineStore('profit', () => {
     const loading: Ref<boolean> = ref(false);
@@ -13,6 +17,7 @@ export const useProfit = defineStore('profit', () => {
     const db2 = getFirestore()
     const productStore = useProductStore();
     const {products} = storeToRefs(productStore);
+    const resultRangeDate: Ref<any[]> = ref([]);
 
 
     function getRevenue(data: { profit: number, unit: string, variant_unit?: string, quantity: number }[]) {
@@ -183,7 +188,7 @@ export const useProfit = defineStore('profit', () => {
 
     async function getRevenueByRangeDate(rangeDate: { start: any , end: any }) {
         if (!rangeDate.end || !rangeDate.start) return;
-
+            console.log('callPA', rangeDate)
         try {
             loading.value = true;
             const profitCollection = collection(db, 'profitTemp');
@@ -207,12 +212,31 @@ export const useProfit = defineStore('profit', () => {
                     const topTier = getTopQuantityAndPrice(day.data[0])
 
                     response = [...response,  {
-                        ...topTier,
+                        ...toRaw(topTier),
+                        day: day.id,
                         topSale: maxQuantity,
                         topRevenue: maxPrice
                     }]
                 });
-                return response;
+                const missingDate = findMissingDay(rangeDate.start, rangeDate.end,[...results.map((i) => i.id)])
+                if(missingDate) {
+                    missingDate.map((i) => {
+                       response = [
+                           ...response,
+                           {
+                               day: i,
+                               topSale:[],
+                               topRevenue:[],
+                               totalPrice: 0,
+                               totalQuantity:0,
+                               revenue:0
+                           }
+                       ]
+
+                    })
+                }
+                const sortResult =  response.sort((a:{day:string}, b:{day:string}) => compareAsc(parseISO(a.day), parseISO(b.day)));
+                resultRangeDate.value = sortResult
             }else{
                 console.log('not result')
                 return []
@@ -283,7 +307,8 @@ export const useProfit = defineStore('profit', () => {
         updateProfit,
         getRevenueByRangeDate,
         getRevenueByDate,
-        loading
+        loading,
+        resultRangeDate
 
     }
 })

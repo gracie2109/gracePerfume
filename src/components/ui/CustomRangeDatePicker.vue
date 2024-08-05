@@ -6,7 +6,6 @@ import {
 } from '@internationalized/date'
 
 import { Calendar as CalendarIcon } from 'lucide-vue-next'
-// import {type DateRangeValueType} from "@/types"
 import { RangeCalendar } from '@/components/ui/range-calendar'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'

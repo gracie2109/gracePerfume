@@ -5,6 +5,7 @@ import {db} from '@/plugins/firebase';
 import type {Updater} from '@tanstack/vue-table'
 import type {Ref} from 'vue';
 import slugify from 'slugify';
+import { parseISO, eachDayOfInterval, isSameDay, format } from 'date-fns';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
@@ -263,5 +264,21 @@ export const modifyVariantProduct = (products:any[]) => {
         return data
     }
     else return []
+}
+
+export function findMissingDay(start:any, end:any, aviableDate:any[]) {
+    if(!(start || end)) return;
+    const startDate = parseISO(start);
+    const endDate = parseISO(end);
+
+    const dateObjects = aviableDate.map(date => parseISO(date));
+
+    const allDates = eachDayOfInterval({ start: startDate, end: endDate });
+
+    const missingDates = allDates.filter(date =>
+        !dateObjects.some(existingDate => isSameDay(existingDate, date))
+    );
+
+    return missingDates.map(date => format(date, 'yyyy-MM-dd'));
 }
 

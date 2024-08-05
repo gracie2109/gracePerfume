@@ -4,59 +4,93 @@
   </div>
 
   <div v-else class="h-full  w-full border border-red-600 p-2">
-    <CustomChart />
+    <div v-if="dataChart && serial">
+      <CustomChart :data="dataChart"
+                   :series="serial"
+                   subtitle="Revenue weekly"
+                   title="Revenue"
+
+      />
+    </div>
 
   </div>
-
 
 </template>
 
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref} from "vue";
+import {computed, onMounted, toRaw, onUnmounted, watchEffect} from "vue";
 import {useProfit} from "@/stores/profit.ts"
 import {storeToRefs} from "pinia";
 import Loading from "@/components/loading.vue";
 import CustomChart from "@/components/CustomChart.vue";
-
-
-
 
 const props = defineProps<{
   value: any
 }>()
 
 const store = useProfit();
-const {loading} = storeToRefs(store)
-const response = ref();
+const {loading, resultRangeDate} = storeToRefs(store);
+
+const dataChart = computed(() => {
+  if(toRaw(resultRangeDate.value)){
+    return toRaw(resultRangeDate.value).map((i) => {
+      return {
+        day: i.day,
+        revenue: i.revenue,
+        totalQuantity: i.totalQuantity,
+        totalPrice: i.totalPrice
+      }
+    })
+  }
+});
+
+  const serial = computed(() => {
+    if(resultRangeDate.value){
+      return [
+        {
+          type: "bar",
+          xKey: "day",
+          yKey: "revenue",
+          yName: "Revenue",
+        },
+        {
+          type: "bar",
+          xKey: "day",
+          yKey: "totalQuantity",
+          yName: "Total Quantity",
+        },
+        {
+          type: "bar",
+          xKey: "day",
+          yKey: "totalPrice",
+          yName: "Total Price",
+        },
+      ]
+    }
+  });
+
+
+  onMounted(async () => {
+    if (props.value) {
+       await store.getRevenueByRangeDate({
+        start: props.value.start?.toString(),
+        end: props.value.end?.toString()
+      });
+    }
+  });
 
 
 
-
-onMounted(async () => {
+watchEffect(async () => {
   if (props.value) {
-    const data = await store.getRevenueByRangeDate({
+    await store.getRevenueByRangeDate({
       start: props.value.start?.toString(),
       end: props.value.end?.toString()
     });
-
-    response.value = data;
-    // dataset2.value = data.map((index:any, item:any) => {
-    //   return {
-    //     name: item.id,
-    //     value: 12,
-    //     color: color[index]
-    //   }
-    // })
   }
-
 })
 
-
-onBeforeUnmount(() => {
-  response.value = []
-
-})
 
 
 </script>
