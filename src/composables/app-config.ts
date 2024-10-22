@@ -31,6 +31,11 @@ export const navigation = {
     ],
     settingNav :[
         {
+            path: 'setting-app',
+            name: 'adminSettingApp',
+            icon:''
+        },
+        {
             path: 'roles',
             name: 'adminSettingRoleList',
             icon:'',

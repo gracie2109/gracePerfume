@@ -212,7 +212,12 @@ const router = createRouter({
                             path: 'roles/create',
                             name: 'adminSettingRoleCreate',
                             component: () => import("@/views/admin/settings/roles/CreateRole.vue"),
-                        }
+                        },
+                        {
+                            path:'setting-app',
+                            name: 'adminSettingApp',
+                            component: () => import("@/views/admin/settings/app/SettingApp.vue")
+                        },
 
                     ]
                 }
